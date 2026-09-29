@@ -5,1076 +5,807 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Arcanum Runes — Elder Futhark Casting</title>
 <style>
+
 :root{
-  --bg:#030713;--panel:#07101ddd;--panel2:#0b1423ee;--line:#9a7138;
-  --gold:#e1b35b;--gold2:#8e632c;--ink:#f3ead7;--muted:#9ea4b4;
-  --violet:#9c79db;--blue:#618fd8;--green:#81c5a0;--danger:#d88c8c
+  --bg:#02050b;
+  --ink:#f4eee4;
+  --muted:#8b95a7;
+  --muted2:#657083;
+  --gold:#d9b269;
+  --gold-soft:#f0d6a0;
+  --gold-dim:#8e6a32;
+  --violet:#8f79c7;
+  --blue:#789ce5;
+  --glass:rgba(6,11,19,.68);
+  --glass-strong:rgba(5,9,16,.86);
+  --line:rgba(223,184,107,.20);
+  --line-cool:rgba(123,151,204,.16);
+  --shadow:0 35px 90px rgba(0,0,0,.52);
 }
 *{box-sizing:border-box}
+html{background:var(--bg)}
 html,body{min-height:100%}
 body{
-  margin:0;color:var(--ink);font-family:Georgia,"Times New Roman",serif;
+  margin:0;
+  color:var(--ink);
+  font-family:Georgia,"Times New Roman",serif;
   background:
-    linear-gradient(180deg,rgba(2,5,14,.58),rgba(2,4,10,.92)),
-    url("../arcanum-tarot/assets/arcanum-tarot-sanctuary.png") center/cover fixed no-repeat,
-    radial-gradient(circle at 50% 0,#183260 0,#07111f 40%,#02050b 100%);
+    linear-gradient(180deg,rgba(2,5,12,.16),rgba(2,5,11,.58) 56%,rgba(1,3,8,.90)),
+    url("../arcanum-tarot/assets/arcanum-tarot-sanctuary.png") center 18%/cover fixed no-repeat,
+    #02050b;
+  overflow-x:hidden;
 }
-body:before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
   background:
-    radial-gradient(circle at 50% 18%,rgba(92,138,232,.22),transparent 30%),
-    radial-gradient(circle at 50% 70%,rgba(225,170,75,.11),transparent 34%),
-    linear-gradient(90deg,rgba(1,3,9,.85),transparent 28% 72%,rgba(1,3,9,.85));
+    radial-gradient(circle at 50% 10%,rgba(93,133,222,.16),transparent 20%),
+    radial-gradient(circle at 50% 60%,rgba(225,176,81,.08),transparent 28%),
+    linear-gradient(90deg,rgba(0,2,7,.82),transparent 22% 78%,rgba(0,2,7,.82));
 }
-button,input,select,textarea{font:inherit}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  background:linear-gradient(180deg,transparent 0 52%,rgba(1,3,8,.42) 78%,rgba(1,3,8,.82) 100%);
+}
+button,input,textarea,select{font:inherit}
 button{cursor:pointer}
-.app{width:100%;min-height:100vh;padding:0 12px 14px}
-.topbar{
-  min-height:64px;margin:0 -12px;padding:9px 24px;
-  display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;
-  border-bottom:1px solid #b7863f75;background:rgba(2,5,13,.93);backdrop-filter:blur(14px);
-  box-shadow:0 12px 42px #000a
-}
-.brand-wrap{display:flex;align-items:center;gap:11px}
-.brand-mark{
-  width:42px;height:42px;border-radius:50%;border:1px solid #d8aa50;
-  display:grid;place-items:center;color:#efca79;font-size:21px;
-  background:radial-gradient(circle,#2b4569,#0a1220 70%);
-  box-shadow:0 0 20px #6e93dd35,inset 0 0 18px #d9aa4220
-}
-.brand{font-weight:700;letter-spacing:.16em;color:#e8c57e;font-size:22px}
-.subtitle{margin-top:3px;color:#8f9aad;font:9px system-ui;letter-spacing:.13em}
-.nav{display:flex;justify-content:center;gap:27px}
-.nav a{
-  color:#c9c0b5;text-decoration:none;font-size:12px;padding:11px 3px;position:relative
-}
-.nav a.active,.nav a:hover{color:#f1d18c}
-.nav a.active:after{
-  content:"";position:absolute;left:14%;right:14%;bottom:1px;height:1px;
-  background:#e1ad50;box-shadow:0 0 10px #e1ad50
-}
-.mode-note{color:#858c9b;font:9px system-ui;letter-spacing:.04em;text-align:right}
-.layout{
-  display:grid;grid-template-columns:360px minmax(640px,1fr) 430px;
-  gap:11px;margin-top:11px;align-items:start
-}
-.panel{
-  border:1px solid #9c733a7c;border-radius:13px;overflow:hidden;
-  background:linear-gradient(180deg,rgba(4,9,19,.95),rgba(3,7,15,.97));
-  backdrop-filter:blur(10px);box-shadow:0 24px 76px #000b,inset 0 0 0 1px #ffd9780a
-}
-.pad{padding:20px}
-h1,h2,h3,h4{margin:0;color:#e8c781}
-.controls h2{font-size:24px;margin-bottom:4px}
-.lead{margin:0 0 12px;color:#848b9c;font:11px/1.55 system-ui}
-.step{
-  margin:17px 0 7px;color:#e3c383;font:700 11px/1 Georgia,serif;
-  letter-spacing:.12em;text-transform:uppercase
-}
-.spread-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.spread-option{
-  min-height:96px;padding:11px 8px;border:1px solid #354664;border-radius:10px;
-  background:radial-gradient(circle at 50% 24%,#6d4ca51e,transparent 34%),linear-gradient(#0a1526,#060b15);
-  color:#ddd5e5;transition:.16s ease
-}
-.spread-option:hover{transform:translateY(-2px);border-color:#80678d}
-.spread-option.active{
-  border-color:#e0aa4e;color:#f4d595;
-  box-shadow:0 0 0 1px #e0aa4e35,0 0 22px #d89c3b2c,inset 0 0 24px #d49a3512
-}
-.spread-symbol{display:block;color:#ad87dc;font-size:28px;line-height:1.1;margin-bottom:6px}
-.spread-option.active .spread-symbol{color:#efc873;text-shadow:0 0 10px #ddad55}
-.spread-title{display:block;font:700 12px/1.2 Georgia,serif}
-.spread-sub{display:block;margin-top:4px;color:#858da0;font:8.5px/1.3 system-ui}
-textarea,input,select{
-  width:100%;border:1px solid #6c512e;border-radius:9px;background:linear-gradient(#081320,#040a13);
-  color:#eee5d4;padding:11px 12px;outline:none;box-shadow:inset 0 0 19px #0008
-}
-textarea{min-height:90px;resize:vertical;font:13px/1.5 system-ui}
-input:focus,textarea:focus,select:focus{border-color:#daa54d;box-shadow:0 0 15px #d59b3a1b,inset 0 0 19px #0008}
-.seed-row{display:grid;grid-template-columns:1fr 42px;gap:7px}
-.icon-btn{
-  border:1px solid #73572f;border-radius:9px;background:#0a1320;color:#e5b95e;font-size:18px
-}
-.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
-.chip-btn{
-  min-height:38px;border:1px solid #34445f;border-radius:8px;background:#091321;color:#9da7ba;
-  font:700 9px system-ui
-}
-.chip-btn.active{border-color:#d6a149;color:#f1ce84;box-shadow:0 0 14px #d29a3a22}
-.primary{
-  width:100%;min-height:49px;margin-top:16px;border:1px solid #ffe2a0;border-radius:10px;
-  color:#271605;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
-  background:linear-gradient(90deg,#ae701e,#f7d58b 44%,#ffe9ae 51%,#cf8b2d);
-  box-shadow:0 10px 28px #bd7d252d,inset 0 1px #fff6d1
-}
-.secondary{
-  width:100%;min-height:43px;margin-top:8px;border:1px solid #46608e;border-radius:10px;
-  color:#d3d8ef;background:linear-gradient(#0b1730,#071020)
-}
-.note{color:#7f8797;font:9.5px/1.5 system-ui;margin:12px 0 0}
-.history{margin-top:16px;padding-top:13px;border-top:1px solid #6f522727}
-.history h3{font-size:14px}
-.history button{
-  width:100%;border:0;background:transparent;color:#979dac;text-align:left;
-  padding:6px 0;font:9px/1.35 system-ui
-}
-.history button:hover{color:#e0c283}
+a{color:inherit}
+.app{width:min(1920px,100%);margin:0 auto;padding:0 24px 24px}
 
-.cast-table{
-  position:relative;min-height:855px;overflow:hidden;
+/* masthead */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:80;
+  min-height:76px;
+  margin:0 -24px;
+  padding:12px 30px;
+  display:grid;
+  grid-template-columns:auto 1fr auto;
+  gap:24px;
+  align-items:center;
+  border-bottom:1px solid rgba(221,182,106,.16);
+  background:linear-gradient(180deg,rgba(3,6,13,.92),rgba(3,6,13,.70));
+  backdrop-filter:blur(24px) saturate(1.08);
+  box-shadow:0 16px 50px rgba(0,0,0,.24);
+}
+.brand-wrap{display:flex;align-items:center;gap:14px}
+.brand-mark{
+  width:52px;height:52px;border-radius:50%;
+  display:grid;place-items:center;
+  border:1px solid rgba(232,198,131,.60);
+  color:#f1cf84;
+  font-size:24px;
   background:
-    radial-gradient(circle at 50% 17%,rgba(80,125,220,.20),transparent 23%),
-    radial-gradient(circle at 50% 64%,rgba(215,162,70,.10),transparent 35%),
-    linear-gradient(180deg,rgba(5,12,27,.88),rgba(3,7,16,.94));
+    radial-gradient(circle at 50% 43%,rgba(108,148,232,.34),rgba(13,23,39,.96) 66%),
+    linear-gradient(180deg,#111b2a,#07101c);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.025),
+    inset 0 0 28px rgba(232,188,92,.08),
+    0 0 36px rgba(87,133,225,.10);
 }
-.cast-table:before{
-  content:"";position:absolute;inset:42px;border-radius:50%;
-  border:1px solid #c4944649;
-  box-shadow:inset 0 0 130px #1e37665c,0 0 70px #c58c2d0c
+.brand{
+  color:#ecd19b;
+  font-size:22px;
+  font-weight:600;
+  letter-spacing:.22em;
 }
-.cast-table:after{
-  content:"";position:absolute;inset:95px;border-radius:50%;
-  border:1px dashed #7c653b45;pointer-events:none
+.subtitle{
+  margin-top:4px;
+  color:#778296;
+  font:8px/1 system-ui,sans-serif;
+  letter-spacing:.24em;
+  text-transform:uppercase;
 }
-.hero{position:relative;z-index:2;text-align:center;padding:34px 16px 0}
-.hero-kicker{color:#a68c61;font:8px system-ui;letter-spacing:.32em;text-transform:uppercase}
-.hero h1{margin:6px 0 3px;font-size:43px;letter-spacing:.12em;font-weight:400;color:#f0d293;text-shadow:0 0 26px #d9a1454b}
-.hero p{margin:0;color:#8992a6;font:9px system-ui;letter-spacing:.18em;text-transform:uppercase}
+.nav{
+  display:flex;
+  justify-content:center;
+  gap:34px;
+}
+.nav a{
+  position:relative;
+  padding:11px 2px;
+  text-decoration:none;
+  color:#abb5c7;
+  font:500 10px/1 system-ui,sans-serif;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+.nav a:hover,.nav a.active{color:#eed099}
+.nav a.active::after{
+  content:"";
+  position:absolute;
+  left:24%;
+  right:24%;
+  bottom:2px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,#ddb467,transparent);
+}
+.mode-note{
+  max-width:260px;
+  color:#6f7a8d;
+  font:8px/1.45 system-ui,sans-serif;
+  letter-spacing:.07em;
+  text-align:right;
+}
+
+/* product layout */
+.layout{
+  display:grid;
+  grid-template-columns:340px minmax(720px,1fr) 400px;
+  gap:20px;
+  align-items:start;
+  margin-top:22px;
+}
+.controls,.reading{
+  position:sticky;
+  top:98px;
+  align-self:start;
+}
+.controls .pad,.reading .pad{
+  position:relative;
+  overflow:hidden;
+  border-radius:22px;
+  border:1px solid rgba(223,184,107,.20);
+  background:
+    radial-gradient(circle at 14% 0%,rgba(83,119,180,.07),transparent 30%),
+    linear-gradient(180deg,rgba(8,14,25,.76),rgba(4,8,15,.84));
+  backdrop-filter:blur(22px) saturate(1.06);
+  box-shadow:var(--shadow),inset 0 0 0 1px rgba(255,240,205,.018);
+}
+.controls .pad::before,.reading .pad::before{
+  content:"";
+  position:absolute;
+  left:26px;right:26px;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(236,198,124,.52),transparent);
+}
+.controls .pad{padding:24px 24px 22px}
+.reading .pad{padding:24px 24px 26px;min-height:720px}
+.rail-eyebrow{
+  color:#86775f;
+  font:600 8px/1 system-ui,sans-serif;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+}
+.controls h2,.reading h2{
+  margin:8px 0 0;
+  color:#efd69f;
+  font-size:28px;
+  font-weight:400;
+  letter-spacing:.01em;
+}
+.lead{
+  margin:7px 0 0;
+  color:#8c96a8;
+  font:10.5px/1.7 system-ui,sans-serif;
+}
+.step{
+  margin:22px 0 9px;
+  color:#bca370;
+  font:600 9.5px/1 system-ui,sans-serif;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.step::before{
+  content:"";
+  display:inline-block;
+  width:15px;height:1px;
+  margin:0 8px 3px 0;
+  background:rgba(210,167,88,.50);
+}
+
+/* elegant selectors */
+.spread-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.spread-option{
+  position:relative;
+  min-height:70px;
+  padding:10px 14px 10px 76px;
+  border-radius:13px;
+  border:1px solid rgba(93,111,140,.28);
+  background:linear-gradient(180deg,rgba(10,18,31,.72),rgba(6,11,20,.82));
+  color:#d9deea;
+  text-align:left;
+  transition:transform .16s ease,border-color .16s ease,background .16s ease;
+}
+.spread-option:hover{
+  transform:translateX(2px);
+  border-color:rgba(159,135,195,.42);
+  background:linear-gradient(180deg,rgba(14,23,39,.84),rgba(7,13,23,.90));
+}
+.spread-option.active{
+  border-color:rgba(225,183,101,.56);
+  background:
+    radial-gradient(circle at 10% 50%,rgba(225,183,101,.10),transparent 26%),
+    linear-gradient(180deg,rgba(15,23,37,.90),rgba(8,14,23,.96));
+  box-shadow:inset 3px 0 0 rgba(225,183,101,.76);
+}
+.spread-symbol{
+  position:absolute;
+  left:14px;top:9px;
+  width:50px;height:50px;
+  display:grid;place-items:center;
+  border-radius:50%;
+  border:1px solid rgba(150,126,202,.24);
+  background:radial-gradient(circle,rgba(133,103,196,.12),transparent 72%);
+  color:#c6b1ed;
+  font-size:20px;
+}
+.spread-option.active .spread-symbol{
+  border-color:rgba(232,193,118,.34);
+  color:#efc973;
+  background:radial-gradient(circle,rgba(226,180,92,.14),transparent 72%);
+}
+.spread-title{
+  display:block;
+  color:#eee6d8;
+  font-size:12.5px;
+  font-weight:600;
+}
+.spread-sub{
+  display:block;
+  margin-top:5px;
+  color:#788294;
+  font:8.5px/1.3 system-ui,sans-serif;
+}
+
+/* quiet-luxury inputs */
+textarea,input{
+  width:100%;
+  border:1px solid rgba(181,141,73,.34);
+  border-radius:11px;
+  outline:none;
+  color:#eee6d8;
+  background:rgba(5,10,18,.64);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.012);
+}
+textarea{
+  min-height:94px;
+  padding:13px 14px;
+  resize:vertical;
+  font:12.5px/1.55 system-ui,sans-serif;
+}
+input{
+  min-height:43px;
+  padding:0 12px;
+  font:12px system-ui,sans-serif;
+}
+textarea::placeholder,input::placeholder{color:#646f81}
+textarea:focus,input:focus{
+  border-color:rgba(224,177,91,.72);
+  box-shadow:0 0 0 1px rgba(224,177,91,.14),0 0 18px rgba(224,177,91,.06);
+}
+.seed-row{display:grid;grid-template-columns:1fr 40px;gap:7px}
+.icon-btn{
+  border:1px solid rgba(181,141,73,.32);
+  border-radius:10px;
+  color:#e7bb67;
+  background:rgba(8,14,24,.74);
+}
+.icon-btn:hover{border-color:rgba(220,170,79,.62)}
+.chips{display:flex;gap:6px}
+.chip-btn{
+  flex:1;
+  min-height:34px;
+  border-radius:999px;
+  border:1px solid rgba(93,110,138,.28);
+  color:#8e99ac;
+  background:rgba(8,14,24,.60);
+  font:700 8px/1 system-ui,sans-serif;
+}
+.chip-btn.active{
+  border-color:rgba(225,183,101,.50);
+  color:#e9cb8a;
+  background:rgba(225,183,101,.08);
+}
+.primary{
+  width:100%;
+  min-height:54px;
+  margin-top:19px;
+  border:1px solid rgba(255,232,178,.65);
+  border-radius:12px;
+  color:#271707;
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  background:linear-gradient(90deg,#a86b20,#dcb05f 31%,#f2da9d 50%,#d19d49 73%,#a86b20);
+  box-shadow:0 14px 38px rgba(177,118,35,.16);
+}
+.primary:hover{filter:brightness(1.035);transform:translateY(-1px)}
+.secondary{
+  width:100%;
+  min-height:42px;
+  margin-top:8px;
+  border:1px solid rgba(99,124,171,.28);
+  border-radius:11px;
+  color:#c7d0df;
+  background:rgba(8,15,27,.58);
+}
+.note{
+  margin:12px 2px 0;
+  color:#707b8d;
+  font:8.6px/1.65 system-ui,sans-serif;
+}
+.history{
+  margin-top:17px;
+  padding-top:14px;
+  border-top:1px solid rgba(225,177,82,.08);
+}
+.history h3{
+  margin:0;
+  color:#d1b57f;
+  font-size:14px;
+  font-weight:400;
+}
+.history button{
+  width:100%;
+  margin-top:5px;
+  padding:8px 9px;
+  border:0;
+  border-radius:8px;
+  text-align:left;
+  color:#808a9c;
+  background:rgba(255,255,255,.018);
+  font:8.5px/1.4 system-ui,sans-serif;
+}
+.history button:hover{color:#d8c49d;background:rgba(225,177,82,.045)}
+
+/* altar stage */
+.cast-table{
+  position:relative;
+  min-height:910px;
+  overflow:hidden;
+  border-radius:30px;
+  isolation:isolate;
+  background:
+    linear-gradient(180deg,rgba(3,8,17,.08),rgba(3,8,17,.42)),
+    radial-gradient(circle at 50% 30%,rgba(82,121,207,.15),transparent 25%),
+    radial-gradient(circle at 50% 69%,rgba(219,170,78,.085),transparent 32%);
+  box-shadow:inset 0 0 120px rgba(0,0,0,.16);
+}
+.cast-table::before{
+  content:"";
+  position:absolute;
+  inset:42px;
+  z-index:0;
+  border-radius:50%;
+  border:1px solid rgba(221,176,88,.12);
+  box-shadow:inset 0 0 150px rgba(27,48,85,.13),0 0 80px rgba(206,153,57,.035);
+}
+.cast-table::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 50%,transparent 0 214px,rgba(218,168,74,.12) 215px 216px,transparent 217px 278px,rgba(218,168,74,.05) 279px 280px,transparent 281px),
+    radial-gradient(circle at 50% 50%,rgba(42,64,106,.11),transparent 57%);
+}
+.hero{
+  position:relative;
+  z-index:4;
+  text-align:center;
+  padding:42px 16px 0;
+}
+.hero-kicker{
+  color:#8993a5;
+  font:600 7.5px/1 system-ui,sans-serif;
+  letter-spacing:.42em;
+  text-transform:uppercase;
+}
+.hero h1{
+  margin:12px 0 0;
+  color:#f1d79f;
+  font-size:52px;
+  font-weight:400;
+  letter-spacing:.18em;
+  text-shadow:0 0 30px rgba(215,164,73,.20);
+}
+.hero p{
+  margin:8px 0 0;
+  color:#7e899c;
+  font:8px/1.3 system-ui,sans-serif;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+}
+.hero-luxury-meta{display:flex;justify-content:center;gap:7px;margin-top:16px}
+.hero-luxury-meta span{
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid rgba(156,177,214,.13);
+  background:rgba(5,10,18,.22);
+  color:#858fa2;
+  font:600 7px/1 system-ui,sans-serif;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+}
+.altar-orbit{
+  position:absolute;
+  left:50%;top:124px;
+  transform:translateX(-50%);
+  z-index:1;
+  width:334px;height:334px;
+  border-radius:50%;
+  border:1px solid rgba(117,149,211,.07);
+}
+.altar-orbit::before,.altar-orbit::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  inset:26px;
+  border:1px dashed rgba(215,171,85,.07);
+}
+.altar-orbit::after{
+  inset:56px;
+  border-style:solid;
+  border-color:rgba(215,171,85,.045);
+}
 .rune-circle{
-  position:absolute;left:50%;top:106px;transform:translateX(-50%);
-  width:195px;height:195px;border-radius:50%;border:1px solid #ddb35d65;
-  box-shadow:0 0 42px #688de04a,inset 0 0 66px #36578f50
+  position:absolute;
+  left:50%;top:156px;
+  transform:translateX(-50%);
+  z-index:2;
+  width:270px;height:270px;
+  border-radius:50%;
+  border:1px solid rgba(226,183,101,.26);
+  box-shadow:inset 0 0 92px rgba(83,121,203,.14),0 0 64px rgba(96,136,218,.09);
 }
-.rune-circle:before{
-  content:"ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ";position:absolute;inset:0;
-  display:grid;place-items:center;color:#e9c370;font-size:20px;letter-spacing:.16em;
-  transform:rotate(-8deg);opacity:.75;text-shadow:0 0 12px #e2b04d
+.rune-circle::before{
+  content:"";
+  position:absolute;
+  inset:25px;
+  border-radius:50%;
+  border:1px dashed rgba(226,183,101,.13);
+}
+.rune-circle::after{
+  content:"ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ";
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  color:#e9c16b;
+  font-size:21px;
+  letter-spacing:.20em;
+  opacity:.74;
+  text-shadow:0 0 14px rgba(227,176,68,.30);
 }
 .cast-area{
-  position:relative;z-index:3;display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
-  gap:24px;align-items:start;max-width:870px;margin:0 auto;padding:225px 22px 28px
+  position:relative;
+  z-index:4;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:30px;
+  align-items:start;
+  max-width:940px;
+  margin:0 auto;
+  padding:308px 30px 42px;
 }
+.cast-area[data-count="1"]{grid-template-columns:1fr;max-width:230px}
+.cast-area[data-count="5"]{grid-template-columns:repeat(5,minmax(120px,1fr))}
+.cast-area[data-count="9"]{grid-template-columns:repeat(3,minmax(135px,1fr));max-width:700px}
+.cast-help{
+  position:relative;
+  z-index:4;
+  padding:0 16px 20px;
+  color:#6d7788;
+  text-align:center;
+  font:7.8px/1.5 system-ui,sans-serif;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+/* stones */
 .rune-slot{text-align:center}
 .rune-stone{
-  position:relative;width:128px;height:164px;margin:auto;perspective:900px;cursor:pointer
+  position:relative;
+  width:144px;height:184px;
+  margin:0 auto;
+  perspective:1000px;
+  cursor:pointer;
+  filter:drop-shadow(0 24px 26px rgba(0,0,0,.42));
 }
 .rune-inner{
-  position:relative;width:100%;height:100%;transform-style:preserve-3d;
-  transition:transform .68s cubic-bezier(.2,.8,.2,1)
+  position:relative;
+  width:100%;height:100%;
+  transform-style:preserve-3d;
+  transition:transform .72s cubic-bezier(.2,.82,.2,1);
 }
 .rune-stone.revealed .rune-inner{transform:rotateY(180deg)}
 .rune-face{
-  position:absolute;inset:0;backface-visibility:hidden;border-radius:42% 48% 45% 44% / 34% 38% 43% 46%;
-  border:1px solid #b68842;overflow:hidden;box-shadow:0 16px 31px #000c
-}
-.rune-back{
-  background:
-    radial-gradient(circle at 35% 28%,#59719522 0 2px,transparent 3px),
-    linear-gradient(145deg,#172338,#0a101a 67%,#101929);
-  box-shadow:inset 0 0 28px #0009,0 16px 31px #000c
-}
-.rune-back:after{
-  content:"ᛟ";position:absolute;inset:0;display:grid;place-items:center;
-  color:#c89c4b;font-size:54px;text-shadow:0 0 15px #c79743
-}
-.rune-front{
-  transform:rotateY(180deg);
-  background:
-    radial-gradient(circle at 35% 25%,#7887a630 0 2px,transparent 3px),
-    linear-gradient(145deg,#24334c,#121b29 55%,#09101b);
-  box-shadow:inset 0 0 34px #0008,0 16px 31px #000c
-}
-.rune-front:before{
-  content:"";position:absolute;inset:7px;border-radius:inherit;border:1px solid #cc9b4a70
-}
-.rune-glyph{
-  position:absolute;inset:0 0 38px;display:grid;place-items:center;
-  color:#f0c96f;font-size:78px;text-shadow:0 0 13px #efbc50,0 0 28px #6e8dd9
-}
-.rune-nameplate{
-  position:absolute;left:8px;right:8px;bottom:8px;min-height:35px;
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  border-top:1px solid #bd8a3b;background:#060912de;border-radius:0 0 18px 18px
-}
-.rune-name{color:#f1d08a;font:700 11px Georgia,serif;letter-spacing:.08em;text-transform:uppercase}
-.rune-meaning{margin-top:2px;color:#8c94a4;font:6px system-ui;letter-spacing:.12em;text-transform:uppercase}
-.reversed-badge{
-  position:absolute;top:11px;right:8px;padding:3px 5px;border:1px solid #b8863e;border-radius:999px;
-  background:#080b12dd;color:#e7bf70;font:700 5px system-ui;letter-spacing:.09em
-}
-.position{margin-top:9px;color:#ebca85;font-size:12px}
-.position-sub{margin-top:3px;color:#858b99;font:8px/1.35 system-ui;text-transform:uppercase;letter-spacing:.08em}
-.cast-help{text-align:center;color:#747c8e;font:9px system-ui;padding-bottom:16px}
-.cast-table.casting .rune-stone{animation:scatter .75s ease}
-@keyframes scatter{
-  0%{transform:translateY(0) rotate(0)}
-  35%{transform:translateY(-30px) rotate(-7deg)}
-  70%{transform:translateY(11px) rotate(4deg)}
-  100%{transform:none}
-}
-
-.reading h2{font-size:23px}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #34435e;border-radius:8px;overflow:hidden;margin:11px 0}
-.tabs button{
-  min-height:36px;border:0;border-right:1px solid #2f3a4e;background:#08111d;color:#8e97aa;font-size:10px
-}
-.tabs button:last-child{border-right:0}
-.tabs button.active{background:linear-gradient(#17375d,#0c1e35);color:#e2eaf5;box-shadow:inset 0 -2px #d2e6ff}
-.view{display:none}.view.active{display:block}
-.status{padding:8px 10px;border:1px solid #2b3b54;border-radius:8px;background:#07101c;color:#8f99aa;font:9px system-ui}
-.summary{
-  margin-top:10px;padding:11px;border:1px solid #644a28;border-radius:9px;background:#0a0e18;
-  color:#d4cbd0;font:11px/1.55 system-ui
-}
-.reading-entry{padding:13px 0;border-top:1px solid #282d38}
-.reading-entry:first-child{border-top:0}
-.entry-head{display:flex;gap:10px;align-items:center}
-.mini-stone{
-  width:46px;height:58px;border-radius:42% 48% 45% 44%;
-  display:grid;place-items:center;border:1px solid #a77a36;background:linear-gradient(#22314a,#0c1320);
-  color:#edc36d;font-size:27px;box-shadow:inset 0 0 13px #0009
-}
-.entry-title h4{font-size:14px;margin:0}
-.entry-title small{color:#777f8f;font:8px system-ui}
-.entry-text{margin-top:7px;color:#c9c4c8;font:10.5px/1.55 system-ui}
-.rule-box{
-  margin-top:7px;padding:8px;border-left:2px solid #7b5ba0;background:#0a0d16;
-  color:#9991a4;font:8.5px/1.45 system-ui
-}
-.explanation{
-  padding:12px;border:1px solid #654b28;border-radius:9px;background:#0a0e18;color:#d1c7cd;
-  font:11px/1.6 system-ui
-}
-.explanation h3{font-size:16px;margin-bottom:7px}
-.library-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;max-height:690px;overflow:auto}
-.library-rune{
-  min-height:106px;padding:10px 7px;border:1px solid #35435b;border-radius:9px;background:#08111d;text-align:center
-}
-.library-rune:hover{border-color:#a1793d}
-.library-rune .glyph{font-size:36px;color:#e8bd67}
-.library-rune strong{display:block;color:#d6c394;font-size:10px}
-.library-rune small{display:block;margin-top:3px;color:#747d8d;font:7px/1.3 system-ui}
-footer{text-align:center;color:#606776;font:9px/1.5 system-ui;padding:12px}
-
-@media(max-width:1350px){
-  .layout{grid-template-columns:320px minmax(560px,1fr) 380px}
-  .rune-stone{width:112px;height:145px}
-}
-@media(max-width:1080px){
-  .layout{grid-template-columns:300px 1fr}.reading{grid-column:1/-1}.nav{display:none}
-}
-@media(max-width:720px){
-  .layout{grid-template-columns:1fr}.mode-note{display:none}.topbar{grid-template-columns:1fr}
-  .spread-grid{grid-template-columns:repeat(2,1fr)}.cast-area{grid-template-columns:repeat(2,1fr);padding-top:210px}
-}
-
-/* === ARCANUM RUNES PREMIUM VISUAL BUILD v2 === */
-body{
-  background:
-    linear-gradient(180deg,rgba(2,5,14,.45),rgba(2,4,10,.88)),
-    url("../arcanum-tarot/assets/arcanum-tarot-sanctuary.png") center/cover fixed no-repeat,
-    radial-gradient(circle at 50% 0,#17315a 0,#08131f 38%,#02050a 100%)!important;
-}
-body:after{
-  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 12%,rgba(92,134,235,.18),transparent 22%),
-    radial-gradient(circle at 50% 70%,rgba(230,176,76,.10),transparent 33%),
-    linear-gradient(90deg,rgba(1,3,9,.76) 0 18%,transparent 30% 70%,rgba(1,3,9,.76) 82% 100%)
-}
-.topbar{
-  min-height:66px!important;padding:10px 26px!important;
-  background:rgba(2,5,13,.90)!important;
-  border-bottom:1px solid rgba(226,177,85,.34)!important;
-  box-shadow:0 10px 44px rgba(0,0,0,.55)!important
-}
-.brand-mark{
-  width:46px!important;height:46px!important;
-  border-color:#e0b35e!important;
-  background:
-    radial-gradient(circle at 50% 44%,rgba(106,149,234,.42),rgba(20,31,52,.96) 67%),
-    linear-gradient(#111a2a,#08101c)!important;
-  box-shadow:inset 0 0 22px rgba(235,190,88,.11),0 0 28px rgba(100,146,232,.16)!important
-}
-.brand{font-size:24px!important;letter-spacing:.17em!important}
-.subtitle{color:#8f9aaf!important;letter-spacing:.16em!important}
-.nav{gap:32px!important}
-.nav a{font-size:11px!important;letter-spacing:.08em!important;color:#c2c8d4!important}
-.nav a.active,.nav a:hover{color:#f3d18c!important}
-.layout{
-  grid-template-columns:380px minmax(680px,1fr) 440px!important;
-  gap:12px!important;margin-top:12px!important
-}
-.panel{
-  border-radius:16px!important;
-  border:1px solid rgba(225,177,82,.32)!important;
-  background:
-    radial-gradient(circle at 15% 4%,rgba(70,101,169,.08),transparent 28%),
-    linear-gradient(180deg,rgba(8,14,25,.95),rgba(4,8,15,.97))!important;
-  box-shadow:0 28px 85px rgba(0,0,0,.58),inset 0 0 0 1px rgba(255,232,177,.035)!important
-}
-.panel:before{
-  content:"";position:absolute;inset:9px;border-radius:12px;
-  border:1px solid rgba(225,177,82,.10);pointer-events:none
-}
-.pad{position:relative;z-index:2;padding:22px!important}
-.controls h2,.reading h2{font-size:25px!important;color:#ecd090!important}
-.lead{font-size:11px!important;color:#939bad!important}
-.step{
-  margin:19px 0 8px!important;
-  color:#e5c482!important;font-size:11px!important;
-  letter-spacing:.14em!important
-}
-
-/* PREMIUM SPREAD TILES */
-.spread-grid{gap:9px!important}
-.spread-option{
-  min-height:118px!important;padding:13px 8px 11px!important;
-  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;
-  border:1px solid rgba(71,96,141,.72)!important;border-radius:12px!important;
-  background:
-    radial-gradient(circle at 50% 28%,rgba(135,95,201,.14),transparent 34%),
-    linear-gradient(180deg,#0d182b,#070d18)!important;
-  box-shadow:inset 0 0 24px rgba(125,92,189,.06),0 10px 22px rgba(0,0,0,.23)!important
-}
-.spread-option:hover{
-  transform:translateY(-2px) scale(1.01)!important;
-  border-color:#846c9b!important;
-  box-shadow:0 14px 26px rgba(0,0,0,.3),0 0 18px rgba(151,111,215,.11),inset 0 0 24px rgba(133,98,191,.08)!important
-}
-.spread-option.active{
-  border-color:#e2ad52!important;
-  background:
-    radial-gradient(circle at 50% 28%,rgba(226,173,82,.16),transparent 34%),
-    linear-gradient(180deg,#151b2b,#0a0f19)!important;
-  box-shadow:0 0 0 1px rgba(226,173,82,.30),0 0 24px rgba(220,159,59,.23),inset 0 0 28px rgba(226,173,82,.07)!important
-}
-.spread-symbol{
-  width:58px!important;height:54px!important;
-  display:grid!important;place-items:center!important;
-  margin:0 auto 9px!important;
-  border:1px solid rgba(163,133,224,.28)!important;
-  border-radius:16px!important;
-  background:radial-gradient(circle,rgba(145,108,221,.18),transparent 72%)!important;
-  color:#c9aeef!important;font-size:23px!important;
-  text-shadow:0 0 11px rgba(152,116,220,.28)!important
-}
-.spread-option.active .spread-symbol{
-  border-color:rgba(239,201,121,.42)!important;
-  background:radial-gradient(circle,rgba(239,201,121,.17),transparent 72%)!important;
-  color:#f2cc77!important;text-shadow:0 0 12px rgba(229,174,68,.36)!important
-}
-.spread-title{font-size:12px!important;color:#f1e8d5!important}
-.spread-sub{font-size:8.5px!important;color:#8991a3!important}
-
-/* FORM CONTROLS */
-textarea,input,select{
-  border-color:rgba(177,132,57,.58)!important;
-  border-radius:10px!important;
-  background:
-    radial-gradient(circle at 95% 16%,rgba(85,120,181,.08),transparent 28%),
-    linear-gradient(180deg,#091521,#050a13)!important;
-  color:#eee5d6!important;
-  box-shadow:inset 0 0 20px rgba(0,0,0,.48)!important
-}
-textarea{min-height:98px!important;padding:14px!important;font-size:13px!important}
-input{min-height:44px!important}
-textarea:focus,input:focus,select:focus{
-  outline:none!important;border-color:#e0a94c!important;
-  box-shadow:0 0 0 1px rgba(224,169,76,.22),0 0 17px rgba(224,169,76,.11),inset 0 0 20px rgba(0,0,0,.48)!important
-}
-.icon-btn{
-  border-color:#785b32!important;border-radius:9px!important;
-  background:linear-gradient(#101929,#080e18)!important;
-  color:#ebbd63!important
-}
-.icon-btn:hover{border-color:#d6a04a!important;color:#ffe0a0!important}
-.chips{grid-template-columns:repeat(4,1fr)!important;gap:7px!important}
-.chip-btn{
-  min-height:38px!important;border-radius:8px!important;
-  border-color:#34445f!important;background:linear-gradient(#0c1626,#070c15)!important;
-  color:#9da7b9!important
-}
-.chip-btn.active{
-  border-color:#d4a049!important;color:#f2cf86!important;
-  box-shadow:0 0 15px rgba(212,160,73,.17),inset 0 0 13px rgba(212,160,73,.06)!important
-}
-.primary{
-  min-height:50px!important;border-radius:11px!important;
-  font-size:14px!important;letter-spacing:.06em!important;
-  background:linear-gradient(90deg,#b7731f,#f4cf7f 37%,#ffe6a6 50%,#d49939 75%,#b47521)!important;
-  box-shadow:0 10px 26px rgba(190,129,36,.23),inset 0 1px rgba(255,247,213,.88)!important
-}
-.secondary{
-  min-height:43px!important;border-radius:10px!important;
-  border-color:#4b6290!important;
-  background:linear-gradient(#0c1831,#071021)!important
-}
-.note{font-size:9.3px!important;line-height:1.6!important}
-.history{
-  margin-top:17px!important;padding-top:14px!important;
-  border-top:1px solid rgba(225,177,82,.12)!important
-}
-.history button{
-  padding:8px 9px!important;border:1px solid rgba(73,89,115,.43)!important;
-  border-radius:8px!important;background:rgba(8,14,23,.64)!important;margin-top:5px!important
-}
-.history button:hover{border-color:rgba(225,177,82,.42)!important;color:#f0debc!important}
-
-/* CASTING SANCTUARY */
-.cast-table{
-  min-height:900px!important;
-  background:
-    radial-gradient(circle at 50% 16%,rgba(82,126,224,.24),transparent 25%),
-    radial-gradient(circle at 50% 70%,rgba(229,172,71,.10),transparent 36%),
-    linear-gradient(180deg,rgba(5,12,25,.84),rgba(3,8,17,.93))!important;
-  isolation:isolate
-}
-.cast-table:before{
-  content:"";position:absolute;inset:44px;z-index:0;border-radius:50%;
-  border:1px solid rgba(217,166,74,.20)!important;
-  box-shadow:inset 0 0 150px rgba(26,48,91,.34),0 0 85px rgba(216,157,56,.07)!important
-}
-.cast-table:after{
-  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 49%,transparent 0 210px,rgba(216,166,73,.17) 211px 212px,transparent 213px 268px,rgba(216,166,73,.08) 269px 270px,transparent 271px),
-    linear-gradient(transparent,rgba(1,4,11,.12))
-}
-.hero{z-index:3!important;padding-top:37px!important}
-.hero h1{
-  font-size:47px!important;letter-spacing:.14em!important;
-  color:#f2d293!important;text-shadow:0 0 27px rgba(218,165,73,.35)!important
-}
-.hero-kicker{letter-spacing:.34em!important;color:#a89068!important}
-.hero p{letter-spacing:.22em!important;color:#9099ac!important}
-.rune-circle{
-  width:238px!important;height:238px!important;top:112px!important;z-index:2!important;
-  border-color:rgba(230,187,99,.44)!important;
-  box-shadow:inset 0 0 100px rgba(71,111,196,.24),0 0 50px rgba(101,140,220,.18)!important
-}
-.rune-circle:before{
-  content:"";position:absolute;inset:18px;border-radius:50%;
-  border:1px dashed rgba(230,187,99,.24)
-}
-.rune-circle:after{
-  font-size:23px!important;color:#ebc46e!important;opacity:.88!important;
-  text-shadow:0 0 14px rgba(228,176,68,.38)!important
-}
-.cast-area{
-  padding:250px 24px 35px!important;gap:30px!important;
-  max-width:930px!important
-}
-
-/* HIGH QUALITY RUNE STONES */
-.rune-stone{
-  width:138px!important;height:178px!important;
-  filter:drop-shadow(0 18px 20px rgba(0,0,0,.45))
-}
-.rune-face{
-  border-radius:42% 47% 45% 44% / 34% 38% 44% 46%!important;
-  border:1px solid rgba(218,171,84,.78)!important;
-  box-shadow:inset 0 0 40px rgba(0,0,0,.46),0 18px 34px rgba(0,0,0,.50)!important
-}
-.rune-back{
-  background:
-    radial-gradient(circle at 31% 23%,rgba(255,255,255,.10) 0 3px,transparent 4px),
-    radial-gradient(circle at 70% 66%,rgba(255,255,255,.05) 0 2px,transparent 3px),
-    linear-gradient(145deg,#22324a,#0e1725 60%,#0a1019)!important
-}
-.rune-back:before{
-  content:"";position:absolute;inset:7px;border-radius:inherit;
-  border:1px solid rgba(211,164,77,.22)
-}
-.rune-back:after{
-  font-size:60px!important;color:#d9a84d!important;
-  text-shadow:0 0 13px rgba(223,172,72,.38),0 0 27px rgba(86,128,217,.16)!important
-}
-.rune-front{
-  background:
-    radial-gradient(circle at 28% 20%,rgba(255,255,255,.12) 0 3px,transparent 4px),
-    radial-gradient(circle at 71% 62%,rgba(255,255,255,.04) 0 2px,transparent 3px),
-    linear-gradient(145deg,#314763,#1a2638 52%,#0d1521)!important
-}
-.rune-front:before{
-  inset:7px!important;border-color:rgba(230,188,101,.38)!important
-}
-.rune-glyph{
-  font-size:86px!important;
-  color:#f2ca70!important;
-  text-shadow:
-    0 0 9px rgba(245,197,91,.55),
-    0 0 24px rgba(102,143,231,.25),
-    0 2px 2px rgba(0,0,0,.55)!important
-}
-.rune-nameplate{
-  min-height:40px!important;
-  border-top-color:rgba(218,166,76,.64)!important;
-  background:linear-gradient(180deg,rgba(7,10,17,.38),rgba(3,6,11,.96))!important
-}
-.rune-name{font-size:11.5px!important;color:#f5d58e!important}
-.rune-meaning{color:#8d96a8!important}
-.position{
-  margin-top:11px!important;color:#efcc86!important;font-size:13px!important;
-  text-shadow:0 2px 8px rgba(0,0,0,.75)
-}
-.position-sub{
-  color:#8992a5!important;font-size:8.5px!important;
-  max-width:150px;margin:4px auto 0!important
-}
-.cast-table.casting .rune-stone{animation:runeCastPremium .84s cubic-bezier(.2,.8,.2,1)}
-@keyframes runeCastPremium{
-  0%{transform:translateY(0) rotate(0) scale(1)}
-  30%{transform:translateY(-38px) rotate(-9deg) scale(1.04)}
-  60%{transform:translateY(12px) rotate(5deg) scale(.98)}
-  100%{transform:none}
-}
-
-/* READING PANEL */
-.reading .tabs{
-  margin-top:12px!important;border-color:#435a82!important;border-radius:9px!important
-}
-.reading .tabs button{
-  min-height:38px!important;background:linear-gradient(#0b1628,#07101c)!important;
-  color:#929bae!important
-}
-.reading .tabs button.active{
-  background:linear-gradient(#1a3d69,#0e223c)!important;
-  color:#e8eff8!important;box-shadow:inset 0 -2px #d8e9ff!important
-}
-.status{
-  margin-top:12px!important;padding:10px 11px!important;border-radius:9px!important;
-  border-color:#3e506e!important;background:#08111dcc!important
-}
-.summary,.explanation{
-  border-color:rgba(163,120,52,.48)!important;border-radius:10px!important;
-  background:linear-gradient(180deg,rgba(12,16,25,.94),rgba(8,11,18,.96))!important;
-  box-shadow:inset 0 0 18px rgba(0,0,0,.33)!important
-}
-.reading-entry{
-  padding:14px 0!important;border-top-color:rgba(255,255,255,.06)!important
-}
-.mini-stone{
-  width:52px!important;height:64px!important;
-  border-color:rgba(199,151,67,.78)!important;
-  background:linear-gradient(145deg,#2d4261,#101a29)!important;
-  color:#efc66f!important;font-size:30px!important;
-  box-shadow:inset 0 0 16px rgba(0,0,0,.42)!important
-}
-.entry-title h4{font-size:14.5px!important;color:#ecd092!important}
-.entry-title small{color:#80899a!important}
-.entry-text{font-size:10.5px!important;line-height:1.62!important;color:#cec5cb!important}
-.rule-box{
-  border-left-color:#8c69c5!important;background:#0a0d15!important;
-  color:#aaa1b5!important;padding:9px!important
-}
-.explanation h3{font-size:16px!important;color:#e6c883!important}
-
-/* LIBRARY */
-.library-grid{gap:10px!important}
-.library-rune{
-  min-height:116px!important;border-radius:10px!important;
-  border-color:#3b4b66!important;
-  background:linear-gradient(#0a1423,#07101a)!important;
-  box-shadow:0 8px 18px rgba(0,0,0,.20)!important
-}
-.library-rune:hover{
-  transform:translateY(-1px);
-  border-color:#ad8240!important;
-  box-shadow:0 12px 22px rgba(0,0,0,.28),0 0 13px rgba(214,160,71,.08)!important
-}
-.library-rune .glyph{
-  font-size:40px!important;color:#edc36d!important;
-  text-shadow:0 0 11px rgba(229,174,69,.28)!important
-}
-.library-rune strong{font-size:10.5px!important;color:#ead7ad!important}
-.library-rune small{color:#7f899a!important}
-
-/* casting layout tuning */
-.cast-area[data-count="5"]{grid-template-columns:repeat(5,minmax(118px,1fr))!important}
-.cast-area[data-count="9"]{grid-template-columns:repeat(3,minmax(130px,1fr))!important;max-width:690px!important}
-.cast-area[data-count="1"]{grid-template-columns:1fr!important;max-width:250px!important}
-@media(max-width:1450px){
-  .layout{grid-template-columns:340px minmax(600px,1fr) 400px!important}
-  .rune-stone{width:124px!important;height:160px!important}
-  .cast-area[data-count="5"]{grid-template-columns:repeat(3,minmax(120px,1fr))!important}
-}
-@media(max-width:1080px){
-  .layout{grid-template-columns:310px 1fr!important}
-  .reading{grid-column:1/-1!important}
-}
-
-
-/* === ARCANUM RUNES LUXURY PRODUCT REBUILD v3 === */
-:root{
-  --lux-gold:#d8ad63;
-  --lux-gold-soft:#f0d39a;
-  --lux-ink:#f5efe5;
-  --lux-muted:#9ca5b8;
-  --lux-navy:#07101d;
-  --lux-glass:rgba(7,12,22,.62);
-}
-html{background:#02050a}
-body{
-  min-height:100vh;
-  background:
-    linear-gradient(180deg,rgba(2,5,12,.22),rgba(2,4,9,.72)),
-    url("../arcanum-tarot/assets/arcanum-tarot-sanctuary.png") center 20%/cover fixed no-repeat,
-    #02050a!important;
-}
-body:before{
-  background:
-    radial-gradient(circle at 50% 10%,rgba(115,154,240,.16),transparent 20%),
-    radial-gradient(circle at 50% 57%,rgba(218,168,79,.10),transparent 31%),
-    linear-gradient(90deg,rgba(0,2,7,.82),transparent 22% 78%,rgba(0,2,7,.82))!important
-}
-body:after{
-  background:
-    linear-gradient(180deg,rgba(3,6,12,.08),rgba(3,6,12,.30) 35%,rgba(1,3,8,.72) 100%)!important
-}
-.app{max-width:1920px;margin:0 auto;padding:0 22px 28px!important}
-
-/* refined masthead */
-.topbar{
-  margin:0 -22px!important;
-  min-height:74px!important;
-  padding:12px 32px!important;
-  background:linear-gradient(180deg,rgba(3,6,13,.88),rgba(3,6,13,.68))!important;
-  border-bottom:1px solid rgba(215,173,99,.20)!important;
-  box-shadow:0 14px 45px rgba(0,0,0,.28)!important;
-  backdrop-filter:blur(22px) saturate(1.1)!important
-}
-.brand-wrap{gap:14px!important}
-.brand-mark{
-  width:50px!important;height:50px!important;
-  border:1px solid rgba(231,194,125,.65)!important;
-  background:
-    radial-gradient(circle at 50% 44%,rgba(107,148,228,.38),rgba(12,22,38,.96) 64%),
-    linear-gradient(#0f192a,#07101d)!important;
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+  backface-visibility:hidden;
+  border-radius:42% 47% 45% 44% / 34% 38% 44% 46%;
   box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.035),
-    inset 0 0 28px rgba(226,178,84,.09),
-    0 0 35px rgba(95,139,228,.10)!important
-}
-.brand{font-size:22px!important;font-weight:600!important;letter-spacing:.22em!important;color:#ecd09a!important}
-.subtitle{font-size:8px!important;letter-spacing:.23em!important;color:#7d8798!important}
-.nav{gap:34px!important}
-.nav a{
-  font:500 10px/1 system-ui!important;
-  letter-spacing:.14em!important;
-  text-transform:uppercase;
-  color:#aeb7c8!important
-}
-.nav a.active,.nav a:hover{color:#f1d39a!important}
-.nav a.active:after{
-  left:24%!important;right:24%!important;height:1px!important;
-  background:linear-gradient(90deg,transparent,#e1b96d,transparent)!important
-}
-.mode-note{font-size:8px!important;letter-spacing:.08em!important;color:#768095!important}
-
-/* layout is now stage + two floating rails, not three matching cards */
-.layout{
-  grid-template-columns:360px minmax(700px,1fr) 420px!important;
-  gap:22px!important;
-  margin-top:22px!important;
-  align-items:start!important
-}
-.panel{
-  border:none!important;
-  border-radius:0!important;
-  background:none!important;
-  box-shadow:none!important;
-  backdrop-filter:none!important;
-  overflow:visible!important
-}
-.panel:before{display:none!important}
-
-.controls,.reading{
-  position:sticky!important;
-  top:96px!important;
-  align-self:start!important
-}
-.controls .pad,.reading .pad{
-  border-radius:20px!important;
-  border:1px solid rgba(224,180,96,.22)!important;
-  background:
-    linear-gradient(180deg,rgba(8,14,25,.74),rgba(5,9,17,.82))!important;
-  backdrop-filter:blur(20px) saturate(1.08)!important;
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.45),
-    inset 0 0 0 1px rgba(255,239,204,.022)!important
-}
-.controls .pad{padding:24px 24px 22px!important}
-.reading .pad{padding:24px 24px 26px!important}
-.controls .pad:before,.reading .pad:before{
-  content:"";position:absolute;left:22px;right:22px;top:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(236,196,119,.55),transparent)
-}
-.controls h2,.reading h2{
-  font-size:27px!important;font-weight:400!important;letter-spacing:.015em!important;
-  color:#f0d59d!important
-}
-.lead{
-  margin-top:7px!important;margin-bottom:4px!important;
-  color:#929bac!important;font-size:10.5px!important;line-height:1.65!important
-}
-
-/* sectional typography like a premium settings rail */
-.step{
-  margin:21px 0 9px!important;
-  font:600 9.5px/1 system-ui!important;
-  letter-spacing:.17em!important;
-  color:#bca371!important
-}
-.step:before{
-  content:"";display:inline-block;width:16px;height:1px;margin:0 8px 3px 0;
-  background:rgba(211,167,85,.55)
-}
-
-/* selector becomes elegant horizontal editorial tiles */
-.spread-grid{grid-template-columns:1fr!important;gap:8px!important}
-.spread-option{
-  position:relative!important;
-  min-height:72px!important;
-  padding:10px 14px 10px 78px!important;
-  align-items:flex-start!important;justify-content:center!important;
-  text-align:left!important;
-  border-radius:12px!important;
-  border:1px solid rgba(97,117,151,.30)!important;
-  background:linear-gradient(180deg,rgba(11,19,33,.72),rgba(7,12,21,.78))!important;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.012)!important
-}
-.spread-option:hover{
-  transform:translateX(2px)!important;
-  border-color:rgba(170,139,194,.44)!important;
-  background:linear-gradient(180deg,rgba(15,23,39,.84),rgba(8,13,23,.88))!important
-}
-.spread-option.active{
-  border-color:rgba(223,181,99,.58)!important;
-  background:
-    radial-gradient(circle at 12% 50%,rgba(223,181,99,.10),transparent 28%),
-    linear-gradient(180deg,rgba(16,23,37,.92),rgba(9,14,23,.94))!important;
-  box-shadow:
-    inset 3px 0 0 rgba(223,181,99,.82),
-    0 12px 34px rgba(0,0,0,.18)!important
-}
-.spread-symbol{
-  position:absolute!important;left:15px!important;top:10px!important;
-  width:50px!important;height:50px!important;margin:0!important;
-  border-radius:50%!important;
-  font-size:20px!important;
-  background:radial-gradient(circle,rgba(125,102,185,.12),transparent 72%)!important
-}
-.spread-option.active .spread-symbol{
-  background:radial-gradient(circle,rgba(224,178,87,.14),transparent 72%)!important
-}
-.spread-title{
-  text-align:left!important;font-size:12.5px!important;font-weight:600!important;
-  color:#eee5d6!important
-}
-.spread-sub{
-  text-align:left!important;margin-top:5px!important;
-  font-size:8.5px!important;color:#7d8799!important;letter-spacing:.03em!important
-}
-
-/* controls use quiet luxury instead of obvious demo widgets */
-textarea,input{
-  border:1px solid rgba(183,143,75,.34)!important;
-  background:rgba(5,10,18,.62)!important;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.012)!important
-}
-textarea{min-height:92px!important}
-textarea::placeholder,input::placeholder{color:#667083}
-.seed-row{grid-template-columns:1fr 40px!important}
-.icon-btn{
-  background:rgba(8,14,24,.74)!important;
-  border:1px solid rgba(183,143,75,.32)!important
-}
-.chips{
-  display:flex!important;gap:6px!important
-}
-.chip-btn{
-  flex:1!important;min-height:34px!important;border-radius:999px!important;
-  border:1px solid rgba(95,112,139,.30)!important;
-  background:rgba(8,14,24,.64)!important;
-  font-size:8px!important
-}
-.chip-btn.active{
-  border-color:rgba(224,180,95,.52)!important;
-  background:rgba(224,180,95,.09)!important;
-  box-shadow:none!important;color:#e8c985!important
-}
-.primary{
-  min-height:54px!important;margin-top:19px!important;border-radius:12px!important;
-  color:#261707!important;
-  background:linear-gradient(90deg,#a96d21,#dfb260 32%,#f4dc9e 50%,#d5a24f 72%,#a96c21)!important;
-  box-shadow:0 14px 38px rgba(175,117,34,.18)!important;
-  letter-spacing:.09em!important
-}
-.primary:hover{transform:translateY(-1px);filter:brightness(1.035)}
-.secondary{
-  min-height:42px!important;
-  color:#cad2e1!important;border:1px solid rgba(103,128,173,.30)!important;
-  background:rgba(8,15,27,.62)!important
-}
-.note{
-  color:#737d8e!important;font-size:8.7px!important;line-height:1.65!important;
-  padding:0 2px!important
-}
-.history{border-top-color:rgba(225,177,82,.08)!important}
-.history h3{
-  font-size:14px!important;font-weight:400!important;color:#d3b77f!important;
-  letter-spacing:.02em!important
-}
-.history button{
-  border:none!important;border-radius:7px!important;
-  background:rgba(255,255,255,.018)!important;color:#858e9f!important
-}
-.history button:hover{background:rgba(225,177,82,.05)!important;color:#d8c49d!important}
-
-/* center becomes an altar, not a panel */
-.cast-table{
-  position:relative!important;
-  min-height:910px!important;
-  border-radius:28px!important;
-  overflow:hidden!important;
-  background:
-    linear-gradient(180deg,rgba(3,8,17,.10),rgba(3,8,17,.46)),
-    radial-gradient(circle at 50% 32%,rgba(87,126,211,.16),transparent 25%),
-    radial-gradient(circle at 50% 69%,rgba(221,172,78,.09),transparent 31%)!important;
-  box-shadow:inset 0 0 120px rgba(0,0,0,.18)!important
-}
-.cast-table:before{
-  inset:38px!important;
-  border:1px solid rgba(222,177,89,.13)!important;
-  box-shadow:
-    inset 0 0 140px rgba(25,43,78,.14),
-    0 0 90px rgba(208,155,58,.04)!important
-}
-.cast-table:after{
-  background:
-    radial-gradient(circle at 50% 50%,transparent 0 210px,rgba(216,166,73,.13) 211px 212px,transparent 213px 272px,rgba(216,166,73,.055) 273px 274px,transparent 275px),
-    radial-gradient(circle at 50% 50%,rgba(39,62,105,.12),transparent 55%)!important
-}
-.hero{padding-top:42px!important}
-.hero-kicker{
-  color:#8f98a9!important;font-size:7.5px!important;letter-spacing:.42em!important
-}
-.hero h1{
-  margin-top:12px!important;
-  font-size:51px!important;font-weight:400!important;letter-spacing:.18em!important;
-  color:#f2d79f!important;
-  text-shadow:0 0 30px rgba(215,164,73,.22)!important
-}
-.hero p{
-  margin-top:7px!important;font-size:8px!important;letter-spacing:.25em!important;
-  color:#818b9e!important
-}
-.hero-luxury-meta{
-  display:flex;justify-content:center;gap:8px;margin-top:16px
-}
-.hero-luxury-meta span{
-  padding:6px 10px;border-radius:999px;
-  border:1px solid rgba(163,182,215,.15);
-  background:rgba(5,10,18,.26);
-  color:#8994a6;font:600 7px/1 system-ui;letter-spacing:.10em;text-transform:uppercase
-}
-.rune-circle{
-  top:152px!important;width:260px!important;height:260px!important;
-  border-color:rgba(226,183,101,.28)!important;
-  box-shadow:
-    inset 0 0 90px rgba(83,121,203,.15),
-    0 0 65px rgba(96,136,218,.10)!important
-}
-.rune-circle:before{
-  inset:24px!important;border-color:rgba(226,183,101,.14)!important
-}
-.rune-circle:after{
-  font-size:21px!important;letter-spacing:.20em!important;opacity:.75!important
-}
-.altar-orbit{
-  position:absolute;left:50%;top:118px;transform:translateX(-50%);
-  width:330px;height:330px;border-radius:50%;
-  border:1px solid rgba(117,149,211,.08);z-index:1
-}
-.altar-orbit:before,.altar-orbit:after{
-  content:"";position:absolute;border-radius:50%;inset:24px;
-  border:1px dashed rgba(214,170,83,.08)
-}
-.altar-orbit:after{inset:54px;border-style:solid;border-color:rgba(214,170,83,.055)}
-.cast-area{
-  padding:300px 30px 42px!important;
-  max-width:940px!important;
-  align-items:start!important
-}
-.cast-help{
-  color:#6f7889!important;font-size:8px!important;letter-spacing:.06em!important;
-  text-transform:uppercase
-}
-
-/* premium rune objects: darker mineral, engraved gold */
-.rune-stone{
-  width:142px!important;height:182px!important;
-  filter:drop-shadow(0 24px 26px rgba(0,0,0,.42))!important
-}
-.rune-face{
-  border:none!important;
-  box-shadow:
-    inset 0 0 0 1px rgba(226,183,101,.42),
-    inset 0 0 35px rgba(0,0,0,.46),
-    0 22px 34px rgba(0,0,0,.48)!important
-}
-.rune-front{
-  background:
-    radial-gradient(circle at 28% 17%,rgba(255,255,255,.095) 0 2px,transparent 3px),
-    radial-gradient(circle at 77% 62%,rgba(255,255,255,.03) 0 1px,transparent 2px),
-    linear-gradient(145deg,#253a54 0%,#162334 52%,#0a111b 100%)!important
+    inset 0 0 0 1px rgba(226,183,101,.40),
+    inset 0 0 36px rgba(0,0,0,.46),
+    0 22px 34px rgba(0,0,0,.48);
 }
 .rune-back{
   background:
     radial-gradient(circle at 31% 22%,rgba(255,255,255,.07) 0 2px,transparent 3px),
-    linear-gradient(145deg,#17263a,#0a111c 70%,#0a1019)!important
+    linear-gradient(145deg,#17263a,#0a111c 70%,#0a1019);
 }
-.rune-back:before{
-  border-color:rgba(215,170,82,.13)!important
+.rune-back::before{
+  content:"";
+  position:absolute;
+  inset:7px;
+  border-radius:inherit;
+  border:1px solid rgba(215,170,82,.12);
 }
-.rune-back:after{
-  color:#c99c4f!important;font-size:57px!important;
-  text-shadow:0 0 12px rgba(203,156,68,.24)!important
+.rune-back::after{
+  content:"ᛟ";
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  color:#c99b4d;
+  font-size:58px;
+  text-shadow:0 0 12px rgba(203,156,68,.22);
 }
-.rune-front:before{
-  border-color:rgba(232,193,117,.28)!important
+.rune-front{
+  transform:rotateY(180deg);
+  background:
+    radial-gradient(circle at 28% 17%,rgba(255,255,255,.095) 0 2px,transparent 3px),
+    radial-gradient(circle at 77% 62%,rgba(255,255,255,.03) 0 1px,transparent 2px),
+    linear-gradient(145deg,#253a54 0%,#162334 52%,#0a111b 100%);
+}
+.rune-front::before{
+  content:"";
+  position:absolute;
+  inset:7px;
+  border-radius:inherit;
+  border:1px solid rgba(232,193,117,.27);
 }
 .rune-glyph{
-  color:#e9bd67!important;font-size:88px!important;
-  text-shadow:
-    0 1px 0 #5d3d14,
-    0 0 11px rgba(230,183,91,.32),
-    0 0 26px rgba(104,144,226,.12)!important
+  position:absolute;
+  inset:0 0 42px;
+  display:grid;
+  place-items:center;
+  color:#e8bc66;
+  font-size:88px;
+  text-shadow:0 1px 0 #5d3d14,0 0 11px rgba(230,183,91,.30),0 0 26px rgba(104,144,226,.11);
 }
 .rune-nameplate{
-  left:10px!important;right:10px!important;bottom:10px!important;
-  border-top:1px solid rgba(221,174,85,.40)!important;
-  background:linear-gradient(180deg,rgba(6,10,17,.24),rgba(3,6,11,.92))!important
+  position:absolute;
+  left:10px;right:10px;bottom:10px;
+  min-height:40px;
+  border-top:1px solid rgba(221,174,85,.38);
+  border-radius:0 0 18px 18px;
+  background:linear-gradient(180deg,rgba(6,10,17,.22),rgba(3,6,11,.92));
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
 }
-.rune-name{font-size:10.5px!important;letter-spacing:.14em!important;color:#efd094!important}
-.rune-meaning{font-size:5.8px!important;letter-spacing:.16em!important;color:#798395!important}
+.rune-name{
+  color:#efd094;
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.rune-meaning{
+  margin-top:2px;
+  color:#788294;
+  font:6px/1 system-ui,sans-serif;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.reversed-badge{
+  position:absolute;
+  top:10px;right:8px;
+  padding:3px 5px;
+  border-radius:999px;
+  border:1px solid rgba(224,177,91,.52);
+  color:#e5bf72;
+  background:rgba(4,7,13,.82);
+  font:700 5px/1 system-ui,sans-serif;
+  letter-spacing:.08em;
+}
 .position{
-  font-size:12px!important;font-weight:400!important;letter-spacing:.03em!important;color:#e0bf7d!important
+  margin-top:11px;
+  color:#dfbf7e;
+  font-size:12px;
+  letter-spacing:.03em;
 }
 .position-sub{
-  font-size:7.5px!important;letter-spacing:.10em!important;color:#747f92!important
+  max-width:150px;
+  margin:4px auto 0;
+  color:#727d90;
+  font:7.5px/1.35 system-ui,sans-serif;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+}
+.cast-table.casting .rune-stone{animation:runeCast .84s cubic-bezier(.2,.8,.2,1)}
+@keyframes runeCast{
+  0%{transform:translateY(0) rotate(0)}
+  30%{transform:translateY(-38px) rotate(-8deg)}
+  60%{transform:translateY(12px) rotate(5deg)}
+  100%{transform:none}
 }
 
-/* editorial reading rail */
-.reading .pad{min-height:690px}
+/* editorial reading */
+.reading-head{margin-bottom:2px}
 .reading .tabs{
-  margin-top:16px!important;border:none!important;border-bottom:1px solid rgba(116,135,166,.20)!important;
-  border-radius:0!important;overflow:visible!important
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  margin:17px 0 0;
+  border-bottom:1px solid rgba(111,132,167,.18);
 }
 .reading .tabs button{
   position:relative;
-  min-height:38px!important;border:none!important;
-  background:transparent!important;color:#7f899b!important;
-  font-size:8.5px!important;letter-spacing:.10em!important;text-transform:uppercase!important
+  min-height:38px;
+  border:0;
+  color:#7f899a;
+  background:transparent;
+  font:600 8.5px/1 system-ui,sans-serif;
+  letter-spacing:.10em;
+  text-transform:uppercase;
 }
-.reading .tabs button.active{
-  background:transparent!important;color:#e2c88e!important;box-shadow:none!important
+.reading .tabs button.active{color:#e1c68c}
+.reading .tabs button.active::after{
+  content:"";
+  position:absolute;
+  left:22%;right:22%;bottom:-1px;height:1px;
+  background:#ddb264;
 }
-.reading .tabs button.active:after{
-  content:"";position:absolute;left:22%;right:22%;bottom:-1px;height:1px;background:#dfb265
-}
+.view{display:none}.view.active{display:block}
 .status{
-  margin-top:14px!important;
-  border:none!important;border-radius:0!important;
-  border-left:1px solid rgba(110,141,196,.34)!important;
-  background:transparent!important;
-  padding:8px 0 8px 11px!important;
-  color:#788396!important;font-size:8px!important
+  margin-top:14px;
+  padding:8px 0 8px 11px;
+  border-left:1px solid rgba(110,141,196,.32);
+  color:#768194;
+  background:transparent;
+  font:8px/1.5 system-ui,sans-serif;
 }
 .summary,.explanation{
-  border:none!important;border-radius:0!important;
-  border-top:1px solid rgba(220,177,91,.14)!important;
-  border-bottom:1px solid rgba(220,177,91,.10)!important;
-  background:transparent!important;
-  box-shadow:none!important;
-  padding:14px 0!important
+  margin-top:10px;
+  padding:14px 0;
+  border-top:1px solid rgba(220,177,91,.13);
+  border-bottom:1px solid rgba(220,177,91,.09);
+  color:#c3c0c4;
+  background:transparent;
+  font:10.5px/1.7 system-ui,sans-serif;
 }
-.summary{font-size:10.5px!important;line-height:1.7!important;color:#c5c1c5!important}
 .reading-entry{
-  position:relative!important;padding:16px 0!important;
-  border-top:1px solid rgba(255,255,255,.045)!important
+  padding:16px 0;
+  border-top:1px solid rgba(255,255,255,.045);
 }
-.entry-head{gap:12px!important}
+.reading-entry:first-child{border-top:0}
+.entry-head{display:flex;gap:12px;align-items:center}
 .mini-stone{
-  width:44px!important;height:56px!important;
-  border:none!important;
-  box-shadow:inset 0 0 0 1px rgba(221,174,85,.42),inset 0 0 14px rgba(0,0,0,.35)!important;
-  background:linear-gradient(145deg,#253850,#101927)!important
+  width:44px;height:56px;
+  display:grid;place-items:center;
+  border-radius:42% 47% 45% 44% / 34% 38% 44% 46%;
+  color:#e4b865;
+  font-size:27px;
+  background:linear-gradient(145deg,#24374f,#101927);
+  box-shadow:inset 0 0 0 1px rgba(221,174,85,.40),inset 0 0 14px rgba(0,0,0,.35);
 }
 .entry-title h4{
-  font-size:13.5px!important;font-weight:500!important;color:#e6cb91!important
+  margin:0;
+  color:#e6cb92;
+  font-size:13.5px;
+  font-weight:500;
 }
-.entry-title small{font-size:7.5px!important;letter-spacing:.08em!important}
+.entry-title small{
+  display:block;
+  margin-top:3px;
+  color:#788294;
+  font:7.5px/1.3 system-ui,sans-serif;
+  letter-spacing:.08em;
+}
 .entry-text{
-  margin-top:9px!important;
-  font-size:10px!important;line-height:1.72!important;color:#bbb9c0!important
+  margin-top:9px;
+  color:#bcb9c0;
+  font:10px/1.72 system-ui,sans-serif;
 }
 .rule-box{
-  margin-top:9px!important;padding:8px 10px!important;
-  border-left:1px solid rgba(138,107,192,.52)!important;
-  background:rgba(126,96,181,.035)!important;
-  color:#898294!important;font-size:7.8px!important
+  margin-top:9px;
+  padding:8px 10px;
+  border-left:1px solid rgba(138,107,192,.50);
+  color:#898294;
+  background:rgba(126,96,181,.03);
+  font:7.8px/1.5 system-ui,sans-serif;
 }
 .explanation h3{
-  font-size:14px!important;font-weight:400!important;letter-spacing:.03em!important;color:#ddc18a!important
+  margin:0 0 6px;
+  color:#dbc08a;
+  font-size:14px;
+  font-weight:400;
 }
-
-/* library behaves like a premium specimen index */
-.library-grid{grid-template-columns:repeat(3,1fr)!important;gap:8px!important}
+.library-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  max-height:690px;
+  margin-top:12px;
+  overflow:auto;
+}
 .library-rune{
-  min-height:124px!important;padding:12px 8px!important;
-  border:1px solid rgba(92,110,139,.22)!important;
-  border-radius:12px!important;
-  background:rgba(8,14,24,.48)!important;
-  box-shadow:none!important
+  min-height:124px;
+  padding:12px 8px;
+  border-radius:12px;
+  border:1px solid rgba(92,110,139,.22);
+  color:#cad1df;
+  background:rgba(8,14,24,.46);
+  text-align:center;
 }
 .library-rune:hover{
-  transform:translateY(-2px)!important;
-  border-color:rgba(213,171,91,.38)!important;
-  background:rgba(11,18,29,.68)!important
+  transform:translateY(-2px);
+  border-color:rgba(213,171,91,.36);
+  background:rgba(11,18,29,.66);
 }
-.library-rune .glyph{font-size:38px!important;color:#dfb666!important}
-.library-rune strong{font-size:9.5px!important;font-weight:600!important;letter-spacing:.06em!important}
-.library-rune small{font-size:6.6px!important;color:#737d8f!important}
+.library-rune .glyph{
+  display:block;
+  color:#deb566;
+  font-size:38px;
+}
+.library-rune strong{
+  display:block;
+  margin-top:4px;
+  color:#e6d5b4;
+  font-size:9.5px;
+  font-weight:600;
+  letter-spacing:.06em;
+}
+.library-rune small{
+  display:block;
+  margin-top:4px;
+  color:#727c8e;
+  font:6.6px/1.35 system-ui,sans-serif;
+}
+footer{
+  padding:18px 0 6px;
+  color:#5f697b;
+  text-align:center;
+  font:8px/1.5 system-ui,sans-serif;
+  letter-spacing:.03em;
+}
 
-/* responsive */
 @media(max-width:1500px){
-  .layout{grid-template-columns:330px minmax(620px,1fr) 390px!important;gap:16px!important}
+  .layout{grid-template-columns:320px minmax(620px,1fr) 380px;gap:16px}
+  .rune-stone{width:128px;height:166px}
+  .cast-area[data-count="5"]{grid-template-columns:repeat(3,minmax(120px,1fr))}
 }
 @media(max-width:1180px){
-  .layout{grid-template-columns:320px 1fr!important}
-  .reading{grid-column:1/-1!important;position:relative!important;top:auto!important}
-  .controls{position:sticky!important}
+  .layout{grid-template-columns:310px 1fr}
+  .reading{grid-column:1/-1;position:relative;top:auto}
 }
 @media(max-width:760px){
-  .app{padding:0 12px 18px!important}
-  .topbar{margin:0 -12px!important;padding:12px 16px!important}
-  .layout{grid-template-columns:1fr!important}
-  .controls,.reading{position:relative!important;top:auto!important}
-  .cast-table{min-height:780px!important}
-  .cast-area{padding-top:285px!important}
+  .app{padding:0 12px 18px}
+  .topbar{margin:0 -12px;padding:12px 16px;grid-template-columns:1fr;gap:10px}
+  .nav{justify-content:flex-start;gap:14px}
+  .mode-note{text-align:left}
+  .layout{grid-template-columns:1fr}
+  .controls,.reading{position:relative;top:auto}
+  .cast-table{min-height:780px}
+  .cast-area{grid-template-columns:repeat(2,1fr);padding-top:286px}
+  .library-grid{grid-template-columns:repeat(3,1fr)}
 }
 
 </style>
 </head>
+
 <body>
 <div class="app">
   <header class="topbar">
     <div class="brand-wrap">
       <div class="brand-mark">ᛟ</div>
-      <div><div class="brand">ARCANUM RUNES</div><div class="subtitle">ELDER FUTHARK CASTING · 24 RUNES</div></div>
+      <div>
+        <div class="brand">ARCANUM RUNES</div>
+        <div class="subtitle">Elder Futhark Divination · 24 Runes</div>
+      </div>
     </div>
     <nav class="nav">
       <a href="../arcanum-tarot/standalone.html">Tarot</a>
@@ -1082,30 +813,50 @@ textarea::placeholder,input::placeholder{color:#667083}
       <a href="#" data-nav="library">Codex</a>
       <a href="#" data-nav="history">Casting Journal</a>
     </nav>
-    <div class="mode-note">Rule-based interpretation · fresh random casting · optional seeded replay</div>
+    <div class="mode-note">Private, rule-based interpretation with fresh random casting and optional deterministic replay.</div>
   </header>
 
   <main class="layout">
     <aside class="controls">
       <div class="pad">
-        <h2>Create Your Casting</h2>
-        <p class="lead">Choose a spread, focus your question, then cast the runes within the sanctuary circle.</p>
+        <div class="rail-eyebrow">Ritual Console</div>
+        <h2>Open the Runes</h2>
+        <p class="lead">Choose the shape of the reading, hold your question in mind, then cast.</p>
 
-        <div class="step">1. Choose a Casting</div>
+        <div class="step">Choose a casting</div>
         <div class="spread-grid">
-          <button class="spread-option" data-spread="one"><span class="spread-symbol">ᛟ</span><span class="spread-title">One Rune</span><span class="spread-sub">A single guiding theme</span></button>
-          <button class="spread-option active" data-spread="three"><span class="spread-symbol">ᚠ ᛃ ᛞ</span><span class="spread-title">Three Norns</span><span class="spread-sub">Past · Present · Future</span></button>
-          <button class="spread-option" data-spread="five"><span class="spread-symbol">ᛉ ✦ ᛏ</span><span class="spread-title">Five Rune Cross</span><span class="spread-sub">Situation · challenge · action</span></button>
-          <button class="spread-option" data-spread="nine"><span class="spread-symbol">ᚱ ᛇ ᛋ</span><span class="spread-title">Nine Rune Cast</span><span class="spread-sub">A broader pattern reading</span></button>
+          <button class="spread-option" data-spread="one">
+            <span class="spread-symbol">ᛟ</span>
+            <span class="spread-title">One Rune</span>
+            <span class="spread-sub">A single guiding theme</span>
+          </button>
+          <button class="spread-option active" data-spread="three">
+            <span class="spread-symbol">ᚠ ᛃ ᛞ</span>
+            <span class="spread-title">Three Norns</span>
+            <span class="spread-sub">Past · Present · Future</span>
+          </button>
+          <button class="spread-option" data-spread="five">
+            <span class="spread-symbol">ᛉ ✦ ᛏ</span>
+            <span class="spread-title">Five Rune Cross</span>
+            <span class="spread-sub">Situation · challenge · action</span>
+          </button>
+          <button class="spread-option" data-spread="nine">
+            <span class="spread-symbol">ᚱ ᛇ ᛋ</span>
+            <span class="spread-title">Nine Rune Cast</span>
+            <span class="spread-sub">A wider field of influence</span>
+          </button>
         </div>
 
-        <div class="step">2. Your Question</div>
-        <textarea id="question" placeholder="What should I understand about the situation before me?"></textarea>
+        <div class="step">Your question</div>
+        <textarea id="question" placeholder="What pattern, lesson, or direction should I understand now?"></textarea>
 
-        <div class="step">3. Casting Seed (Optional)</div>
-        <div class="seed-row"><input id="seed" placeholder="Leave blank for a fresh casting" autocomplete="off"><button id="clearSeed" class="icon-btn" type="button" title="Clear seed">⟳</button></div>
+        <div class="step">Casting seed</div>
+        <div class="seed-row">
+          <input id="seed" placeholder="Leave blank for a fresh casting" autocomplete="off">
+          <button id="clearSeed" class="icon-btn" type="button" title="Clear seed">⟳</button>
+        </div>
 
-        <div class="step">4. Modern Reversal Mode</div>
+        <div class="step">Reversal mode</div>
         <div class="chips">
           <button class="chip-btn active" data-reversal="0">Off</button>
           <button class="chip-btn" data-reversal=".10">10%</button>
@@ -1113,34 +864,63 @@ textarea::placeholder,input::placeholder{color:#667083}
           <button class="chip-btn" data-reversal=".25">25%</button>
         </div>
 
-        <button id="castButton" class="primary">✦ Cast the Runes →</button>
+        <button id="castButton" class="primary">✦ Cast the Runes</button>
         <button id="dailyButton" class="secondary">☾ Rune of the Day</button>
 
-        <p class="note">Runes are presented here as a reflective divination system. Meanings are rule-based; the draw itself is random. Reversal mode is optional and uses modern interpretive conventions.</p>
+        <p class="note">Reflective divination only. The draw is random; interpretation is applied consistently from the rune, position, orientation, and local pattern.</p>
 
-        <div class="history"><h3>Recent Castings</h3><div id="history"></div></div>
+        <div class="history">
+          <h3>Recent Castings</h3>
+          <div id="history"></div>
+        </div>
       </div>
     </aside>
 
     <section class="cast-table" id="castTable">
-      <div class="hero"><div class="hero-kicker">The Arcanum Archive presents</div><h1>RUNE CASTING</h1><p>Symbols · cycles · choices · reflection</p><div class="hero-luxury-meta"><span>Elder Futhark</span><span>24 Runes</span><span>Rule-Based</span></div></div>
+      <div class="hero">
+        <div class="hero-kicker">The Arcanum Archive presents</div>
+        <h1>RUNE CASTING</h1>
+        <p>Symbols · Cycles · Choice · Reflection</p>
+        <div class="hero-luxury-meta">
+          <span>Elder Futhark</span>
+          <span>24 Runes</span>
+          <span>Rule-Based</span>
+        </div>
+      </div>
       <div class="altar-orbit"></div>
       <div class="rune-circle"></div>
       <div id="castArea" class="cast-area"></div>
-      <div class="cast-help">Click any rune stone to reveal or conceal it.</div>
+      <div class="cast-help">Touch any stone to reveal or conceal it</div>
     </section>
 
     <aside class="reading">
       <div class="pad">
-        <h2>Your Rune Reading</h2>
+        <div class="reading-head">
+          <div class="rail-eyebrow">Interpretation</div>
+          <h2>Your Reading</h2>
+          <p class="lead">A structured interpretation of the symbols you cast.</p>
+        </div>
+
         <div class="tabs">
           <button class="active" data-tab="reading">Reading</button>
-          <button data-tab="runes">Rune Meanings</button>
-          <button data-tab="library">Library</button>
+          <button data-tab="runes">Meanings</button>
+          <button data-tab="library">Codex</button>
         </div>
-        <div id="readingView" class="view active"><div id="status" class="status">Choose a casting and cast the runes.</div><div id="summary"></div><div id="reading"></div><div id="explanation"></div></div>
-        <div id="runesView" class="view"><div id="meanings"></div></div>
-        <div id="libraryView" class="view"><div id="library" class="library-grid"></div></div>
+
+        <div id="readingView" class="view active">
+          <div id="status" class="status">Choose a casting and cast the runes.</div>
+          <div id="summary"></div>
+          <div id="reading"></div>
+          <div id="explanation"></div>
+        </div>
+
+        <div id="runesView" class="view">
+          <div id="meanings"></div>
+        </div>
+
+        <div id="libraryView" class="view">
+          <div id="library" class="library-grid"></div>
+        </div>
       </div>
     </aside>
   </main>
