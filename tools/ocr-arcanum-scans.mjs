@@ -84,21 +84,23 @@ try {
     try {
       const info = await parser.getInfo({ parsePageInfo: false });
       const totalPages = Number(info?.total || source.pageCount || 0);
-      let pagesToProcess = pageLimit > 0 ? Math.min(totalPages, pageLimit) : totalPages;
-      if (maxTotalPages > 0) {
-        const remainingBudget = Math.max(0, maxTotalPages - totalPageBudgetUsed);
-        pagesToProcess = Math.min(pagesToProcess, remainingBudget);
-      }
+      const pageRecords = [];
+      const remainingBatchBudget = maxTotalPages > 0
+        ? Math.max(0, maxTotalPages - newlyProcessedPages)
+        : Number.POSITIVE_INFINITY;
+      const newPageTarget = pageLimit > 0
+        ? Math.min(pageLimit, remainingBatchBudget)
+        : remainingBatchBudget;
 
-      if (pagesToProcess <= 0) {
+      if (newPageTarget <= 0) {
         console.log("\nPage budget reached; stopping OCR batch.");
         break;
       }
-      const pageRecords = [];
 
-      console.log(`\n[${docIndex + 1}/${docs.length}] ${source.filename} — ${totalPages} pages, OCR ${pagesToProcess}`);
+      console.log(`\n[${docIndex + 1}/${docs.length}] ${source.filename} — ${totalPages} pages, up to ${Number.isFinite(newPageTarget) ? newPageTarget : totalPages} new OCR pages`);
 
-      for (let pageNumber = 1; pageNumber <= pagesToProcess; pageNumber += 1) {
+      let newPagesForDocument = 0;
+      for (let pageNumber = 1; pageNumber <= totalPages; pageNumber += 1) {
         const pageBase = `${source.id}-p${String(pageNumber).padStart(5, "0")}`;
         const imagePath = path.join(outputRoot, "pages", `${pageBase}.png`);
         const textPath = path.join(outputRoot, "text", `${pageBase}.txt`);
@@ -107,9 +109,11 @@ try {
           const text = fs.readFileSync(textPath, "utf8");
           pageRecords.push({ page: pageNumber, status: "cached", imagePath, textPath, textChars: text.length });
           cachedPages += 1;
-          totalPageBudgetUsed += 1;
           continue;
         }
+
+        if (newPagesForDocument >= newPageTarget) break;
+        if (maxTotalPages > 0 && newlyProcessedPages >= maxTotalPages) break;
 
         const screenshot = await parser.getScreenshot({
           partial: [pageNumber],
@@ -142,8 +146,9 @@ try {
         });
 
         newlyProcessedPages += 1;
-        totalPageBudgetUsed += 1;
-        console.log(`  page ${pageNumber}/${pagesToProcess}: ${text.length} chars · confidence ${Number(result?.data?.confidence || 0).toFixed(1)}`);
+        newPagesForDocument += 1;
+        totalPageBudgetUsed = newlyProcessedPages + cachedPages;
+        console.log(`  page ${pageNumber}/${totalPages}: ${text.length} chars · confidence ${Number(result?.data?.confidence || 0).toFixed(1)}`);
       }
 
       const combined = pageRecords
@@ -160,8 +165,9 @@ try {
         sourcePath: source.sourcePath,
         status: "ocr-complete",
         totalPages,
-        pagesProcessed: pagesToProcess,
-        completeDocument: pagesToProcess === totalPages,
+        pagesProcessed: pageRecords.length,
+        newlyProcessedPages: newPagesForDocument,
+        completeDocument: pageRecords.filter((page) => page.textPath && fs.existsSync(page.textPath)).length >= totalPages,
         combinedTextPath: combinedPath.replaceAll("\\", "/"),
         textChars: combined.length,
         pages: pageRecords,
@@ -197,7 +203,7 @@ const output = {
     }, {}),
     newlyProcessedPages,
     cachedPages,
-    totalPageBudgetUsed,
+    totalPageBudgetUsed: newlyProcessedPages + cachedPages,
   },
   records,
 };
