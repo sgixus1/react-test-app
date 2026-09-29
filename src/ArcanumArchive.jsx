@@ -3,7 +3,7 @@ import { archiveStats, categories, learningChapters, libraryEntries } from "./ar
 import { useArchiveMemory } from "./useArchiveMemory";
 import "./arcanum.css";
 
-const assetUrl = (path) => (import.meta.env.BASE_URL || "/") + path.replace(/^\\/+/, "");
+const assetUrl = (path) => (import.meta.env.BASE_URL || "/") + path.replace(/^[/]+/, "");
 
 const visualMap = {
   spells: assetUrl("arcanum/spells.svg"),
