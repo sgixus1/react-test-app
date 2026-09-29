@@ -1084,6 +1084,138 @@ body:after{
   backdrop-filter:none!important;
 }
 
+
+/* === Universal Tarot title enforcement v8 === */
+.card-image-shell{
+  position:relative;
+  overflow:hidden;
+  border-radius:inherit;
+  background:#06080d;
+}
+.card-image-shell>img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+}
+.card-image-title{
+  position:absolute;
+  z-index:8;
+  left:5px;
+  right:5px;
+  bottom:5px;
+  min-height:28px;
+  padding:6px 5px 5px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  border-top:1px solid rgba(221,169,75,.85);
+  border-left:1px solid rgba(221,169,75,.48);
+  border-right:1px solid rgba(221,169,75,.48);
+  border-bottom:1px solid rgba(221,169,75,.48);
+  border-radius:3px;
+  color:#f5d58e;
+  background:linear-gradient(180deg,rgba(7,9,14,.68),rgba(2,3,7,.96));
+  box-shadow:0 -6px 18px rgba(0,0,0,.56),inset 0 0 12px rgba(226,171,71,.05);
+  font:700 8px/1.08 Georgia,serif;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  text-shadow:0 1px 5px #000;
+  pointer-events:none;
+}
+.card-image-title .reversed-mini{
+  margin-left:5px;
+  padding:2px 4px;
+  border:1px solid #a87932;
+  border-radius:999px;
+  color:#eecb83;
+  font:700 5px/1 system-ui;
+  letter-spacing:.08em;
+}
+
+/* right reading thumbnails */
+.reading-thumb{
+  position:relative!important;
+  overflow:hidden!important;
+}
+.reading-thumb.card-image-shell .card-image-title{
+  left:2px;right:2px;bottom:2px;
+  min-height:18px;
+  padding:4px 2px 3px;
+  font-size:5.7px;
+  letter-spacing:.025em;
+  line-height:1.02;
+}
+.reading-thumb.card-image-shell img{
+  width:100%;height:100%;object-fit:cover
+}
+
+/* library cards: title is physically overlaid on card, not merely beneath it */
+.library-card-art{
+  position:relative;
+  width:100%;
+  aspect-ratio:2/3;
+  overflow:hidden;
+  border-radius:8px;
+  border:1px solid #9b7135;
+  background:#080a10;
+  box-shadow:0 10px 25px #0008;
+}
+.library-card-art img{
+  width:100%;height:100%;object-fit:cover;display:block
+}
+.library-card-art .card-image-title{
+  min-height:31px;
+  padding:7px 4px 5px;
+  font-size:7.5px;
+}
+.library-card>span.library-caption{
+  display:block;
+  color:#8c8390;
+  font:8px/1.3 system-ui;
+  margin-top:5px
+}
+
+/* large card viewer */
+.card-detail-art{
+  position:relative;
+}
+.card-detail-art.card-image-shell{
+  border:1px solid #c08e43;
+  border-radius:12px;
+  box-shadow:0 25px 60px #000c;
+}
+.card-detail-art.card-image-shell>img{
+  width:100%;
+  height:auto;
+  aspect-ratio:auto;
+  border:0!important;
+  border-radius:12px;
+  box-shadow:none!important;
+}
+.card-detail-art.card-image-shell .card-image-title{
+  left:10px;right:10px;bottom:10px;
+  min-height:48px;
+  padding:10px 8px 8px;
+  font-size:14px;
+  letter-spacing:.07em;
+}
+
+/* Main reading card nameplate must always be visible above the artwork. */
+.arcanum-card-nameplate{
+  z-index:12!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+.arcanum-card-name{
+  display:block!important;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
 </style>
 </head>
 <body>
@@ -2236,7 +2368,7 @@ window.ARCANUM_TAROT = (() => {
     const overlay=q("#cardOverlay");
     if(!overlay||!card)return;
     q("#cardDetail").innerHTML=
-      '<div class="card-detail-art"><img src="'+imgUrl(card)+'" alt="'+card.name+'"></div>'+
+      '<div class="card-detail-art card-image-shell"><img src="'+imgUrl(card)+'" alt="'+card.name+'"><div class="card-image-title">'+card.name+(reversed?'<span class="reversed-mini">REVERSED</span>':'')+'</div></div>'+
       '<div class="card-detail-copy">'+
         '<div class="keywords">'+card.arcana+' · '+card.suit+' · '+card.element+(reversed?' · Reversed':' · Upright')+'</div>'+
         '<h2>'+card.name+'</h2>'+
@@ -2261,7 +2393,8 @@ window.ARCANUM_TAROT = (() => {
       wrap.className="reading-card-row";
       const thumb=document.createElement("div");
       thumb.className="reading-thumb";
-      thumb.innerHTML='<img src="'+imgUrl(draw.card)+'" alt="'+draw.card.name+'">';
+      thumb.classList.add("card-image-shell");
+      thumb.innerHTML='<img src="'+imgUrl(draw.card)+'" alt="'+draw.card.name+'"><div class="card-image-title">'+draw.card.name+(draw.reversed?'<span class="reversed-mini">REV</span>':'')+'</div>';
       const copy=document.createElement("div");
       copy.className="reading-card-copy";
       while(entry.firstChild)copy.appendChild(entry.firstChild);
@@ -2280,7 +2413,7 @@ window.ARCANUM_TAROT = (() => {
     const render=()=>{
       const term=(input.value||"").toLowerCase().trim();
       grid.innerHTML=cards.filter(c=>!term||c.name.toLowerCase().includes(term)||c.suit.toLowerCase().includes(term)||c.arcana.toLowerCase().includes(term))
-        .map(c=>'<div class="library-card" data-card="'+c.id+'"><img loading="lazy" src="'+imgUrl(c)+'" alt="'+c.name+'"><span>'+c.name+'</span></div>').join("");
+        .map(c=>'<div class="library-card" data-card="'+c.id+'"><div class="library-card-art card-image-shell"><img loading="lazy" src="'+imgUrl(c)+'" alt="'+c.name+'"><div class="card-image-title">'+c.name+'</div></div><span class="library-caption">'+c.arcana+(c.arcana==="Minor"?' · '+c.suit:' · Major Arcana')+'</span></div>').join("");
     };
     input.addEventListener("input",render);render();
     grid.addEventListener("click",e=>{
@@ -2587,6 +2720,30 @@ window.ARCANUM_TAROT = (() => {
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",markBackgroundState);
   else markBackgroundState();
+})();
+</script>
+
+
+<script>
+(() => {
+  "use strict";
+  function verifyVisibleTarotTitles(){
+    const state=window.__currentTarotReading;
+    if(!state)return true;
+    const faces=[...document.querySelectorAll("#spreadArea .arcanum-card-face")];
+    return faces.every((face,i)=>{
+      const expected=state.draws?.[i]?.card?.name?.trim().toUpperCase();
+      const actual=face.querySelector(".arcanum-card-name")?.textContent?.trim().toUpperCase();
+      return !expected || actual===expected;
+    });
+  }
+  window.verifyVisibleTarotTitles=verifyVisibleTarotTitles;
+  const root=document.getElementById("spreadArea");
+  if(root){
+    new MutationObserver(()=>setTimeout(()=>{
+      if(!verifyVisibleTarotTitles()) console.error("Tarot title verification failed");
+    },0)).observe(root,{childList:true,subtree:true});
+  }
 })();
 </script>
 
