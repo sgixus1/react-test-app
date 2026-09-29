@@ -3,20 +3,21 @@
  * Arcanum Archive source extraction engine.
  *
  * Reads public/arcanum/source-manifest.json and an extracted source root.
- * It never edits the original library. Outputs are written beneath:
- *   public/arcanum/extracted/
+ * Original library files are never modified.
  *
- * Built-in support:
- *   .txt .md .json .csv .html .htm
+ * Native parsers:
+ *   PDF  -> Mozilla PDF.js (pdfjs-dist)
+ *   DOCX -> Mammoth
+ *   TXT/MD/CSV/JSON/HTML -> Node
+ *   Images -> copied into derived asset storage
  *
  * Optional external tools:
- *   PDF      -> pdftotext
- *   DOC/DOCX -> soffice/libreoffice (converted to txt)
- *   ZIP/RAR/7Z -> 7z / 7z.exe (asset listing + optional extraction)
+ *   DOC / RTF -> LibreOffice/soffice
+ *   ZIP/RAR/7Z -> 7-Zip
+ *   PDF fallback -> pdftotext
  *
- * Usage:
- *   node tools/extract-arcanum-sources.mjs --root "D:\\Magic-Library"
- *   node tools/extract-arcanum-sources.mjs --root ./fixtures --limit 20
+ * Exact duplicate sources are skipped by default and linked to a canonical
+ * source record. Pass --include-duplicates to process every copy.
  */
 
 import fs from "node:fs";
@@ -35,9 +36,10 @@ const manifestPath = argValue("--manifest", "public/arcanum/source-manifest.json
 const outputRoot = argValue("--output", "public/arcanum/extracted");
 const limitArg = Number(argValue("--limit", "0") || 0);
 const extractArchives = process.argv.includes("--extract-archives");
+const includeDuplicates = process.argv.includes("--include-duplicates");
 
 if (!rootArg) {
-  console.error('Usage: node tools/extract-arcanum-sources.mjs --root "<extracted-library-root>" [--limit N] [--extract-archives]');
+  console.error('Usage: node tools/extract-arcanum-sources.mjs --root "<library-root>" [--limit N] [--extract-archives] [--include-duplicates]');
   process.exit(1);
 }
 
@@ -45,17 +47,17 @@ const sourceRoot = path.resolve(rootArg);
 if (!fs.existsSync(sourceRoot)) throw new Error(`Source root does not exist: ${sourceRoot}`);
 if (!fs.existsSync(manifestPath)) throw new Error(`Manifest not found: ${manifestPath}`);
 
-const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+const manifestText = fs.readFileSync(manifestPath, "utf8").replace(/^\uFEFF/, "");
+const manifest = JSON.parse(manifestText);
 const manifestFiles = Array.isArray(manifest.files) ? manifest.files : [];
 const files = limitArg > 0 ? manifestFiles.slice(0, limitArg) : manifestFiles;
 
-fs.mkdirSync(outputRoot, { recursive: true });
-fs.mkdirSync(path.join(outputRoot, "text"), { recursive: true });
-fs.mkdirSync(path.join(outputRoot, "assets"), { recursive: true });
-fs.mkdirSync(path.join(outputRoot, "archives"), { recursive: true });
-fs.mkdirSync(path.join(outputRoot, "work"), { recursive: true });
+for (const dir of ["text", "assets", "archives", "work", "pages"]) {
+  fs.mkdirSync(path.join(outputRoot, dir), { recursive: true });
+}
 
 function commandExists(command, args = ["--version"]) {
+  if (!command) return false;
   try {
     const result = spawnSync(command, args, { encoding: "utf8", windowsHide: true, timeout: 5000 });
     return !result.error && (result.status === 0 || result.status === 1);
@@ -66,7 +68,7 @@ function commandExists(command, args = ["--version"]) {
 
 function firstAvailable(commands) {
   for (const candidate of commands) {
-    if (candidate && commandExists(candidate.command, candidate.args)) return candidate.command;
+    if (candidate?.command && commandExists(candidate.command, candidate.args)) return candidate.command;
   }
   return null;
 }
@@ -91,13 +93,35 @@ const office = firstAvailable([
   { command: "C:\\Program Files\\LibreOffice\\program\\soffice.exe", args: ["--version"] },
 ]);
 
+let pdfjs = null;
+let mammoth = null;
+let nativePdfError = null;
+let nativeDocxError = null;
+
+try {
+  pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+} catch (error) {
+  nativePdfError = error?.message || String(error);
+}
+
+try {
+  const module = await import("mammoth");
+  mammoth = module.default ?? module;
+} catch (error) {
+  nativeDocxError = error?.message || String(error);
+}
+
 const capabilities = {
+  nativePdf: Boolean(pdfjs?.getDocument),
+  nativeDocx: Boolean(mammoth?.extractRawText),
   sevenZip: Boolean(sevenZip),
   pdfToText: Boolean(pdfToText),
   office: Boolean(office),
   sevenZipPath: sevenZip,
   pdfToTextPath: pdfToText,
   officePath: office,
+  nativePdfError,
+  nativeDocxError,
 };
 
 function cleanText(text) {
@@ -107,6 +131,10 @@ function cleanText(text) {
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{4,}/g, "\n\n\n")
     .trim();
+}
+
+function hashText(text) {
+  return crypto.createHash("sha256").update(text).digest("hex");
 }
 
 function hashFile(filePath) {
@@ -128,20 +156,113 @@ function writeTextRecord(file, text, engine) {
   const cleaned = cleanText(text);
   const target = path.join(outputRoot, "text", `${file.id}.txt`);
   fs.writeFileSync(target, cleaned, "utf8");
-
   return {
     textPath: target.replaceAll("\\", "/"),
     textChars: cleaned.length,
-    textSha256: crypto.createHash("sha256").update(cleaned).digest("hex"),
+    textSha256: hashText(cleaned),
     engine,
   };
 }
 
-function readPlainText(filePath, file) {
-  return writeTextRecord(file, fs.readFileSync(filePath, "utf8"), "node:text");
+function writePageRecord(file, pageRecord) {
+  const target = path.join(outputRoot, "pages", `${file.id}.json`);
+  fs.writeFileSync(target, JSON.stringify(pageRecord, null, 2), "utf8");
+  return target.replaceAll("\\", "/");
 }
 
-function extractPdf(filePath, file) {
+function buildDuplicateCanonicalMap() {
+  const map = new Map();
+  const exactSets = Array.isArray(manifest?.duplicateSets?.exact) ? manifest.duplicateSets.exact : [];
+  for (const group of exactSets) {
+    if (!Array.isArray(group) || group.length < 2) continue;
+    const canonical = group[0];
+    for (let i = 1; i < group.length; i += 1) map.set(group[i], canonical);
+  }
+  return map;
+}
+
+const duplicateCanonical = buildDuplicateCanonicalMap();
+
+function readPlainText(filePath, file) {
+  return { status: "extracted", ...writeTextRecord(file, fs.readFileSync(filePath, "utf8"), "node:text") };
+}
+
+async function extractPdfNative(filePath, file) {
+  if (!pdfjs?.getDocument) {
+    return { status: "blocked", reason: nativePdfError || "Native PDF.js unavailable" };
+  }
+
+  const source = new Uint8Array(fs.readFileSync(filePath));
+  const loadingTask = pdfjs.getDocument({
+    data: source,
+    useSystemFonts: true,
+    disableFontFace: true,
+    isEvalSupported: false,
+    verbosity: 0,
+  });
+
+  const document = await loadingTask.promise;
+  const pages = [];
+  let totalTextChars = 0;
+
+  try {
+    for (let pageNumber = 1; pageNumber <= document.numPages; pageNumber += 1) {
+      const page = await document.getPage(pageNumber);
+      const textContent = await page.getTextContent();
+      const lines = [];
+      let line = "";
+
+      for (const item of textContent.items || []) {
+        if (!("str" in item)) continue;
+        const value = String(item.str || "");
+        if (value) line += (line && !line.endsWith(" ") ? " " : "") + value;
+        if (item.hasEOL) {
+          if (line.trim()) lines.push(line.trim());
+          line = "";
+        }
+      }
+      if (line.trim()) lines.push(line.trim());
+
+      const pageText = cleanText(lines.join("\n"));
+      totalTextChars += pageText.length;
+      pages.push({
+        page: pageNumber,
+        text: pageText,
+        textChars: pageText.length,
+        textSha256: hashText(pageText),
+      });
+      page.cleanup();
+    }
+  } finally {
+    await document.destroy();
+  }
+
+  const joined = pages
+    .map((entry) => `--- PAGE ${entry.page} ---\n${entry.text}`)
+    .join("\n\n");
+
+  const textRecord = writeTextRecord(file, joined, "pdfjs");
+  const pagePath = writePageRecord(file, {
+    version: 1,
+    sourceId: file.id,
+    sourcePath: file.path,
+    filename: file.filename,
+    pageCount: pages.length,
+    pages,
+  });
+
+  return {
+    status: totalTextChars > 0 ? "extracted" : "needs-vision",
+    ...textRecord,
+    pagePath,
+    pageCount: pages.length,
+    sourceTextChars: totalTextChars,
+    engine: "pdfjs",
+    note: totalTextChars > 0 ? null : "PDF.js found pages but no extractable text; likely scanned/image-only.",
+  };
+}
+
+function extractPdfExternal(filePath, file) {
   if (!pdfToText) return { status: "blocked", reason: "pdftotext unavailable" };
   const target = path.join(outputRoot, "text", `${file.id}.txt`);
   const result = spawnSync(pdfToText, ["-layout", "-enc", "UTF-8", filePath, target], {
@@ -158,14 +279,50 @@ function extractPdf(filePath, file) {
     status: text.length ? "extracted" : "needs-vision",
     textPath: target.replaceAll("\\", "/"),
     textChars: text.length,
-    textSha256: crypto.createHash("sha256").update(text).digest("hex"),
+    textSha256: hashText(text),
     engine: "pdftotext",
     note: text.length ? null : "PDF yielded no text and may be image-only/scanned.",
   };
 }
 
-function extractOffice(filePath, file) {
-  if (!office) return { status: "blocked", reason: "LibreOffice/soffice unavailable" };
+async function extractPdf(filePath, file) {
+  if (pdfjs?.getDocument) {
+    try {
+      return await extractPdfNative(filePath, file);
+    } catch (error) {
+      if (!pdfToText) {
+        return { status: "error", reason: `PDF.js failed: ${error?.message || String(error)}`, engine: "pdfjs" };
+      }
+      const fallback = extractPdfExternal(filePath, file);
+      return {
+        ...fallback,
+        note: [`PDF.js failed: ${error?.message || String(error)}`, fallback.note].filter(Boolean).join(" | "),
+      };
+    }
+  }
+  return extractPdfExternal(filePath, file);
+}
+
+async function extractDocx(filePath, file) {
+  if (!mammoth?.extractRawText) {
+    return { status: "blocked", reason: nativeDocxError || "Mammoth unavailable" };
+  }
+
+  try {
+    const result = await mammoth.extractRawText({ path: filePath });
+    const record = writeTextRecord(file, result.value || "", "mammoth:raw-text");
+    return {
+      status: record.textChars ? "extracted" : "needs-review",
+      ...record,
+      warnings: (result.messages || []).map((message) => message.message || String(message)).slice(0, 20),
+    };
+  } catch (error) {
+    return { status: "error", reason: `Mammoth failed: ${error?.message || String(error)}`, engine: "mammoth" };
+  }
+}
+
+function extractLegacyOffice(filePath, file) {
+  if (!office) return { status: "blocked", reason: "Legacy DOC/RTF requires LibreOffice/soffice" };
 
   const workDir = path.resolve(outputRoot, "work", file.id);
   fs.mkdirSync(workDir, { recursive: true });
@@ -253,7 +410,23 @@ function listArchive(filePath, file) {
   };
 }
 
-function extractOne(file) {
+async function extractOne(file) {
+  const duplicateOf = duplicateCanonical.get(file.id);
+  if (duplicateOf && !includeDuplicates) {
+    return {
+      id: file.id,
+      sourcePath: file.path,
+      filename: file.filename,
+      kind: file.kind,
+      extension: file.extension,
+      sourceExists: true,
+      processedAt: new Date().toISOString(),
+      status: "duplicate-skipped",
+      duplicateOf,
+      note: "Exact duplicate skipped; derived content should reference canonical source.",
+    };
+  }
+
   const filePath = path.join(sourceRoot, ...String(file.path || "").split("/"));
   const result = {
     id: file.id,
@@ -267,9 +440,7 @@ function extractOne(file) {
   };
 
   if (!result.sourceExists) {
-    result.status = "missing";
-    result.reason = "Source path not found beneath extraction root";
-    return result;
+    return { ...result, status: "missing", reason: "Source path not found beneath extraction root" };
   }
 
   try {
@@ -278,11 +449,13 @@ function extractOne(file) {
 
     let extracted;
     if (plain.includes(ext)) {
-      extracted = { status: "extracted", ...readPlainText(filePath, file) };
+      extracted = readPlainText(filePath, file);
     } else if (ext === ".pdf") {
-      extracted = extractPdf(filePath, file);
-    } else if ([".doc", ".docx", ".rtf"].includes(ext)) {
-      extracted = extractOffice(filePath, file);
+      extracted = await extractPdf(filePath, file);
+    } else if (ext === ".docx") {
+      extracted = await extractDocx(filePath, file);
+    } else if ([".doc", ".rtf"].includes(ext)) {
+      extracted = extractLegacyOffice(filePath, file);
     } else if ([".png", ".jpg", ".jpeg", ".webp", ".gif", ".tif", ".tiff", ".bmp", ".svg"].includes(ext)) {
       extracted = indexImage(filePath, file);
     } else if ([".rar", ".zip", ".7z"].includes(ext)) {
@@ -297,7 +470,17 @@ function extractOne(file) {
   }
 }
 
-const results = files.map(extractOne);
+const results = [];
+for (let index = 0; index < files.length; index += 1) {
+  const file = files[index];
+  const result = await extractOne(file);
+  results.push(result);
+
+  const count = index + 1;
+  if (count === 1 || count % 10 === 0 || count === files.length) {
+    console.log(`[${count}/${files.length}] ${result.status}: ${file.filename}`);
+  }
+}
 
 const counts = results.reduce((acc, item) => {
   acc[item.status] = (acc[item.status] || 0) + 1;
@@ -305,7 +488,7 @@ const counts = results.reduce((acc, item) => {
 }, {});
 
 const extraction = {
-  version: 1,
+  version: 2,
   generatedAt: new Date().toISOString(),
   sourceRoot,
   manifestPath: manifestPath.replaceAll("\\", "/"),
@@ -317,7 +500,10 @@ const extraction = {
     textRecords: results.filter((item) => item.textPath).length,
     assetRecords: results.filter((item) => item.assetPath).length,
     archiveRecords: results.filter((item) => item.listingPath).length,
+    pageMappedRecords: results.filter((item) => item.pagePath).length,
+    totalPages: results.reduce((sum, item) => sum + Number(item.pageCount || 0), 0),
     needsVision: results.filter((item) => item.status === "needs-vision").length,
+    exactDuplicatesSkipped: results.filter((item) => item.status === "duplicate-skipped").length,
   },
   records: results,
 };
@@ -335,17 +521,25 @@ const websiteReport = {
     kind: item.kind,
     extension: item.extension,
     status: item.status,
+    engine: item.engine || null,
+    duplicateOf: item.duplicateOf || null,
     textPath: item.textPath || null,
+    pagePath: item.pagePath || null,
+    pageCount: item.pageCount ?? null,
     assetPath: item.assetPath || null,
     listingPath: item.listingPath || null,
     memberCount: item.memberCount ?? null,
     textChars: item.textChars ?? null,
+    sourceTextChars: item.sourceTextChars ?? null,
     reason: item.reason || null,
     note: item.note || null,
+    warnings: item.warnings || [],
   })),
 };
+
 fs.writeFileSync("public/arcanum/extraction-report.json", JSON.stringify(websiteReport, null, 2), "utf8");
 
+console.log("\nExtraction complete.");
 console.log(JSON.stringify({ capabilities, summary: extraction.summary }, null, 2));
 console.log("Wrote public/arcanum/extracted/extraction-report.json");
 console.log("Wrote public/arcanum/extraction-report.json");
