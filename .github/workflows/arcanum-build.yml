@@ -25,5 +25,14 @@ jobs:
       - name: Test source importer
         run: npm run arcanum:import -- "import/source-files.example.json"
 
+      - name: Test source extraction engine
+        run: npm run arcanum:extract -- --root "import/extraction-fixture" --manifest "import/extraction-fixture/source-manifest.json" --output "public/arcanum/extracted-test"
+
+      - name: Verify extraction outputs
+        run: |
+          test -f public/arcanum/extracted-test/text/fixture-text-01.txt
+          test -f public/arcanum/extracted-test/assets/fixture-image-01.svg
+          test -f public/arcanum/extraction-report.json
+
       - name: Build Arcanum Archive
         run: npm run build
