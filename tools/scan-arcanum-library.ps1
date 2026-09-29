@@ -63,7 +63,9 @@ if ($parent -and -not (Test-Path $parent)) {
   New-Item -ItemType Directory -Path $parent -Force | Out-Null
 }
 
-$result | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $Output -Encoding UTF8
+$json = $result | ConvertTo-Json -Depth 5
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+[System.IO.File]::WriteAllText((Join-Path (Get-Location) $Output), $json, $utf8NoBom)
 
 Write-Host ""
 Write-Host "Arcanum source scan complete." -ForegroundColor Green
