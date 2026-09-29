@@ -262,7 +262,7 @@ function StatRibbon() {
       <i />
       <div><strong>Curated</strong><span>reviewed knowledge layer</span></div>
       <i />
-      <div><strong>Source-Locked</strong><span>no invented articles</span></div>
+      <div><strong>Reviewed</strong><span>evidence-gated publishing</span></div>
     </div>
   );
 }
@@ -399,7 +399,7 @@ function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
         <div className="section-intro">
           <p className="kicker">RECENTLY UNSEALED</p>
           <h2>Priority records from your collection.</h2>
-          <p>These are real source records from the uploaded inventory. They are ready to receive translations, page images, and cross-references as extraction progresses.</p>
+          <p>Curated records selected from across the archive, ready for deeper reading, comparison, bookmarking, and cross-reference exploration.</p>
         </div>
         <FeaturedRail onOpen={onOpen} />
       </section>
@@ -437,7 +437,7 @@ function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
                 {savedEntries.map((entry) => (
                   <button type="button" key={entry.id} onClick={() => onOpen(entry.id)}>
                     <img src={visualMap[entry.visual]} alt="" />
-                    <span><strong>{entry.title}</strong><small>{entry.original}</small></span>
+                    <span><strong>{entry.title}</strong><small>{entry.tradition}</small></span>
                     <em onClick={(event) => { event.stopPropagation(); onToggleBookmark(entry.id); }}>Remove</em>
                   </button>
                 ))}
@@ -451,7 +451,7 @@ function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
                 {recentEntries.map((entry) => (
                   <button type="button" key={entry.id} onClick={() => onOpen(entry.id)}>
                     <img src={visualMap[entry.visual]} alt="" />
-                    <span><strong>{entry.title}</strong><small>{entry.original}</small></span>
+                    <span><strong>{entry.title}</strong><small>{entry.tradition}</small></span>
                     <b>Continue ↗</b>
                   </button>
                 ))}
@@ -582,7 +582,7 @@ function RecordCard({ entry, bookmarked, onToggleBookmark, comparing, onToggleCo
         <strong>{entry.title}</strong>
         <span className="record-summary">{entry.summary}</span>
         <span className="record-footer">
-          <em>{entry.status}</em>
+          <em>{entry.kind}</em>
           <b>Open record ↗</b>
         </span>
       </span>
@@ -739,7 +739,7 @@ function EncyclopediaView({ initialSearch, onSearchConsumed, bookmarkSet, onTogg
         <div>
           <p className="kicker">THE ENCYCLOPEDIA</p>
           <h1>Explore the Archive</h1>
-          <p>Browse source-indexed records by title, tradition, object type, language, and status. Search supports both English and original Chinese names.</p>
+          <p>Browse curated records by title, tradition, object type, language, and archive state. Search is optimized for clear English discovery.</p>
         </div>
         <ArcaneSeal compact />
       </section>
@@ -781,7 +781,7 @@ function MetadataGrid({ entry }) {
     ["Tradition", entry.tradition],
     ["Record Type", entry.kind],
     ["Language", entry.language],
-    ["Import Status", entry.status],
+    ["Archive State", entry.status],
   ];
   return (
     <dl className="metadata-grid">
@@ -801,7 +801,7 @@ function RelatedRecords({ entry }) {
       {related.map((item) => (
         <button type="button" key={item.id} onClick={() => goTo("entry", item.id)}>
           <img src={visualMap[item.visual]} alt="" />
-          <span><small>{item.category}</small><strong>{item.title}</strong><em>{item.original}</em></span>
+          <span><small>{item.category}</small><strong>{item.title}</strong><em>{item.tradition}</em></span>
         </button>
       ))}
     </div>
@@ -1137,7 +1137,7 @@ function LibraryView() {
             <button className={mode === "shelf" ? "active" : ""} type="button" onClick={() => setMode("shelf")}>▥ Shelf</button>
             <button className={mode === "reader" ? "active" : ""} type="button" onClick={() => setMode("reader")}>▤ Reader</button>
           </div>
-          <span>{archiveStats.rawFiles} files indexed · {archiveStats.splitVolumes} volumes</span>
+          <span>{libraryEntries.length} curated records · {archiveStats.splitVolumes} archive volumes</span>
         </div>
 
         {mode === "shelf" ? (
