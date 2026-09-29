@@ -3,17 +3,19 @@ import { archiveStats, categories, learningChapters, libraryEntries } from "./ar
 import { useArchiveMemory } from "./useArchiveMemory";
 import "./arcanum.css";
 
+const assetUrl = (path) => (import.meta.env.BASE_URL || "/") + path.replace(/^\\/+/, "");
+
 const visualMap = {
-  spells: "/arcanum/spells.svg",
-  rituals: "/arcanum/rituals.svg",
-  artifacts: "/arcanum/artifacts.svg",
-  traditions: "/arcanum/traditions.svg",
-  entities: "/arcanum/entities.svg",
-  divination: "/arcanum/divination.svg",
-  alchemy: "/arcanum/alchemy.svg",
-  plants: "/arcanum/plants.svg",
-  grimoires: "/arcanum/spells.svg",
-  historical: "/arcanum/traditions.svg",
+  spells: assetUrl("arcanum/spells.svg"),
+  rituals: assetUrl("arcanum/rituals.svg"),
+  artifacts: assetUrl("arcanum/artifacts.svg"),
+  traditions: assetUrl("arcanum/traditions.svg"),
+  entities: assetUrl("arcanum/entities.svg"),
+  divination: assetUrl("arcanum/divination.svg"),
+  alchemy: assetUrl("arcanum/alchemy.svg"),
+  plants: assetUrl("arcanum/plants.svg"),
+  grimoires: assetUrl("arcanum/spells.svg"),
+  historical: assetUrl("arcanum/traditions.svg"),
 };
 
 const navItems = [
@@ -345,7 +347,7 @@ function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
   return (
     <main className="view home-view">
       <section className="home-hero">
-        <div className="hero-library-art" aria-hidden="true" />
+        <div className="hero-library-art" style={{ backgroundImage: `url(${assetUrl("arcanum/hero-library.svg")})` }} aria-hidden="true" />
         <div className="hero-blackout" aria-hidden="true" />
         <div className="hero-copy">
           <p className="kicker">A LIVING ENCYCLOPEDIA OF MAGIC</p>
@@ -1028,8 +1030,8 @@ function DivinationView() {
             Interactive systems for reflective readings, symbolic study, and structured interpretation. Random selection and calculated inputs are separated from the rules that explain each result.
           </p>
           <div className="divination-hero-actions">
-            <a className="button gold" href="/arcanum/divination/tarot.html">Open Tarot</a>
-            <a className="button ghost" href="/arcanum/divination/runes.html">Cast Runes</a>
+            <a className="button gold" href={assetUrl("arcanum/divination/tarot.html")}>Open Tarot</a>
+            <a className="button ghost" href={assetUrl("arcanum/divination/runes.html")}>Cast Runes</a>
           </div>
         </div>
         <div className="divination-orbit" aria-hidden="true">
@@ -1211,8 +1213,8 @@ function SourceLabView() {
   useEffect(() => {
     let alive = true;
     Promise.all([
-      fetch("/arcanum/source-manifest.json", { cache: "no-store" }),
-      fetch("/arcanum/extraction-report.json", { cache: "no-store" }),
+      fetch(assetUrl("arcanum/source-manifest.json"), { cache: "no-store" }),
+      fetch(assetUrl("arcanum/extraction-report.json"), { cache: "no-store" }),
     ])
       .then(async ([manifestResponse, extractionResponse]) => {
         if (!manifestResponse.ok) throw new Error(`Manifest request failed: ${manifestResponse.status}`);
@@ -1232,7 +1234,7 @@ function SourceLabView() {
   }, []);
 
   /* legacy fetch kept out intentionally */
-  /* fetch("/arcanum/source-manifest.json", { cache: "no-store" }) */
+  /* fetch(assetUrl("arcanum/source-manifest.json"), { cache: "no-store" }) */
   const summary = manifest?.summary || {};
   const extractionSummary = extraction?.summary || {};
   const capabilities = extraction?.capabilities || {};
