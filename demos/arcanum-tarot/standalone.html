@@ -827,7 +827,7 @@ body:after{
           <textarea id="question" placeholder="What should I understand about my current situation?"></textarea>
 
           <label for="seed">Shuffle seed</label>
-          <input id="seed" placeholder="Blank = new shuffle" />
+          <input id="seed" placeholder="Leave blank for a fresh random draw" autocomplete="off" />
 
           <label for="reversalRate">Reversed cards</label>
           <select id="reversalRate">
@@ -1408,7 +1408,7 @@ window.ARCANUM_TAROT = (() => {
         }));
         $("#spread").value = r.spreadKey;
         $("#question").value = r.question || "";
-        $("#seed").value = r.seed;
+        $("#seed").value = "";
         render(draws,r.spreadKey,r.seed,r.question||"");
       });
     });
@@ -1454,7 +1454,7 @@ window.ARCANUM_TAROT = (() => {
     }
 
     $("#spread").value = "one";
-    $("#seed").value = seed;
+    $("#seed").value = "";
     render([draw],"one",seed,"Daily card");
     saveHistory(window.__currentTarotReading);
   }
