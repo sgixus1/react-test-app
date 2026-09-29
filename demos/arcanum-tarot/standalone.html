@@ -856,6 +856,178 @@ body{
   box-shadow:0 16px 34px #000d,inset 0 0 0 5px #070a12,0 0 0 1px #39200b!important;
 }
 
+
+/* === Left selector premium rebuild v7 === */
+.controls{
+  background:
+    radial-gradient(circle at 14% 4%,rgba(61,102,180,.13),transparent 30%),
+    radial-gradient(circle at 90% 78%,rgba(212,151,63,.08),transparent 28%),
+    linear-gradient(180deg,rgba(3,8,18,.98),rgba(2,5,13,.99))!important;
+}
+.controls .pad{padding:20px 18px 24px!important}
+.controls label{
+  margin:18px 0 8px!important;
+  color:#e8cb91!important;
+  font:700 12px/1.1 Georgia,serif!important;
+  letter-spacing:.12em!important;
+}
+.controls label:not(:first-of-type){
+  padding-top:3px;
+  border-top:1px solid rgba(181,133,57,.10);
+}
+
+/* select/input surfaces */
+.controls select,.controls input,.controls textarea{
+  border:1px solid rgba(168,124,55,.62)!important;
+  background:
+    radial-gradient(circle at 95% 20%,rgba(65,88,137,.09),transparent 28%),
+    linear-gradient(180deg,#08111e,#040913)!important;
+  color:#f0e5d2!important;
+  box-shadow:inset 0 0 20px rgba(0,0,0,.52),0 0 0 1px rgba(255,219,141,.025)!important;
+}
+.controls select:focus,.controls input:focus,.controls textarea:focus{
+  outline:none!important;
+  border-color:#e4ae52!important;
+  box-shadow:0 0 0 1px rgba(228,174,82,.22),0 0 18px rgba(228,174,82,.12),inset 0 0 20px rgba(0,0,0,.5)!important;
+}
+
+/* actual spread selector cards */
+.controls .spread-quick{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:9px!important;
+  margin:10px 0 3px!important;
+}
+.controls .spread-quick button{
+  min-width:0!important;
+  min-height:118px!important;
+  padding:11px 7px 10px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  border:1px solid #334565!important;
+  border-radius:11px!important;
+  background:
+    radial-gradient(circle at 50% 26%,rgba(109,75,170,.13),transparent 32%),
+    linear-gradient(180deg,#0b1527,#060b15 86%)!important;
+  color:#ded6e7!important;
+  box-shadow:inset 0 0 22px rgba(96,74,140,.08),0 8px 20px rgba(0,0,0,.24)!important;
+  overflow:hidden!important;
+  transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease,background .16s ease!important;
+}
+.controls .spread-quick button:before{display:none!important}
+.controls .spread-quick button:hover{
+  transform:translateY(-2px)!important;
+  border-color:#8a6f91!important;
+  background:
+    radial-gradient(circle at 50% 26%,rgba(127,86,193,.20),transparent 34%),
+    linear-gradient(180deg,#0e1930,#070c18 86%)!important;
+  box-shadow:0 12px 24px rgba(0,0,0,.30),0 0 18px rgba(152,102,215,.10),inset 0 0 24px rgba(113,81,160,.10)!important;
+}
+.controls .spread-quick button.active{
+  border-color:#e6ad4d!important;
+  color:#f6d994!important;
+  background:
+    radial-gradient(circle at 50% 27%,rgba(227,170,74,.16),transparent 34%),
+    linear-gradient(180deg,#12192b,#090d18 88%)!important;
+  box-shadow:
+    0 0 0 1px rgba(230,173,77,.35),
+    0 0 24px rgba(229,165,57,.26),
+    inset 0 0 28px rgba(226,165,62,.08)!important;
+}
+.spread-icon{
+  width:54px;height:50px;
+  display:grid;place-items:center;
+  margin:0 auto 7px;
+  color:#ae86dc;
+  filter:drop-shadow(0 0 7px rgba(152,101,219,.22));
+  transition:color .16s ease,filter .16s ease,transform .16s ease;
+}
+.spread-icon svg{width:52px;height:48px;display:block;overflow:visible}
+.spread-icon svg *{vector-effect:non-scaling-stroke}
+.spread-quick button:hover .spread-icon{color:#cab0ec;transform:scale(1.03)}
+.spread-quick button.active .spread-icon{
+  color:#efc66f;
+  filter:drop-shadow(0 0 9px rgba(238,185,81,.45));
+}
+.spread-title{
+  display:block;max-width:100%;
+  color:#eee5d6;
+  font:700 10.5px/1.15 Georgia,serif;
+  text-align:center;
+}
+.spread-quick button.active .spread-title{color:#f6d99b}
+.spread-subtitle{
+  display:block;margin-top:4px;
+  color:#858da4;
+  font:8px/1.25 system-ui;
+  letter-spacing:.01em;
+  text-align:center;
+}
+.spread-quick button.active .spread-subtitle{color:#b2a58d}
+
+/* seed field */
+.seed-field-wrap{position:relative;display:grid;grid-template-columns:1fr 42px;gap:7px}
+.seed-field-wrap #seed{min-width:0}
+.seed-randomize{
+  border:1px solid #76582f;border-radius:8px;
+  background:linear-gradient(180deg,#111827,#080d17);
+  color:#e9bc62;font-size:18px;cursor:pointer;
+  box-shadow:inset 0 0 16px rgba(222,167,68,.06);
+}
+.seed-randomize:hover{
+  border-color:#d9a44c;color:#ffe0a0;
+  box-shadow:0 0 14px rgba(220,161,61,.15),inset 0 0 16px rgba(222,167,68,.08)
+}
+.field-hint{
+  color:#777f91;font:8.5px/1.4 system-ui;
+  margin-top:5px;letter-spacing:.025em;
+}
+
+/* reversal selector chips */
+#reversalRate.reversal-native{
+  position:absolute!important;width:1px!important;height:1px!important;
+  padding:0!important;margin:-1px!important;overflow:hidden!important;
+  clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;
+}
+.reversal-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.reversal-chip{
+  min-height:37px;border:1px solid #34425e;border-radius:8px;
+  background:linear-gradient(180deg,#0b1424,#060b15);
+  color:#9ea7ba;font:700 9px/1 system-ui;letter-spacing:.04em;cursor:pointer;
+  transition:.15s ease;
+}
+.reversal-chip:hover{border-color:#7d6787;color:#d3c6df}
+.reversal-chip.active{
+  border-color:#d4a04a;color:#f0cf87;
+  background:linear-gradient(180deg,#17182a,#0b0e19);
+  box-shadow:0 0 13px rgba(213,159,71,.16),inset 0 0 14px rgba(213,159,71,.07)
+}
+
+/* stronger CTA hierarchy */
+.controls .button.primary{
+  margin-top:16px!important;
+  min-height:49px!important;
+  border-radius:9px!important;
+  font-size:13px!important;
+}
+.controls .button.secondary{
+  min-height:43px!important;
+  border-radius:9px!important;
+  font-size:11px!important;
+}
+.controls .history{
+  margin-top:17px!important;padding-top:14px!important;
+  border-top:1px solid rgba(151,111,48,.22)!important
+}
+.controls .history h3{
+  color:#e3c27e!important;font-size:14px!important
+}
+@media(max-width:1500px){
+  .controls .spread-quick button{min-height:108px!important}
+  .spread-icon{height:43px}.spread-icon svg{height:41px}
+}
+
 </style>
 </head>
 <body>
@@ -2175,6 +2347,111 @@ window.ARCANUM_TAROT = (() => {
     addSpreadDescription();
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>
+
+
+<script>
+(() => {
+  "use strict";
+
+  const spreadMeta={
+    three:{
+      title:"Past · Present · Future",sub:"Clarity on your path",
+      icon:'<svg viewBox="0 0 64 54" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="22" y="5" width="20" height="34" rx="3"/><rect x="4" y="12" width="18" height="31" rx="3"/><rect x="42" y="12" width="18" height="31" rx="3"/><path d="M10 18h6M28 11h8M48 18h6"/></svg>'
+    },
+    celtic:{
+      title:"Celtic Cross",sub:"Deep insight",
+      icon:'<svg viewBox="0 0 64 54" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="27" y="3" width="10" height="18" rx="2"/><rect x="27" y="33" width="10" height="18" rx="2"/><rect x="13" y="21" width="18" height="11" rx="2"/><rect x="33" y="21" width="18" height="11" rx="2"/><rect x="26" y="19" width="12" height="15" rx="2"/></svg>'
+    },
+    love:{
+      title:"Relationship",sub:"Love & connection",
+      icon:'<svg viewBox="0 0 64 54" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M32 44S10 31 10 17c0-7 5-11 11-11 5 0 9 3 11 7 2-4 6-7 11-7 6 0 11 4 11 11 0 14-22 27-22 27Z"/><path d="M32 4v8M28 8h8"/></svg>'
+    },
+    career:{
+      title:"Career",sub:"Work & purpose",
+      icon:'<svg viewBox="0 0 64 54" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="17" width="48" height="29" rx="4"/><path d="M23 17v-5c0-3 2-5 5-5h8c3 0 5 2 5 5v5M8 27c8 5 16 7 24 7s16-2 24-7M28 31h8v6h-8z"/></svg>'
+    },
+    decision:{
+      title:"Decision",sub:"Find your way",
+      icon:'<svg viewBox="0 0 64 54" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 46c4-17 9-20 17-25 8-5 13-7 20-16"/><path d="M42 6h8v8M24 29c7 1 11 4 15 10M35 37l4 2-2 4"/><circle cx="13" cy="46" r="2.5"/></svg>'
+    },
+    one:{
+      title:"One Card",sub:"Daily guidance",
+      icon:'<svg viewBox="0 0 64 54" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="19" y="5" width="26" height="43" rx="4"/><path d="M32 15l2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5Z"/><path d="M25 38h14"/></svg>'
+    }
+  };
+
+  function upgradeSpreadTiles(){
+    const root=document.querySelector(".spread-quick");
+    if(!root)return;
+    root.querySelectorAll("button[data-spread]").forEach(btn=>{
+      const meta=spreadMeta[btn.dataset.spread];
+      if(!meta)return;
+      btn.innerHTML='<span class="spread-icon">'+meta.icon+'</span>'+
+        '<span class="spread-title">'+meta.title+'</span>'+
+        '<span class="spread-subtitle">'+meta.sub+'</span>';
+      btn.setAttribute("aria-label",meta.title+" — "+meta.sub);
+    });
+  }
+
+  function upgradeSeed(){
+    const seed=document.getElementById("seed");
+    if(!seed||seed.closest(".seed-field-wrap"))return;
+    const wrap=document.createElement("div");
+    wrap.className="seed-field-wrap";
+    seed.parentNode.insertBefore(wrap,seed);
+    wrap.appendChild(seed);
+    const b=document.createElement("button");
+    b.type="button";b.className="seed-randomize";b.title="Clear seed for a fresh random draw";
+    b.setAttribute("aria-label","Clear seed for fresh random draw");
+    b.textContent="⟳";
+    b.addEventListener("click",()=>{
+      seed.value="";
+      seed.focus();
+      b.animate([{transform:"rotate(0deg)"},{transform:"rotate(360deg)"}],{duration:330,easing:"ease-out"});
+    });
+    wrap.appendChild(b);
+    const hint=document.createElement("div");
+    hint.className="field-hint";
+    hint.textContent="Leave blank for a fresh draw. Enter a seed only when you want to reproduce the same reading.";
+    wrap.insertAdjacentElement("afterend",hint);
+  }
+
+  function upgradeReversal(){
+    const select=document.getElementById("reversalRate");
+    if(!select||document.querySelector(".reversal-chips"))return;
+    if(![...select.options].some(o=>o.value==="0.10")){
+      const opt=document.createElement("option");opt.value="0.10";opt.textContent="10%";select.appendChild(opt);
+    }
+    select.classList.add("reversal-native");
+    const root=document.createElement("div");
+    root.className="reversal-chips";
+    const items=[["0","Off"],["0.10","10%"],["0.25","25%"],["0.50","50%"]];
+    root.innerHTML=items.map(x=>'<button type="button" class="reversal-chip" data-value="'+x[0]+'">'+x[1]+'</button>').join("");
+    select.insertAdjacentElement("afterend",root);
+    const sync=()=>root.querySelectorAll(".reversal-chip").forEach(b=>b.classList.toggle("active",b.dataset.value===select.value));
+    root.addEventListener("click",e=>{
+      const b=e.target.closest(".reversal-chip");if(!b)return;
+      select.value=b.dataset.value;select.dispatchEvent(new Event("change",{bubbles:true}));sync();
+    });
+    select.addEventListener("change",sync);sync();
+  }
+
+  function improveLabels(){
+    const labels=[...document.querySelectorAll(".controls label")];
+    const names=["1. CHOOSE A SPREAD","2. YOUR QUESTION","3. SHUFFLE SEED  (OPTIONAL)","4. REVERSED CARDS"];
+    labels.slice(0,4).forEach((l,i)=>l.textContent=names[i]);
+  }
+
+  function init(){
+    upgradeSpreadTiles();
+    upgradeSeed();
+    upgradeReversal();
+    improveLabels();
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>setTimeout(init,0));
+  else setTimeout(init,0);
 })();
 </script>
 
