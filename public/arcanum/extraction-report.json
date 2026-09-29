@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "generatedAt": null,
+  "capabilities": {
+    "sevenZip": false,
+    "pdfToText": false,
+    "office": false,
+    "sevenZipPath": null,
+    "pdfToTextPath": null,
+    "officePath": null
+  },
+  "summary": {
+    "requested": 0,
+    "textRecords": 0,
+    "assetRecords": 0,
+    "archiveRecords": 0,
+    "needsVision": 0
+  },
+  "records": []
+}
