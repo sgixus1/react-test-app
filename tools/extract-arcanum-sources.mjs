@@ -94,14 +94,23 @@ const office = firstAvailable([
 ]);
 
 let pdfjs = null;
+let pdfParse = null;
 let mammoth = null;
 let nativePdfError = null;
+let alternatePdfError = null;
 let nativeDocxError = null;
 
 try {
   pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
 } catch (error) {
   nativePdfError = error?.message || String(error);
+}
+
+try {
+  const module = await import("pdf-parse");
+  pdfParse = module.PDFParse || module.default?.PDFParse || module.default || null;
+} catch (error) {
+  alternatePdfError = error?.message || String(error);
 }
 
 try {
@@ -113,6 +122,7 @@ try {
 
 const capabilities = {
   nativePdf: Boolean(pdfjs?.getDocument),
+  alternatePdf: Boolean(pdfParse),
   nativeDocx: Boolean(mammoth?.extractRawText),
   sevenZip: Boolean(sevenZip),
   pdfToText: Boolean(pdfToText),
@@ -121,6 +131,7 @@ const capabilities = {
   pdfToTextPath: pdfToText,
   officePath: office,
   nativePdfError,
+  alternatePdfError,
   nativeDocxError,
 };
 
@@ -262,6 +273,66 @@ async function extractPdfNative(filePath, file) {
   };
 }
 
+async function extractPdfAlternate(filePath, file) {
+  if (!pdfParse) {
+    return { status: "blocked", reason: alternatePdfError || "pdf-parse unavailable" };
+  }
+
+  let parser = null;
+  try {
+    const data = new Uint8Array(fs.readFileSync(filePath));
+    parser = new pdfParse({ data });
+    const result = await parser.getText();
+
+    const rawPages = Array.isArray(result?.pages) ? result.pages : [];
+    const pages = rawPages.map((entry, index) => {
+      const pageNumber = Number(entry?.num || index + 1);
+      const pageText = cleanText(entry?.text || "");
+      return {
+        page: pageNumber,
+        text: pageText,
+        textChars: pageText.length,
+        textSha256: hashText(pageText),
+      };
+    });
+
+    const fullText = pages.length
+      ? pages.map((entry) => `--- PAGE ${entry.page} ---\n${entry.text}`).join("\n\n")
+      : cleanText(result?.text || "");
+
+    const textRecord = writeTextRecord(file, fullText, "pdf-parse");
+    const pageCount = Number(result?.total || pages.length || 0);
+    const pagePath = writePageRecord(file, {
+      version: 1,
+      sourceId: file.id,
+      sourcePath: file.path,
+      filename: file.filename,
+      pageCount,
+      pages,
+    });
+
+    const sourceTextChars = pages.length
+      ? pages.reduce((sum, entry) => sum + entry.textChars, 0)
+      : textRecord.textChars;
+
+    return {
+      status: sourceTextChars > 0 ? "extracted" : "needs-vision",
+      ...textRecord,
+      pagePath,
+      pageCount,
+      sourceTextChars,
+      engine: "pdf-parse",
+      note: sourceTextChars > 0 ? null : "PDF contains pages but no extractable text; likely scanned/image-only.",
+    };
+  } catch (error) {
+    return { status: "error", reason: `pdf-parse failed: ${error?.message || String(error)}`, engine: "pdf-parse" };
+  } finally {
+    if (parser?.destroy) {
+      try { await parser.destroy(); } catch {}
+    }
+  }
+}
+
 function extractPdfExternal(filePath, file) {
   if (!pdfToText) return { status: "blocked", reason: "pdftotext unavailable" };
   const target = path.join(outputRoot, "text", `${file.id}.txt`);
@@ -286,21 +357,38 @@ function extractPdfExternal(filePath, file) {
 }
 
 async function extractPdf(filePath, file) {
+  const errors = [];
+
+  if (pdfParse) {
+    const alternate = await extractPdfAlternate(filePath, file);
+    if (alternate.status !== "error" && alternate.status !== "blocked") return alternate;
+    errors.push(alternate.reason);
+  }
+
   if (pdfjs?.getDocument) {
     try {
       return await extractPdfNative(filePath, file);
     } catch (error) {
-      if (!pdfToText) {
-        return { status: "error", reason: `PDF.js failed: ${error?.message || String(error)}`, engine: "pdfjs" };
-      }
-      const fallback = extractPdfExternal(filePath, file);
-      return {
-        ...fallback,
-        note: [`PDF.js failed: ${error?.message || String(error)}`, fallback.note].filter(Boolean).join(" | "),
-      };
+      errors.push(`PDF.js failed: ${error?.message || String(error)}`);
     }
   }
-  return extractPdfExternal(filePath, file);
+
+  if (pdfToText) {
+    const external = extractPdfExternal(filePath, file);
+    if (external.status !== "error" && external.status !== "blocked") {
+      return {
+        ...external,
+        note: [...errors, external.note].filter(Boolean).join(" | ") || null,
+      };
+    }
+    errors.push(external.reason);
+  }
+
+  return {
+    status: "error",
+    reason: errors.filter(Boolean).join(" | ") || "All PDF extraction engines failed",
+    engine: "pdf-fallback-chain",
+  };
 }
 
 async function extractDocx(filePath, file) {
@@ -478,7 +566,7 @@ for (let index = 0; index < files.length; index += 1) {
 
   const count = index + 1;
   if (count === 1 || count % 10 === 0 || count === files.length) {
-    console.log(`[${count}/${files.length}] ${result.status}: ${file.filename}`);
+    console.log(`[${count}/${files.length}] ${result.status}: ${file.filename}`);\n    if (result.status === "error" && result.reason) console.log(`  ↳ ${result.reason}`);
   }
 }
 
@@ -503,7 +591,7 @@ const extraction = {
     pageMappedRecords: results.filter((item) => item.pagePath).length,
     totalPages: results.reduce((sum, item) => sum + Number(item.pageCount || 0), 0),
     needsVision: results.filter((item) => item.status === "needs-vision").length,
-    exactDuplicatesSkipped: results.filter((item) => item.status === "duplicate-skipped").length,
+    exactDuplicatesSkipped: results.filter((item) => item.status === "duplicate-skipped").length,\n    errorSamples: results.filter((item) => item.status === "error").slice(0, 10).map((item) => ({ filename: item.filename, reason: item.reason })),
   },
   records: results,
 };
