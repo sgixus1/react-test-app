@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "state": "inventory-only",
+  "generatedAt": null,
+  "summary": {
+    "inventoryFiles": 256,
+    "inventoryVolumes": 20,
+    "extractedFiles": 0,
+    "totalFiles": 0,
+    "imageFiles": 0,
+    "documentFiles": 0,
+    "archiveFiles": 0,
+    "exactDuplicateSets": 0,
+    "likelyDuplicateSets": 0
+  },
+  "duplicateSets": {
+    "exact": [],
+    "likely": []
+  },
+  "files": []
+}
