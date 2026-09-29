@@ -184,6 +184,139 @@ footer{
   font:11px/1.45 system-ui
 }
 
+
+/* === Arcanum Tarot premium visual pass v2 === */
+body{
+  background:
+    radial-gradient(circle at 54% 7%,rgba(53,34,92,.52),transparent 29%),
+    radial-gradient(circle at 18% 35%,rgba(123,72,148,.20),transparent 24%),
+    radial-gradient(circle at 78% 56%,rgba(199,128,42,.10),transparent 24%),
+    linear-gradient(180deg,#07060d 0,#05050a 48%,#030307 100%);
+  overflow-x:hidden;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:
+    radial-gradient(circle at 10% 15%,#d7a54b 0 1px,transparent 1.7px),
+    radial-gradient(circle at 76% 10%,#b88cff 0 1px,transparent 1.7px),
+    radial-gradient(circle at 90% 44%,#d7a54b 0 1px,transparent 1.7px);
+  background-size:150px 150px,210px 210px,180px 180px;
+  opacity:.26;
+}
+.app-shell{max-width:1880px;padding:0 18px 18px}
+.topbar{
+  top:0;border-radius:0;margin:0 -18px;padding:13px 34px;
+  border-width:0 0 1px;border-color:#7d5c2a80;
+  background:linear-gradient(90deg,#07070bea,#0b0912f3 50%,#05060aea);
+}
+.brand{font-size:23px;text-shadow:0 0 28px #d3a2584a}
+.subtitle{color:#c4a96f;font-size:9px}
+.top-note{font-size:10px;letter-spacing:.06em}
+.layout{grid-template-columns:360px minmax(610px,1fr) 440px;gap:16px;margin-top:15px}
+.panel{
+  border-color:#76562d99;
+  background:linear-gradient(180deg,rgba(10,11,18,.94),rgba(6,7,12,.96));
+  box-shadow:0 18px 70px #000b,inset 0 0 0 1px #e0ae4b10;
+}
+.controls:before,.right-panel:before{
+  content:"";display:block;height:2px;
+  background:linear-gradient(90deg,transparent,#e2b65d,transparent);opacity:.72
+}
+.controls .pad,.right-panel .pad{padding:21px}
+.controls h2{font-size:25px;margin-bottom:3px}
+.controls h2:after{
+  content:"Set your intention and let the cards speak.";
+  display:block;font:11px/1.5 system-ui;color:#8f8995;margin-top:5px;font-weight:400;letter-spacing:0
+}
+.controls label{
+  color:#d7c5a4;font-size:11px;text-transform:uppercase;letter-spacing:.11em;margin-top:18px
+}
+.controls select,.controls input,.controls textarea{
+  border-color:#5a4930;background:linear-gradient(180deg,#0a0c13,#08090f);
+  box-shadow:inset 0 0 22px #0007;color:#eee5d2
+}
+.controls textarea{min-height:104px;font-size:14px;line-height:1.55}
+.button.primary{
+  color:#231506;font-weight:700;
+  background:linear-gradient(90deg,#a96d24,#f4d48d 45%,#d4973e);
+  border-color:#ffe3a1;
+  box-shadow:0 0 0 1px #a16a2a,0 0 28px #da99345c,inset 0 1px #fff4c2;
+}
+.button.secondary{background:#0d111d;border-color:#3f4d6a}
+.tarot-table{
+  min-height:840px;overflow:hidden;border-color:#6f512a;
+  background:
+    radial-gradient(circle at 50% 28%,rgba(145,94,187,.20),transparent 20%),
+    radial-gradient(circle at 50% 44%,rgba(218,161,68,.12),transparent 34%),
+    repeating-radial-gradient(circle at 50% 47%,transparent 0 110px,#b5894019 111px 112px,transparent 113px 148px),
+    linear-gradient(145deg,#10101b,#090a12 58%,#07070c);
+}
+.tarot-table:before{
+  inset:92px 32px 54px;border-radius:50%;border-color:#9a6c2e6b;
+  box-shadow:inset 0 0 100px #381f5144,0 0 60px #ac793018
+}
+.tarot-hero{position:relative;z-index:3;text-align:center;padding:26px 10px 2px;pointer-events:none}
+.tarot-hero .hero-kicker{font:10px system-ui;letter-spacing:.38em;color:#c8aa73;text-transform:uppercase}
+.tarot-hero h1{
+  margin:7px 0 2px;font-size:43px;font-weight:400;letter-spacing:.12em;
+  color:#f5dba2;text-shadow:0 0 30px #c48c3d66
+}
+.tarot-hero p{margin:0;color:#aaa1b0;font:11px system-ui;letter-spacing:.20em;text-transform:uppercase}
+.spread-area{padding:36px 8px 20px;gap:24px}
+.card{width:min(100%,188px);filter:drop-shadow(0 18px 18px #000a)}
+.face{border-color:#be8c42;border-width:1px;background:#07080d}
+.card-front{padding:5px;background:#07080d}
+.illustrated-card{position:relative;width:100%;height:100%;border-radius:8px;overflow:hidden;background:#090a0d}
+.tarot-photo{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.94) contrast(1.06) brightness(.88)}
+.tarot-vignette{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,#0000 65%,#02020578),radial-gradient(circle,transparent 52%,#05040878 100%)
+}
+.tarot-gold-frame{
+  position:absolute;inset:5px;border:1px solid #d5a64c;border-radius:5px;pointer-events:none;
+  box-shadow:inset 0 0 0 1px #2d1c08,inset 0 0 20px #0008,0 0 9px #b77a2f40
+}
+.tarot-fallback{position:absolute;inset:0}
+.art-fallback{
+  width:100%;height:100%;display:grid;place-items:center;align-content:center;gap:14px;
+  background:radial-gradient(circle,var(--fallback-accent) 0 1px,transparent 2px),linear-gradient(var(--fallback-dark),#05060a);
+  background-size:22px 22px,100% 100%;color:#edcf8e
+}
+.fallback-sigil{font-size:54px}
+.fallback-name{font-size:13px;letter-spacing:.08em;text-align:center;padding:0 10px}
+.card-back{
+  background:
+    radial-gradient(circle at center,#f1c46f 0 1px,transparent 2px),
+    repeating-radial-gradient(circle at center,transparent 0 18px,#c38d391f 19px 20px,transparent 21px 35px),
+    linear-gradient(145deg,#111a31,#080b16);
+}
+.card-back:after{
+  content:"☾ ✦ ☽";font-size:19px;letter-spacing:.18em;width:94px;height:94px;
+  border:1px solid #d6a34a;color:#e2bc72;background:#0c1326aa
+}
+.position{font-size:13px;color:#ebcc8c;margin-top:10px}
+.focus{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#98909d;margin-top:3px}
+.table-help{text-align:center;color:#716b77;margin-top:4px}
+.right-panel{border-color:#8c6636}
+.reading-panel h2{font-size:24px}
+.summary,.reading-explanation{
+  border-color:#564021;background:linear-gradient(180deg,#10131c,#0b0d13);
+  box-shadow:inset 0 0 22px #0006
+}
+.entry{padding:15px 0}.entry h4{font-size:16px}
+.chip{border-color:#67502e;color:#cdb98f}.meaning{line-height:1.65}
+.spread-quick{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0 3px}
+.spread-quick button{
+  border:1px solid #3e3b4f;background:linear-gradient(#101321,#090b12);color:#c8bdcc;
+  border-radius:9px;padding:10px 5px;font:10px/1.25 system-ui;min-height:54px
+}
+.spread-quick button.active{
+  border-color:#c79343;color:#f0d595;box-shadow:0 0 18px #be803334,inset 0 0 18px #7b4d1f22
+}
+@media(max-width:1320px){.layout{grid-template-columns:320px minmax(520px,1fr) 390px}.card{width:min(100%,164px)}}
+@media(max-width:1120px){.layout{grid-template-columns:300px 1fr}.right-panel{grid-column:1/-1}.tarot-table{min-height:720px}}
+@media(max-width:760px){.app-shell{padding:0 8px 8px}.topbar{margin:0 -8px;padding:12px 16px}.layout{grid-template-columns:1fr}.tarot-hero h1{font-size:30px}.spread-quick{grid-template-columns:repeat(2,1fr)}}
+
 </style>
 </head>
 <body>
@@ -537,62 +670,37 @@ window.ARCANUM_TAROT = (() => {
     return variants[n % variants.length];
   }
 
-  function cardArt(card){
-    const [dark, accent] = palettes[card.element] || palettes.Air;
-    const sym = symbolFor(card);
-    let body = "";
+  function tarotImageUrl(card){
+    const file = card.name + " (Rider-Waite Smith tarot deck).png";
+    return "https://commons.wikimedia.org/wiki/Special:Redirect/file/" +
+      encodeURIComponent(file) + "?width=720";
+  }
 
-    if(card.arcana==="Major"){
-      body = `
-        <circle cx="100" cy="148" r="51" fill="none" stroke="${accent}" opacity=".30"/>
-        <circle cx="100" cy="151" r="15" fill="${accent}" opacity=".76"/>
-        <path d="M100 166 L73 226 L127 226Z" fill="${accent}" opacity=".36"/>
-        ${sceneForMajor(card,accent)}
-      `;
-    } else {
-      const numeric = parseInt(card.rank,10);
-      if(Number.isFinite(numeric)){
-        const count = Math.min(10,numeric);
-        const coords = [
-          [100,104],[65,132],[135,132],[100,157],[65,182],
-          [135,182],[100,207],[65,226],[135,226],[100,242]
-        ];
-        for(let i=0;i<count;i++){
-          const [x,y] = coords[i];
-          body += '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="26" fill="'+accent+'" opacity=".88">'+sym+'</text>';
-        }
-      } else {
-        const crown = card.rank==="King" ? "♔" : card.rank==="Queen" ? "♕" : card.rank==="Knight" ? "♞" : "✧";
-        body = `
-          <circle cx="100" cy="156" r="45" fill="${accent}" opacity=".11"/>
-          <path d="M100 112 L70 224 L130 224Z" fill="${accent}" opacity=".28"/>
-          <text x="100" y="154" text-anchor="middle" font-size="44" fill="${accent}">${sym}</text>
-          <text x="100" y="204" text-anchor="middle" font-size="24" fill="${accent}">${crown}</text>
-        `;
-      }
-    }
+  function cardArt(card){
+    const colors = palettes[card.element] || palettes.Air;
+    const dark = colors[0];
+    const accent = colors[1];
+    const fallback =
+      '<div class="art-fallback" style="--fallback-dark:'+dark+';--fallback-accent:'+accent+'">'+
+        '<div class="fallback-sigil">'+symbolFor(card)+'</div>'+
+        '<div class="fallback-name">'+esc(card.name)+'</div>'+
+      '</div>';
 
     return `
-      <svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(card.name)}">
-        <defs>
-          <radialGradient id="g-${card.id}">
-            <stop stop-color="${accent}" stop-opacity=".18"/>
-            <stop offset="1" stop-color="${dark}" stop-opacity=".98"/>
-          </radialGradient>
-          <pattern id="stars-${card.id}" width="19" height="19" patternUnits="userSpaceOnUse">
-            <circle cx="3" cy="3" r=".9" fill="${accent}" opacity=".18"/>
-          </pattern>
-        </defs>
-        <rect width="200" height="300" rx="12" fill="${dark}"/>
-        <rect x="7" y="7" width="186" height="286" rx="8" fill="url(#g-${card.id})" stroke="${accent}" stroke-width="1.3"/>
-        <rect x="11" y="11" width="178" height="278" rx="6" fill="url(#stars-${card.id})"/>
-        <text x="100" y="29" text-anchor="middle" font-size="10" fill="#f3e8cb" letter-spacing="1">${esc(card.rank)}</text>
-        <text x="100" y="76" text-anchor="middle" font-size="45" fill="${accent}">${sym}</text>
-        ${body}
-        <path d="M31 247H169" stroke="${accent}" opacity=".55"/>
-        <text x="100" y="269" text-anchor="middle" font-size="12" fill="#f7e8c5" font-family="Georgia">${esc(card.name)}</text>
-        <text x="100" y="285" text-anchor="middle" font-size="8" fill="${accent}" opacity=".82">${card.element.toUpperCase()}</text>
-      </svg>
+      <div class="illustrated-card">
+        <img
+          class="tarot-photo"
+          src="${tarotImageUrl(card)}"
+          alt="${esc(card.name)}"
+          loading="eager"
+          decoding="async"
+          referrerpolicy="no-referrer"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+        />
+        <div class="tarot-fallback" style="display:none">${fallback}</div>
+        <div class="tarot-vignette"></div>
+        <div class="tarot-gold-frame"></div>
+      </div>
     `;
   }
 
@@ -1148,5 +1256,56 @@ window.ARCANUM_TAROT = (() => {
 })();
 
 </script>
+
+<script>
+(() => {
+  "use strict";
+  function enhancePremiumUI(){
+    const table=document.querySelector(".tarot-table");
+    if(table && !table.querySelector(".tarot-hero")){
+      const hero=document.createElement("div");
+      hero.className="tarot-hero";
+      hero.innerHTML='<div class="hero-kicker">The Arcanum Archive presents</div><h1>ARCANUM TAROT</h1><p>Same questions · deeper answers</p>';
+      table.insertBefore(hero,table.firstChild);
+    }
+
+    const select=document.getElementById("spread");
+    if(select && !document.querySelector(".spread-quick")){
+      const quick=document.createElement("div");
+      quick.className="spread-quick";
+      const items=[
+        ["three","Past · Present · Future"],
+        ["celtic","Celtic Cross"],
+        ["love","Relationship"],
+        ["career","Career"],
+        ["decision","Decision"],
+        ["one","One Card"]
+      ];
+      quick.innerHTML=items.map(x=>'<button type="button" data-spread="'+x[0]+'">'+x[1]+'</button>').join("");
+      select.insertAdjacentElement("afterend",quick);
+      const sync=()=>quick.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.spread===select.value));
+      quick.addEventListener("click",e=>{
+        const b=e.target.closest("button[data-spread]");
+        if(!b)return;
+        select.value=b.dataset.spread;
+        select.dispatchEvent(new Event("change",{bubbles:true}));
+        sync();
+      });
+      select.addEventListener("change",sync);
+      sync();
+    }
+
+    const h=document.querySelector(".controls h2");
+    if(h) h.textContent="Create Your Reading";
+    const primary=document.getElementById("drawButton");
+    if(primary) primary.textContent="✧  Shuffle & Draw  →";
+    const secondary=document.getElementById("dailyButton");
+    if(secondary) secondary.textContent="☾  Today's Card";
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",enhancePremiumUI);
+  else enhancePremiumUI();
+})();
+</script>
+
 </body>
 </html>
