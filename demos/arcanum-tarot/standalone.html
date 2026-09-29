@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Arcanum Tarot — Rule-Based Demo</title>
-  <style>\n:root{
+  <style>
+:root{
   --bg:#07070c;--panel:#111019;--panel2:#16131e;--line:#352c3d;
   --gold:#d6ad63;--gold2:#8b6733;--ink:#f3ead7;--muted:#9b939f;
   --violet:#7b5fc6;--green:#86c5a3;--danger:#d88989
@@ -182,7 +183,8 @@ footer{
   background:#101713;border:1px solid #294035;color:#a9cab6;
   font:11px/1.45 system-ui
 }
-\n</style>
+
+</style>
 </head>
 <body>
   <div class="app-shell">
@@ -249,7 +251,8 @@ footer{
         <div class="pad reading-panel">
           <h2>Your Reading</h2>
           <div id="status" class="status">Choose a spread and draw.</div>
-          <div id="summary"></div>\n          <div id="explanation"></div>
+          <div id="summary"></div>
+          <div id="explanation"></div>
           <div id="reading"></div>
 
           <details class="debug-panel">
@@ -266,7 +269,8 @@ footer{
     </footer>
   </div>
 
-  <script>\nwindow.ARCANUM_TAROT = (() => {
+  <script>
+window.ARCANUM_TAROT = (() => {
   const majorRows = [
     ["The Fool","Beginnings, freedom, trust, spontaneity","Recklessness, hesitation, poor judgment","Air","0"],
     ["The Magician","Will, skill, manifestation, resourcefulness","Manipulation, scattered energy, unused talent","Air","I"],
@@ -418,8 +422,10 @@ footer{
   };
 
   return {deck, spreads};
-})();\n</script>
-  <script>\n(() => {
+})();
+</script>
+  <script>
+(() => {
   "use strict";
 
   const { deck, spreads } = window.ARCANUM_TAROT;
@@ -895,7 +901,10 @@ footer{
   const demoSeed = "ARCANUM-DEMO";
   $("#seed").value = demoSeed;
   render(createReading("three",demoSeed,0.25),"three",demoSeed,"Demo reading");
-})();\n</script>\n  <script>\n
+})();
+</script>
+  <script>
+
 (() => {
   "use strict";
 
@@ -1137,6 +1146,7 @@ footer{
 
   window.addEventListener("load", () => setTimeout(enrichReading, 50));
 })();
-\n</script>
+
+</script>
 </body>
 </html>
