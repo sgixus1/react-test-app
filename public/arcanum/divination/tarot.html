@@ -1031,7 +1031,7 @@ body{
 
 /* === Approved generated sanctuary background v8 === */
 :root{
-  --arcanum-bg-local:url("/arcanum/divination/arcanum-tarot-sanctuary.png");
+  --arcanum-bg-local:url("./arcanum-tarot-sanctuary.png");
   --arcanum-bg-fallback:url("https://images.pexels.com/photos/7179423/pexels-photo-7179423.jpeg?auto=compress&cs=tinysrgb&w=2400&dpr=1");
 }
 body{
@@ -1231,7 +1231,7 @@ body:after{
         <div class="brand">ARCANUM TAROT</div>
         <div class="subtitle">78-CARD DIVINATION SYSTEM</div>
       </div>
-      <nav class="product-nav"><a href="/#/divination">Archive</a><a class="active" href="/arcanum/divination/tarot.html">Tarot</a><a href="/arcanum/divination/runes.html">Runes</a></nav><div class="top-note">Seeded shuffle · upright/reversed · spread logic · elemental interactions</div>
+      <nav class="product-nav"><a href="../../index.html#/divination">Archive</a><a class="active" href="./tarot.html">Tarot</a><a href="./runes.html">Runes</a></nav><div class="top-note">Seeded shuffle · upright/reversed · spread logic · elemental interactions</div>
       <div id="testBadge" class="badge">Running engine checks…</div>
     </header>
 
@@ -2434,7 +2434,7 @@ window.ARCANUM_TAROT = (() => {
       const nav=e.target.closest("[data-nav]");
       if(nav){
         qa(".topnav button").forEach(x=>x.classList.toggle("active",x===nav));
-        if(nav.dataset.nav==="runes"){window.location.href="/arcanum/divination/runes.html";return;}
+        if(nav.dataset.nav==="runes"){window.location.href="./runes.html";return;}
         if(nav.dataset.nav==="library"){q("#libraryOverlay").classList.add("open");return;}
         if(nav.dataset.nav==="journal"){
           q(".history")?.scrollIntoView({behavior:"smooth",block:"center"});return;
