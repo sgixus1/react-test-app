@@ -2986,3 +2986,258 @@ input:focus-visible {
     font-size: 9px;
   }
 }
+
+
+/* v0.2 Personal Vault & Bookmarks */
+
+.personal-vault-section {
+  padding-top: 80px;
+  background:
+    radial-gradient(circle at 12% 30%, rgba(112, 64, 134, 0.08), transparent 28%),
+    radial-gradient(circle at 88% 60%, rgba(126, 82, 39, 0.07), transparent 30%),
+    #070608;
+  border-top: 1px solid rgba(223, 189, 104, 0.07);
+  border-bottom: 1px solid rgba(223, 189, 104, 0.07);
+}
+
+.personal-vault-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.vault-panel {
+  min-height: 360px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(145deg, rgba(18, 13, 19, 0.96), rgba(9, 7, 10, 0.96)),
+    #0a080b;
+  box-shadow: inset 0 0 45px rgba(223, 189, 104, 0.01);
+}
+
+.vault-heading {
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 13px;
+  align-items: center;
+}
+
+.vault-heading > span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  color: var(--gold);
+  background: #0b090c;
+}
+
+.vault-heading > div {
+  display: grid;
+}
+
+.vault-heading small {
+  color: var(--gold);
+  font-family: var(--display);
+  font-size: 7px;
+  letter-spacing: 0.16em;
+}
+
+.vault-heading strong {
+  margin-top: 4px;
+  color: #d2c5af;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.vault-list {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+.vault-list > button {
+  min-height: 78px;
+  padding: 8px 0;
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: padding-left 180ms ease, background 180ms ease;
+}
+
+.vault-list > button:hover {
+  padding-left: 7px;
+  background: linear-gradient(90deg, rgba(223, 189, 104, 0.04), transparent);
+}
+
+.vault-list img {
+  width: 64px;
+  height: 58px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+}
+
+.vault-list > button > span {
+  min-width: 0;
+  display: grid;
+}
+
+.vault-list strong {
+  color: #cfc3ae;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.vault-list small {
+  margin-top: 3px;
+  overflow: hidden;
+  color: #71695f;
+  font-family: var(--cn);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vault-list em,
+.vault-list b {
+  color: #8d7c5a;
+  font-family: var(--display);
+  font-size: 7px;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.vault-list em:hover {
+  color: var(--gold-bright);
+}
+
+.vault-empty {
+  max-width: 500px;
+  color: #776e62;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.category-row .category-scroll {
+  flex: 1;
+}
+
+.saved-filter {
+  min-height: 38px;
+  padding: 0 12px;
+  flex: 0 0 auto;
+  border: 1px solid var(--line);
+  background: #0b090c;
+  color: #8e8372;
+  cursor: pointer;
+  font-family: var(--display);
+  font-size: 8px;
+  letter-spacing: 0.08em;
+}
+
+.saved-filter.active,
+.saved-filter:hover {
+  border-color: var(--gold);
+  color: #171008;
+  background: var(--gold);
+}
+
+.record-card {
+  position: relative;
+}
+
+.record-bookmark {
+  position: absolute;
+  z-index: 8;
+  right: 13px;
+  top: 13px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(223, 189, 104, 0.24);
+  color: #c6aa67;
+  background: rgba(5, 4, 7, 0.78);
+  cursor: pointer;
+  font-size: 15px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.24);
+  transition: 180ms ease;
+}
+
+.record-bookmark:hover,
+.record-bookmark.active {
+  border-color: var(--gold);
+  color: var(--gold-bright);
+  background: rgba(36, 26, 15, 0.94);
+  transform: translateY(-2px);
+}
+
+.entry-bookmark {
+  margin-top: 18px;
+  min-height: 40px;
+  padding: 0 13px;
+  border: 1px solid var(--line);
+  color: #aa9b7f;
+  background: rgba(5,4,7,.55);
+  cursor: pointer;
+  font-family: var(--display);
+  font-size: 8px;
+  letter-spacing: 0.09em;
+  transition: 180ms ease;
+}
+
+.entry-bookmark:hover,
+.entry-bookmark.active {
+  border-color: var(--gold);
+  color: var(--gold-bright);
+  background: rgba(223, 189, 104, 0.065);
+}
+
+@media (max-width: 900px) {
+  .personal-vault-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .category-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .saved-filter {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 520px) {
+  .vault-panel {
+    padding: 18px;
+  }
+
+  .vault-list > button {
+    grid-template-columns: 54px 1fr;
+  }
+
+  .vault-list img {
+    width: 54px;
+    height: 50px;
+  }
+
+  .vault-list em,
+  .vault-list b {
+    display: none;
+  }
+}
