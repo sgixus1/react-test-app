@@ -266,7 +266,877 @@ footer{
     </footer>
   </div>
 
-  <script src="./tarot-data.js"></script>
-  <script src="./app.js"></script>\n  <script src="./explanation.js"></script>
+  <script>\nwindow.ARCANUM_TAROT = (() => {
+  const majorRows = [
+    ["The Fool","Beginnings, freedom, trust, spontaneity","Recklessness, hesitation, poor judgment","Air","0"],
+    ["The Magician","Will, skill, manifestation, resourcefulness","Manipulation, scattered energy, unused talent","Air","I"],
+    ["The High Priestess","Intuition, mystery, inner knowing, silence","Blocked intuition, secrecy, disconnection","Water","II"],
+    ["The Empress","Abundance, nurture, creativity, sensuality","Creative block, dependence, neglect","Earth","III"],
+    ["The Emperor","Structure, authority, stability, boundaries","Rigidity, domination, loss of control","Fire","IV"],
+    ["The Hierophant","Tradition, teaching, ritual, shared values","Rebellion, dogma, unconventional path","Earth","V"],
+    ["The Lovers","Union, choice, values, alignment","Disharmony, imbalance, misaligned values","Air","VI"],
+    ["The Chariot","Drive, victory, direction, self-control","Stalled progress, aggression, scattered will","Water","VII"],
+    ["Strength","Courage, patience, compassion, inner strength","Self-doubt, raw emotion, insecurity","Fire","VIII"],
+    ["The Hermit","Solitude, reflection, wisdom, guidance","Isolation, withdrawal, avoidance","Earth","IX"],
+    ["Wheel of Fortune","Cycles, turning point, change, opportunity","Resistance to change, setbacks, repeating patterns","Fire","X"],
+    ["Justice","Truth, balance, accountability, fair judgment","Bias, avoidance, unfairness, denial","Air","XI"],
+    ["The Hanged Man","Pause, surrender, new perspective, release","Stalling, martyrdom, needless delay","Water","XII"],
+    ["Death","Ending, transformation, transition, renewal","Resistance, stagnation, fear of change","Water","XIII"],
+    ["Temperance","Balance, moderation, integration, healing","Excess, imbalance, friction, poor timing","Fire","XIV"],
+    ["The Devil","Attachment, temptation, shadow, material bonds","Release, awareness, reclaiming power","Earth","XV"],
+    ["The Tower","Sudden change, revelation, disruption, liberation","Avoided upheaval, fear of change, delayed collapse","Fire","XVI"],
+    ["The Star","Hope, renewal, inspiration, calm faith","Discouragement, disconnection, lost confidence","Air","XVII"],
+    ["The Moon","Uncertainty, dreams, intuition, hidden factors","Clarity emerging, fear exposed, confusion lifting","Water","XVIII"],
+    ["The Sun","Vitality, success, joy, confidence","Temporary cloud, overexposure, delayed success","Fire","XIX"],
+    ["Judgement","Awakening, reckoning, calling, renewal","Self-doubt, avoidance, refusal to learn","Fire","XX"],
+    ["The World","Completion, integration, achievement, wholeness","Loose ends, delay, incomplete cycle","Earth","XXI"]
+  ];
+
+  const minors = {
+    Wands: [
+      ["Ace","Inspiration, new spark, initiative","Delay, low energy, false start"],
+      ["Two","Planning, future vision, choice of direction","Fear of change, limited planning, indecision"],
+      ["Three","Expansion, progress, foresight","Delays, obstacles, lack of foresight"],
+      ["Four","Celebration, homecoming, stable foundation","Tension at home, instability, private celebration"],
+      ["Five","Competition, conflict, testing ideas","Conflict avoidance, resolution, internal tension"],
+      ["Six","Recognition, victory, public support","Ego, fall from favor, private win"],
+      ["Seven","Defense, conviction, standing ground","Exhaustion, yielding, feeling overwhelmed"],
+      ["Eight","Speed, movement, messages, momentum","Delay, confusion, miscommunication"],
+      ["Nine","Resilience, boundaries, persistence","Fatigue, defensiveness, nearing burnout"],
+      ["Ten","Burden, duty, responsibility, overload","Release, delegation, collapse under pressure"],
+      ["Page","Curiosity, discovery, enthusiastic message","Restlessness, immature enthusiasm, bad news"],
+      ["Knight","Adventure, action, bold pursuit","Impulsiveness, anger, scattered action"],
+      ["Queen","Confidence, warmth, independence, attraction","Jealousy, insecurity, demanding energy"],
+      ["King","Vision, leadership, entrepreneurship","Domination, rash leadership, unrealistic expectations"]
+    ],
+    Cups: [
+      ["Ace","Emotional opening, love, compassion, intuition","Blocked feelings, emptiness, emotional overflow"],
+      ["Two","Partnership, mutual attraction, agreement","Imbalance, separation, miscommunication"],
+      ["Three","Friendship, celebration, community","Overindulgence, gossip, social tension"],
+      ["Four","Contemplation, reevaluation, emotional pause","Renewed interest, awareness, emerging motivation"],
+      ["Five","Loss, grief, disappointment, focus on absence","Acceptance, recovery, finding what remains"],
+      ["Six","Nostalgia, innocence, reunion, memory","Living in the past, unrealistic nostalgia, moving on"],
+      ["Seven","Choices, imagination, fantasy, many options","Clarity, decision, avoiding illusion"],
+      ["Eight","Walking away, seeking deeper meaning","Fear of leaving, aimless drifting, returning"],
+      ["Nine","Satisfaction, pleasure, wish fulfilled","Dissatisfaction, excess, shallow gratification"],
+      ["Ten","Emotional fulfillment, family harmony, shared joy","Family strain, broken harmony, unrealistic ideal"],
+      ["Page","Sensitive message, intuition, creative feeling","Emotional immaturity, insecurity, blocked intuition"],
+      ["Knight","Romance, invitation, idealism, following the heart","Moodiness, unrealistic promises, disappointment"],
+      ["Queen","Empathy, emotional depth, intuition, care","Emotional overwhelm, dependence, porous boundaries"],
+      ["King","Emotional balance, diplomacy, compassion","Emotional control, manipulation, suppressed feeling"]
+    ],
+    Swords: [
+      ["Ace","Clarity, truth, breakthrough, decisive thought","Confusion, misinformation, harsh judgment"],
+      ["Two","Difficult choice, truce, guarded balance","Indecision breaking, information overload, avoidance"],
+      ["Three","Heartbreak, sorrow, painful truth","Recovery, forgiveness, releasing pain"],
+      ["Four","Rest, recovery, retreat, contemplation","Restlessness, burnout, forced pause"],
+      ["Five","Conflict, hollow victory, tension","Reconciliation, making amends, lingering resentment"],
+      ["Six","Transition, moving on, gradual recovery","Baggage, resistance, unfinished transition"],
+      ["Seven","Strategy, stealth, independence, acting alone","Exposure, self-deception, changing strategy"],
+      ["Eight","Restriction, fear, trapped perspective","Release, new options, reclaiming agency"],
+      ["Nine","Anxiety, worry, sleeplessness, mental pressure","Relief, facing fear, persistent anxiety"],
+      ["Ten","Painful ending, collapse, finality","Recovery, survival, resisting an ending"],
+      ["Page","Alertness, curiosity, new idea, candid message","Gossip, defensiveness, scattered thinking"],
+      ["Knight","Ambition, speed, direct action, argument","Recklessness, aggression, poor timing"],
+      ["Queen","Independence, discernment, direct truth","Bitterness, harshness, isolation"],
+      ["King","Reason, authority, strategy, ethics","Coldness, misuse of intellect, rigid judgment"]
+    ],
+    Pentacles: [
+      ["Ace","Material opportunity, seed of prosperity, grounding","Missed opportunity, poor planning, instability"],
+      ["Two","Adaptability, juggling priorities, resource management","Overload, disorganization, dropped priorities"],
+      ["Three","Teamwork, craft, learning, building quality","Poor collaboration, low standards, lack of growth"],
+      ["Four","Security, conservation, control, boundaries","Greed, fear of loss, releasing control"],
+      ["Five","Hardship, exclusion, financial strain, insecurity","Recovery, assistance, gradual improvement"],
+      ["Six","Giving, receiving, generosity, fair exchange","Debt, strings attached, unequal exchange"],
+      ["Seven","Patience, assessment, long-term investment","Impatience, poor return, wasted effort"],
+      ["Eight","Practice, skill, diligence, craftsmanship","Perfectionism, repetitive work, lack of focus"],
+      ["Nine","Independence, comfort, earned reward, self-reliance","Overwork, dependence, superficial success"],
+      ["Ten","Legacy, family wealth, long-term stability","Family conflict, unstable foundation, short-term focus"],
+      ["Page","Study, practical opportunity, new skill","Procrastination, poor follow-through, impractical plan"],
+      ["Knight","Reliability, routine, patience, steady work","Stagnation, boredom, stubbornness"],
+      ["Queen","Practical care, security, generosity, resourcefulness","Self-neglect, possessiveness, work-home imbalance"],
+      ["King","Prosperity, stewardship, discipline, dependable leadership","Materialism, stubbornness, misuse of resources"]
+    ]
+  };
+
+  const elements = {Wands:"Fire",Cups:"Water",Swords:"Air",Pentacles:"Earth"};
+  const deck = majorRows.map((r,i)=>({
+    id:"M"+String(i).padStart(2,"0"),
+    name:r[0], upright:r[1], reversed:r[2], element:r[3], rank:r[4],
+    suit:"Major", arcana:"Major"
+  }));
+
+  Object.entries(minors).forEach(([suit, rows]) => rows.forEach(r => deck.push({
+    id:suit[0]+"-"+r[0],
+    name:r[0]+" of "+suit,
+    upright:r[1], reversed:r[2],
+    element:elements[suit], rank:r[0], suit, arcana:"Minor"
+  })));
+
+  const spreads = {
+    one:[
+      ["Message","What deserves your attention now?"]
+    ],
+    three:[
+      ["Past","What established the present pattern?"],
+      ["Present","What is active now?"],
+      ["Future","What direction develops if the pattern continues?"]
+    ],
+    love:[
+      ["You","Your energy and needs"],
+      ["Other","The other person or relational counterpart"],
+      ["Bond","What connects you"],
+      ["Challenge","What complicates the connection"],
+      ["Direction","A constructive direction for the relationship"]
+    ],
+    career:[
+      ["Current Role","The energy around your work now"],
+      ["Strength","What you can rely on"],
+      ["Challenge","What needs management"],
+      ["Opportunity","Where growth is available"],
+      ["Next Step","A practical direction"]
+    ],
+    decision:[
+      ["Situation","What defines the decision"],
+      ["Path A","Energy around the first option"],
+      ["Path B","Energy around the second option"],
+      ["Hidden Factor","What is easy to overlook"],
+      ["Guidance","What principle supports a sound choice"]
+    ],
+    celtic:[
+      ["Present","Core situation"],
+      ["Crossing","Immediate challenge or influence"],
+      ["Foundation","Underlying cause"],
+      ["Past","What is receding"],
+      ["Possibility","Conscious aim or potential"],
+      ["Near Future","Developing influence"],
+      ["Self","Your stance"],
+      ["Environment","External context"],
+      ["Hopes / Fears","Emotional expectation"],
+      ["Outcome","Likely direction if current dynamics continue"]
+    ]
+  };
+
+  return {deck, spreads};
+})();\n</script>
+  <script>\n(() => {
+  "use strict";
+
+  const { deck, spreads } = window.ARCANUM_TAROT;
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (m) => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+
+  const domainRules = {
+    general:{
+      Cups:"feelings, relationships, and intuition are active",
+      Wands:"energy, motivation, and initiative are active",
+      Swords:"thought, communication, conflict, or decisions are active",
+      Pentacles:"resources, work, body, money, or practical stability are active",
+      Major:"an archetypal life theme is active"
+    },
+    love:{
+      Cups:"emotional connection and vulnerability are emphasized",
+      Wands:"chemistry, desire, and initiative are emphasized",
+      Swords:"communication, expectations, and boundaries are emphasized",
+      Pentacles:"stability, trust, and practical commitment are emphasized",
+      Major:"the relationship carries a larger developmental theme"
+    },
+    career:{
+      Cups:"satisfaction, purpose, and team dynamics matter",
+      Wands:"initiative, ambition, visibility, and leadership matter",
+      Swords:"strategy, communication, competition, and decisions matter",
+      Pentacles:"skills, money, reliability, and tangible results matter",
+      Major:"the work situation connects to a larger developmental theme"
+    },
+    decision:{
+      Cups:"include emotional truth and relationship impact in the choice",
+      Wands:"consider motivation, appetite for risk, and willingness to act",
+      Swords:"prioritize facts, clarity, communication, and consequences",
+      Pentacles:"weigh resources, feasibility, security, and long-term value",
+      Major:"the decision may shape a broader life chapter"
+    }
+  };
+
+  const elementPairs = {
+    "Fire|Air":"supportive — Air feeds Fire, increasing expression and initiative",
+    "Air|Fire":"supportive — Air feeds Fire, increasing expression and initiative",
+    "Water|Earth":"supportive — Earth gives Water form, favoring steady emotional growth",
+    "Earth|Water":"supportive — Earth gives Water form, favoring steady emotional growth",
+    "Fire|Water":"friction — drive and emotion may pull in different directions",
+    "Water|Fire":"friction — drive and emotion may pull in different directions",
+    "Air|Earth":"friction — ideas and practical limits need reconciliation",
+    "Earth|Air":"friction — ideas and practical limits need reconciliation"
+  };
+
+  const majorSymbols = [
+    "✧","✦","☾","❀","♜","⌂","♡","➳","♌","✺","⊙","⚖",
+    "▽","✣","⚗","⛓","ϟ","★","☽","☀","♬","◎"
+  ];
+  const suitSymbols = {Wands:"✦",Cups:"◡",Swords:"†",Pentacles:"⬟"};
+  const palettes = {
+    Fire:["#571e16","#e2a14d"],
+    Water:["#112c4c","#83c4d8"],
+    Air:["#252f4b","#d7d9ee"],
+    Earth:["#27371f","#b5ba70"]
+  };
+
+  function hashSeed(str){
+    let h = 2166136261;
+    for(let i=0;i<str.length;i++) h = Math.imul(h ^ str.charCodeAt(i), 16777619);
+    return h >>> 0;
+  }
+
+  function makeRng(seed){
+    let a = hashSeed(seed);
+    return () => {
+      a += 0x6D2B79F5;
+      let t = a;
+      t = Math.imul(t ^ t >>> 15, t | 1);
+      t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+      return ((t ^ t >>> 14) >>> 0) / 4294967296;
+    };
+  }
+
+  function fisherYates(items, rng){
+    const a = [...items];
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(rng() * (i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function domainFor(spreadKey){
+    if(spreadKey==="love") return "love";
+    if(spreadKey==="career") return "career";
+    if(spreadKey==="decision") return "decision";
+    return "general";
+  }
+
+  function symbolFor(card){
+    if(card.arcana==="Major") return majorSymbols[Number(card.id.slice(1))] || "✦";
+    return suitSymbols[card.suit] || "✦";
+  }
+
+  function sceneForMajor(card, color){
+    const n = Number(card.id.slice(1));
+    const variants = [
+      '<path d="M28 210 Q100 145 172 210 L172 238 L28 238Z" fill="'+color+'" opacity=".11"/><circle cx="132" cy="132" r="24" fill="'+color+'" opacity=".17"/>',
+      '<rect x="52" y="143" width="96" height="68" rx="7" fill="'+color+'" opacity=".12"/><path d="M100 109V225M63 166H137" stroke="'+color+'" opacity=".42"/>',
+      '<path d="M55 214 Q100 96 145 214" fill="none" stroke="'+color+'" opacity=".4"/><circle cx="75" cy="123" r="17" fill="'+color+'" opacity=".12"/><circle cx="125" cy="123" r="17" fill="'+color+'" opacity=".12"/>',
+      '<path d="M38 220 Q64 136 100 180 Q136 136 162 220Z" fill="'+color+'" opacity=".13"/><circle cx="100" cy="133" r="29" fill="'+color+'" opacity=".12"/>'
+    ];
+    return variants[n % variants.length];
+  }
+
+  function cardArt(card){
+    const [dark, accent] = palettes[card.element] || palettes.Air;
+    const sym = symbolFor(card);
+    let body = "";
+
+    if(card.arcana==="Major"){
+      body = `
+        <circle cx="100" cy="148" r="51" fill="none" stroke="${accent}" opacity=".30"/>
+        <circle cx="100" cy="151" r="15" fill="${accent}" opacity=".76"/>
+        <path d="M100 166 L73 226 L127 226Z" fill="${accent}" opacity=".36"/>
+        ${sceneForMajor(card,accent)}
+      `;
+    } else {
+      const numeric = parseInt(card.rank,10);
+      if(Number.isFinite(numeric)){
+        const count = Math.min(10,numeric);
+        const coords = [
+          [100,104],[65,132],[135,132],[100,157],[65,182],
+          [135,182],[100,207],[65,226],[135,226],[100,242]
+        ];
+        for(let i=0;i<count;i++){
+          const [x,y] = coords[i];
+          body += '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="26" fill="'+accent+'" opacity=".88">'+sym+'</text>';
+        }
+      } else {
+        const crown = card.rank==="King" ? "♔" : card.rank==="Queen" ? "♕" : card.rank==="Knight" ? "♞" : "✧";
+        body = `
+          <circle cx="100" cy="156" r="45" fill="${accent}" opacity=".11"/>
+          <path d="M100 112 L70 224 L130 224Z" fill="${accent}" opacity=".28"/>
+          <text x="100" y="154" text-anchor="middle" font-size="44" fill="${accent}">${sym}</text>
+          <text x="100" y="204" text-anchor="middle" font-size="24" fill="${accent}">${crown}</text>
+        `;
+      }
+    }
+
+    return `
+      <svg viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(card.name)}">
+        <defs>
+          <radialGradient id="g-${card.id}">
+            <stop stop-color="${accent}" stop-opacity=".18"/>
+            <stop offset="1" stop-color="${dark}" stop-opacity=".98"/>
+          </radialGradient>
+          <pattern id="stars-${card.id}" width="19" height="19" patternUnits="userSpaceOnUse">
+            <circle cx="3" cy="3" r=".9" fill="${accent}" opacity=".18"/>
+          </pattern>
+        </defs>
+        <rect width="200" height="300" rx="12" fill="${dark}"/>
+        <rect x="7" y="7" width="186" height="286" rx="8" fill="url(#g-${card.id})" stroke="${accent}" stroke-width="1.3"/>
+        <rect x="11" y="11" width="178" height="278" rx="6" fill="url(#stars-${card.id})"/>
+        <text x="100" y="29" text-anchor="middle" font-size="10" fill="#f3e8cb" letter-spacing="1">${esc(card.rank)}</text>
+        <text x="100" y="76" text-anchor="middle" font-size="45" fill="${accent}">${sym}</text>
+        ${body}
+        <path d="M31 247H169" stroke="${accent}" opacity=".55"/>
+        <text x="100" y="269" text-anchor="middle" font-size="12" fill="#f7e8c5" font-family="Georgia">${esc(card.name)}</text>
+        <text x="100" y="285" text-anchor="middle" font-size="8" fill="${accent}" opacity=".82">${card.element.toUpperCase()}</text>
+      </svg>
+    `;
+  }
+
+  function repeatedRankRules(draws, index){
+    const card = draws[index].card;
+    const same = draws.filter((d,i)=>i!==index && d.card.rank===card.rank && d.card.arcana===card.arcana);
+    if(!same.length) return [];
+    return ["Pattern repetition — the rank/archetype repeats elsewhere in the spread"];
+  }
+
+  function neighborRules(draws,index){
+    const current = draws[index].card;
+    const neighbors = [draws[index-1],draws[index+1]].filter(Boolean);
+    const rules = [];
+
+    neighbors.forEach(n => {
+      const other = n.card;
+      if(current.element===other.element){
+        rules.push("Reinforcement with "+other.name+" — shared "+current.element+" element");
+      } else {
+        const relation = elementPairs[current.element+"|"+other.element];
+        if(relation) rules.push(other.name+" — "+relation);
+      }
+
+      if(current.suit!=="Major" && current.suit===other.suit){
+        rules.push("Suit reinforcement with "+other.name+" — repeated "+current.suit);
+      }
+    });
+
+    return rules;
+  }
+
+  function interpretCard(draws,index,position,domain){
+    const draw = draws[index];
+    const card = draw.card;
+    const orientation = draw.reversed ? "reversed" : "upright";
+    const base = draw.reversed ? card.reversed : card.upright;
+    const domainRule = domainRules[domain][card.suit];
+
+    const rules = [
+      "Base card rule — "+orientation+" meaning",
+      "Spread position — "+position[0]+": "+position[1],
+      "Domain modifier — "+domainRule,
+      ...neighborRules(draws,index),
+      ...repeatedRankRules(draws,index)
+    ];
+
+    const neighborText = rules
+      .filter(r => r.startsWith("Reinforcement") || r.startsWith("Suit") || r.includes(" — supportive") || r.includes(" — friction"))
+      .map(r => r.replace(/^.*? — /,""));
+
+    let text = base + ". ";
+    text += "In the "+position[0]+" position, apply this to "+position[1].toLowerCase()+". ";
+    text += domainRule.charAt(0).toUpperCase()+domainRule.slice(1)+".";
+    if(neighborText.length) text += " Nearby cards add "+neighborText.join("; ")+".";
+    if(rules.some(r=>r.startsWith("Pattern repetition"))) text += " A repeated rank/archetype makes this theme more persistent across the reading.";
+
+    return {text,rules};
+  }
+
+  function overallSummary(draws,domain){
+    const majors = draws.filter(d=>d.card.arcana==="Major").length;
+    const reversed = draws.filter(d=>d.reversed).length;
+    const elements = {Fire:0,Water:0,Air:0,Earth:0};
+    const suits = {Wands:0,Cups:0,Swords:0,Pentacles:0};
+    const court = [];
+
+    draws.forEach(d=>{
+      elements[d.card.element]++;
+      if(d.card.suit!=="Major") suits[d.card.suit]++;
+      if(["Page","Knight","Queen","King"].includes(d.card.rank)) court.push(d.card.name);
+    });
+
+    const [dominantElement,elementCount] = Object.entries(elements).sort((a,b)=>b[1]-a[1])[0];
+    const [dominantSuit,suitCount] = Object.entries(suits).sort((a,b)=>b[1]-a[1])[0];
+
+    const parts = [];
+    parts.push(
+      majors >= Math.ceil(draws.length/2)
+        ? "Major Arcana dominate, so broad life themes carry more weight than short-term details."
+        : "Minor Arcana are prominent, so practical choices and day-to-day dynamics carry more weight."
+    );
+
+    parts.push(
+      reversed===0
+        ? "All cards are upright, emphasizing relatively direct outward expression."
+        : reversed>=Math.ceil(draws.length/2)
+        ? "Reversals are prominent, emphasizing internal processing, delays, resistance, or redirected energy."
+        : "The mix of upright and reversed cards suggests both outward movement and internal adjustment."
+    );
+
+    if(elementCount>1) parts.push(dominantElement+" is the most repeated element, increasing its influence across the spread.");
+    if(suitCount>1) parts.push(dominantSuit+" repeat, reinforcing "+domainRules[domain][dominantSuit]+".");
+    if(court.length>1) parts.push("Multiple court cards suggest that roles, personalities, or styles of action are especially important.");
+
+    return parts.join(" ");
+  }
+
+  function render(draws,spreadKey,seed,question){
+    const positions = spreads[spreadKey];
+    const domain = domainFor(spreadKey);
+    const area = $("#spreadArea");
+
+    area.innerHTML = draws.map((d,i)=>`
+      <div class="slot">
+        <div class="card" data-index="${i}" aria-label="Flip ${esc(d.card.name)}">
+          <div class="card-inner">
+            <div class="face card-back"></div>
+            <div class="face card-front ${d.reversed?"reversed":""}">${cardArt(d.card)}</div>
+          </div>
+        </div>
+        <div class="position">${esc(positions[i][0])}</div>
+        <div class="focus">${esc(positions[i][1])}</div>
+      </div>
+    `).join("");
+
+    area.querySelectorAll(".card").forEach(el=>{
+      el.addEventListener("click",()=>el.classList.toggle("revealed"));
+    });
+
+    $("#summary").innerHTML = '<div class="summary">'+esc(overallSummary(draws,domain))+'</div>';
+
+    $("#reading").innerHTML = draws.map((d,i)=>{
+      const result = interpretCard(draws,i,positions[i],domain);
+      return `
+        <div class="entry">
+          <h4>${i+1}. ${esc(positions[i][0])} — ${esc(d.card.name)} ${d.reversed?"↕":""}</h4>
+          <div class="chips">
+            <span class="chip">${d.card.arcana}</span>
+            <span class="chip">${d.card.suit}</span>
+            <span class="chip">${d.card.element}</span>
+            <span class="chip">${d.reversed?"Reversed":"Upright"}</span>
+          </div>
+          <div class="meaning">${esc(result.text)}</div>
+          <div class="why">${esc(result.rules.join(" · "))}</div>
+        </div>
+      `;
+    }).join("");
+
+    const trace = {
+      seed,
+      question: question || null,
+      spread: spreadKey,
+      domain,
+      cards: draws.map((d,i)=>({
+        position:positions[i][0],
+        card:d.card.name,
+        orientation:d.reversed?"reversed":"upright",
+        arcana:d.card.arcana,
+        suit:d.card.suit,
+        element:d.card.element,
+        rules:interpretCard(draws,i,positions[i],domain).rules
+      }))
+    };
+
+    $("#trace").textContent = JSON.stringify(trace,null,2);
+    $("#status").textContent = "Seed: "+seed+" · "+draws.length+" card"+(draws.length===1?"":"s")+" · "+domain+" logic";
+
+    window.__currentTarotReading = {draws,spreadKey,seed,question:question||"",time:new Date().toISOString()};
+
+    setTimeout(()=>{
+      area.querySelectorAll(".card").forEach((card,i)=>{
+        setTimeout(()=>card.classList.add("revealed"),i*120);
+      });
+    },120);
+  }
+
+  function createReading(spreadKey,seed,reversalRate){
+    const positions = spreads[spreadKey];
+    const rng = makeRng(seed);
+    const shuffled = fisherYates(deck,rng);
+    return shuffled.slice(0,positions.length).map(card=>({
+      card,
+      reversed:rng()<reversalRate
+    }));
+  }
+
+  function saveHistory(reading){
+    const list = JSON.parse(localStorage.getItem("arcanumTarotHistory")||"[]");
+    list.unshift({
+      spreadKey:reading.spreadKey,
+      seed:reading.seed,
+      question:reading.question,
+      time:reading.time,
+      cards:reading.draws.map(d=>({id:d.card.id,reversed:d.reversed}))
+    });
+    localStorage.setItem("arcanumTarotHistory",JSON.stringify(list.slice(0,8)));
+    renderHistory();
+  }
+
+  function renderHistory(){
+    const list = JSON.parse(localStorage.getItem("arcanumTarotHistory")||"[]");
+    const root = $("#historyList");
+
+    if(!list.length){
+      root.innerHTML = '<div class="note">No readings saved yet.</div>';
+      return;
+    }
+
+    root.innerHTML = list.map((r,i)=>`
+      <button data-history="${i}">
+        ${new Date(r.time).toLocaleString()} · ${esc(r.spreadKey)}
+        ${r.question?" · "+esc(r.question.slice(0,24)):""}
+      </button>
+    `).join("");
+
+    root.querySelectorAll("button").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const r = list[Number(btn.dataset.history)];
+        const draws = r.cards.map(x=>({
+          card:deck.find(c=>c.id===x.id),
+          reversed:x.reversed
+        }));
+        $("#spread").value = r.spreadKey;
+        $("#question").value = r.question || "";
+        $("#seed").value = r.seed;
+        render(draws,r.spreadKey,r.seed,r.question||"");
+      });
+    });
+  }
+
+  function drawNew(){
+    const spreadKey = $("#spread").value;
+    const question = $("#question").value.trim();
+    const seed = $("#seed").value.trim() || (Date.now()+"-"+Math.random().toString(36).slice(2));
+    const reversalRate = Number($("#reversalRate").value);
+
+    $("#seed").value = seed;
+    const draws = createReading(spreadKey,seed,reversalRate);
+    render(draws,spreadKey,seed,question);
+    saveHistory(window.__currentTarotReading);
+  }
+
+  function drawDaily(){
+    const day = new Date().toISOString().slice(0,10);
+    const key = "arcanumDaily-"+day;
+    const seed = "ARCANUM-DAILY-"+day;
+    let stored = localStorage.getItem(key);
+    let draw;
+
+    if(stored){
+      const x = JSON.parse(stored);
+      draw = {card:deck.find(c=>c.id===x.id),reversed:x.reversed};
+    } else {
+      const rng = makeRng(seed);
+      const card = fisherYates(deck,rng)[0];
+      draw = {card,reversed:rng()<0.25};
+      localStorage.setItem(key,JSON.stringify({id:card.id,reversed:draw.reversed}));
+    }
+
+    $("#spread").value = "one";
+    $("#seed").value = seed;
+    render([draw],"one",seed,"Daily card");
+    saveHistory(window.__currentTarotReading);
+  }
+
+  function runSelfTests(){
+    const tests = [];
+    const test = (name,fn)=>{
+      try{ tests.push({name,pass:Boolean(fn())}); }
+      catch(e){ tests.push({name,pass:false,error:e.message}); }
+    };
+
+    test("Full 78-card deck",()=>deck.length===78);
+    test("All card IDs unique",()=>new Set(deck.map(c=>c.id)).size===78);
+    test("All meanings populated",()=>deck.every(c=>c.upright && c.reversed));
+    test("Seeded shuffle deterministic",()=>{
+      const a=fisherYates(deck,makeRng("same-seed")).slice(0,10).map(c=>c.id).join(",");
+      const b=fisherYates(deck,makeRng("same-seed")).slice(0,10).map(c=>c.id).join(",");
+      return a===b;
+    });
+    test("Different seeds change order",()=>{
+      const a=fisherYates(deck,makeRng("seed-a")).slice(0,8).map(c=>c.id).join(",");
+      const b=fisherYates(deck,makeRng("seed-b")).slice(0,8).map(c=>c.id).join(",");
+      return a!==b;
+    });
+    test("No duplicate cards in Celtic Cross",()=>{
+      const r=createReading("celtic","duplicate-test",0.33);
+      return new Set(r.map(x=>x.card.id)).size===10;
+    });
+    test("Spread sizes correct",()=>Object.entries(spreads).every(([k,p])=>createReading(k,"size-"+k,0).length===p.length));
+    test("Reversal off means upright",()=>createReading("celtic","rev-off",0).every(x=>!x.reversed));
+    test("Reversal 100% means reversed",()=>createReading("three","rev-all",1).every(x=>x.reversed));
+    test("Rule engine emits trace",()=>{
+      const r=createReading("three","rule-test",0.25);
+      return interpretCard(r,1,spreads.three[1],"general").rules.length>=3;
+    });
+
+    const pass = tests.every(t=>t.pass);
+    const badge = $("#testBadge");
+    badge.textContent = pass ? "Engine self-checks: PASS" : "Engine self-checks: FAIL";
+    badge.classList.add(pass?"pass":"fail");
+
+    if(!pass) console.error("Tarot self-test failures",tests.filter(t=>!t.pass));
+    else console.info("Arcanum Tarot self-tests",tests);
+
+    return tests;
+  }
+
+  $("#drawButton").addEventListener("click",drawNew);
+  $("#dailyButton").addEventListener("click",drawDaily);
+
+  renderHistory();
+  runSelfTests();
+
+  const demoSeed = "ARCANUM-DEMO";
+  $("#seed").value = demoSeed;
+  render(createReading("three",demoSeed,0.25),"three",demoSeed,"Demo reading");
+})();\n</script>\n  <script>\n
+(() => {
+  "use strict";
+
+  const suitExplanations = {
+    Wands: "Wands emphasize motivation, creativity, ambition, courage, initiative, and the use of personal energy.",
+    Cups: "Cups emphasize emotion, relationships, intuition, empathy, imagination, and inner response.",
+    Swords: "Swords emphasize thought, truth, communication, decisions, conflict, boundaries, and mental pressure.",
+    Pentacles: "Pentacles emphasize work, money, health, skills, stability, resources, the body, and tangible results."
+  };
+
+  const rankExplanations = {
+    Ace: "An Ace introduces the seed, opening, or raw potential of its suit.",
+    Two: "A Two introduces polarity, choice, balance, or the need to coordinate two forces.",
+    Three: "A Three develops the suit through growth, expression, collaboration, or consequence.",
+    Four: "A Four stabilizes the suit, creating structure, pause, protection, or containment.",
+    Five: "A Five destabilizes the suit and introduces challenge, adjustment, loss, competition, or change.",
+    Six: "A Six moves toward restoration, exchange, progress, recognition, or rebalancing.",
+    Seven: "A Seven tests commitment, judgment, patience, belief, or strategy.",
+    Eight: "An Eight intensifies movement, skill, restriction, discipline, or practical application.",
+    Nine: "A Nine brings the suit close to completion and often emphasizes maturity, resilience, pressure, or consequence.",
+    Ten: "A Ten completes or overloads the suit, showing culmination and what follows from accumulated energy.",
+    Page: "A Page represents learning, curiosity, messages, discovery, and an early-stage expression of the suit.",
+    Knight: "A Knight represents pursuit, movement, commitment, and active expression of the suit.",
+    Queen: "A Queen represents mature internal command of the suit and how its qualities are embodied.",
+    King: "A King represents mature external command, leadership, responsibility, and direction within the suit."
+  };
+
+  const domainRules = {
+    general: {
+      Cups: "feelings, relationships, and intuition are active",
+      Wands: "energy, motivation, creativity, and initiative are active",
+      Swords: "thought, communication, conflict, and decisions are active",
+      Pentacles: "practical matters, resources, work, health, and stability are active",
+      Major: "a broader archetypal life theme is active"
+    },
+    love: {
+      Cups: "emotional connection, vulnerability, and mutual response are emphasized",
+      Wands: "chemistry, attraction, initiative, and desire are emphasized",
+      Swords: "communication, expectations, boundaries, and difficult truths are emphasized",
+      Pentacles: "stability, reliability, shared resources, and practical commitment are emphasized",
+      Major: "the relationship carries a larger archetypal lesson or turning point"
+    },
+    career: {
+      Cups: "job satisfaction, team dynamics, and emotional investment matter",
+      Wands: "initiative, ambition, visibility, leadership, and motivation matter",
+      Swords: "strategy, communication, competition, decisions, and clarity matter",
+      Pentacles: "skills, money, security, resources, and measurable results matter",
+      Major: "the work situation connects to a broader developmental theme"
+    },
+    decision: {
+      Cups: "emotional truth and relationship consequences should be included in the choice",
+      Wands: "motivation, courage, timing, and willingness to act should be considered",
+      Swords: "facts, clarity, communication, and consequences should be prioritized",
+      Pentacles: "feasibility, resources, risk, and long-term value should be weighed",
+      Major: "the choice may affect a broader chapter of life"
+    }
+  };
+
+  const elementPairs = {
+    "Fire|Air": "supportive: Air feeds Fire, increasing initiative and expression",
+    "Air|Fire": "supportive: Air feeds Fire, increasing initiative and expression",
+    "Water|Earth": "supportive: Earth gives Water form, favoring steady emotional growth",
+    "Earth|Water": "supportive: Earth gives Water form, favoring steady emotional growth",
+    "Fire|Water": "tension: action and emotion can pull in different directions",
+    "Water|Fire": "tension: action and emotion can pull in different directions",
+    "Air|Earth": "tension: ideas and practical limits need reconciliation",
+    "Earth|Air": "tension: ideas and practical limits need reconciliation"
+  };
+
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (m) => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+
+  function domainFor(spreadKey) {
+    if (spreadKey === "love") return "love";
+    if (spreadKey === "career") return "career";
+    if (spreadKey === "decision") return "decision";
+    return "general";
+  }
+
+  function spreadName(key) {
+    return {
+      one: "One Card",
+      three: "Past · Present · Future",
+      love: "Love / Relationship",
+      career: "Career",
+      decision: "Decision",
+      celtic: "Celtic Cross"
+    }[key] || key;
+  }
+
+  function cardStructure(card) {
+    if (card.arcana === "Major") {
+      return card.name + " is a Major Arcana card. Major Arcana cards usually carry broader archetypal themes, turning points, or lessons that can outweigh short-term details.";
+    }
+    return card.name + " is Minor Arcana. " + rankExplanations[card.rank] + " " + suitExplanations[card.suit];
+  }
+
+  function orientationExplanation(draw) {
+    return draw.reversed
+      ? "Because the card is reversed, its meaning is read as blocked, internalized, delayed, redirected, excessive, deficient, or otherwise complicated."
+      : "Because the card is upright, its meaning is read in a more direct, outward, or readily expressed form.";
+  }
+
+  function neighborExplanation(draws, index) {
+    const current = draws[index];
+    const neighbors = [draws[index - 1], draws[index + 1]].filter(Boolean);
+    const notes = [];
+
+    neighbors.forEach((n) => {
+      if (current.card.element === n.card.element) {
+        notes.push("The shared " + current.card.element + " element with " + n.card.name + " reinforces this theme.");
+      } else {
+        const rel = elementPairs[current.card.element + "|" + n.card.element];
+        if (rel) notes.push("With " + n.card.name + ", the elemental relationship is " + rel + ".");
+      }
+
+      if (current.card.suit !== "Major" && current.card.suit === n.card.suit) {
+        notes.push("The repeated " + current.card.suit + " suit strengthens that suit's concerns.");
+      }
+    });
+
+    return notes;
+  }
+
+  function overallExplanation(reading) {
+    const draws = reading.draws;
+    const spreadKey = reading.spreadKey;
+    const domain = domainFor(spreadKey);
+    const question = reading.question || "";
+    const positions = window.ARCANUM_TAROT.spreads[spreadKey];
+
+    const majors = draws.filter((d) => d.card.arcana === "Major").length;
+    const reversed = draws.filter((d) => d.reversed).length;
+    const elements = { Fire:0, Water:0, Air:0, Earth:0 };
+    const suits = { Wands:0, Cups:0, Swords:0, Pentacles:0 };
+
+    draws.forEach((d) => {
+      elements[d.card.element]++;
+      if (d.card.suit !== "Major") suits[d.card.suit]++;
+    });
+
+    const dominantElement = Object.entries(elements).sort((a,b) => b[1] - a[1])[0];
+    const dominantSuit = Object.entries(suits).sort((a,b) => b[1] - a[1])[0];
+
+    const parts = [];
+    parts.push("This is a " + spreadName(spreadKey) + " reading" + (question ? " focused on “" + question + "”." : "."));
+
+    parts.push(
+      majors >= Math.ceil(draws.length / 2)
+        ? "Major Arcana dominate, so larger life themes, transitions, or lessons carry more weight than everyday detail."
+        : "Minor Arcana are prominent, so practical choices and day-to-day dynamics carry substantial weight."
+    );
+
+    if (reversed === 0) {
+      parts.push("No reversed cards appeared, so the spread is comparatively direct and outward-facing.");
+    } else if (reversed >= Math.ceil(draws.length / 2)) {
+      parts.push("Reversed cards are prominent, so internal processing, delay, resistance, or redirected energy deserves special attention.");
+    } else {
+      parts.push("The mix of upright and reversed cards suggests both outward movement and internal adjustment.");
+    }
+
+    if (dominantElement[1] > 1) {
+      parts.push(dominantElement[0] + " is the most repeated element (" + dominantElement[1] + " cards), reinforcing that elemental mode across the reading.");
+    }
+
+    if (dominantSuit[1] > 1) {
+      parts.push(dominantSuit[0] + " is the dominant Minor Arcana suit (" + dominantSuit[1] + " cards). " + suitExplanations[dominantSuit[0]]);
+    }
+
+    if (draws.length > 1) {
+      const first = draws[0];
+      const last = draws[draws.length - 1];
+      parts.push(
+        "The narrative begins with " + first.card.name + (first.reversed ? " reversed" : "") +
+        " in the " + positions[0][0] + " position and resolves toward " +
+        last.card.name + (last.reversed ? " reversed" : "") +
+        " in the " + positions[positions.length - 1][0] + " position."
+      );
+    } else {
+      parts.push("Because this is a one-card reading, the interpretation is concentrated on " + draws[0].card.name + (draws[0].reversed ? " reversed" : "") + ".");
+    }
+
+    return parts.join(" ");
+  }
+
+  function enrichReading() {
+    const reading = window.__currentTarotReading;
+    const target = $("#explanation");
+    if (!reading || !target) return;
+
+    const spreads = window.ARCANUM_TAROT.spreads;
+    const positions = spreads[reading.spreadKey];
+    const domain = domainFor(reading.spreadKey);
+
+    target.innerHTML =
+      '<div class="reading-explanation">' +
+        '<h3>Explanation of This Reading</h3>' +
+        '<p>' + esc(overallExplanation(reading)) + '</p>' +
+      '</div>';
+
+    const entries = document.querySelectorAll("#reading .entry");
+    entries.forEach((entry, index) => {
+      if (entry.querySelector(".card-explanation")) return;
+
+      const draw = reading.draws[index];
+      if (!draw) return;
+
+      const card = draw.card;
+      const position = positions[index];
+      const base = draw.reversed ? card.reversed : card.upright;
+      const parts = [
+        cardStructure(card),
+        orientationExplanation(draw),
+        "The " + position[0] + " position asks us to interpret the card specifically as: " + position[1],
+        "For this question type, " + domainRules[domain][card.suit] + ".",
+        ...neighborExplanation(reading.draws, index)
+      ];
+
+      const div = document.createElement("div");
+      div.className = "card-explanation";
+      div.innerHTML =
+        "<strong>Why this card means that here:</strong><br>" +
+        parts.map((x) => "• " + esc(x)).join("<br>") +
+        '<div class="base-meaning">Base tarot meaning used: ' + esc(base) + "</div>";
+
+      const meaning = entry.querySelector(".meaning");
+      if (meaning) meaning.insertAdjacentElement("afterend", div);
+      else entry.appendChild(div);
+    });
+  }
+
+  const readingRoot = $("#reading");
+  if (readingRoot) {
+    const observer = new MutationObserver(() => setTimeout(enrichReading, 0));
+    observer.observe(readingRoot, { childList:true, subtree:false });
+  }
+
+  window.addEventListener("load", () => setTimeout(enrichReading, 50));
+})();
+\n</script>
 </body>
 </html>
