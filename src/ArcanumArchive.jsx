@@ -1222,12 +1222,15 @@ function SourceLabView() {
             <p>Plain text and images are handled directly. PDF, Office, and archive extraction use optional system tools when available, so one missing dependency does not block the whole library.</p>
           </div>
           <div className="capability-grid">
-            <div className={capabilities.pdfToText ? "ready" : "blocked"}><span>PDF TEXT</span><strong>{capabilities.pdfToText ? "pdftotext ready" : "pdftotext missing"}</strong><small>{capabilities.pdfToTextPath || "Install Poppler or set ARCANUM_PDFTOTEXT"}</small></div>
-            <div className={capabilities.office ? "ready" : "blocked"}><span>DOC / DOCX</span><strong>{capabilities.office ? "LibreOffice ready" : "LibreOffice missing"}</strong><small>{capabilities.officePath || "Install LibreOffice or set ARCANUM_SOFFICE"}</small></div>
+            <div className={capabilities.nativePdf ? "ready" : capabilities.pdfToText ? "attention" : "blocked"}><span>PDF TEXT</span><strong>{capabilities.nativePdf ? "PDF.js native parser ready" : capabilities.pdfToText ? "pdftotext fallback ready" : "PDF parser unavailable"}</strong><small>{capabilities.nativePdf ? "Page-by-page text + provenance enabled" : capabilities.pdfToTextPath || capabilities.nativePdfError || "Install dependencies or Poppler"}</small></div>
+            <div className={capabilities.nativeDocx ? "ready" : "blocked"}><span>DOCX</span><strong>{capabilities.nativeDocx ? "Mammoth native parser ready" : "DOCX parser unavailable"}</strong><small>{capabilities.nativeDocx ? "Raw text extraction without LibreOffice" : capabilities.nativeDocxError || "Run npm install"}</small></div>
+            <div className={capabilities.office ? "ready" : "attention"}><span>LEGACY DOC / RTF</span><strong>{capabilities.office ? "LibreOffice fallback ready" : "LibreOffice optional"}</strong><small>{capabilities.officePath || "Only old .doc/.rtf files still require LibreOffice"}</small></div>
             <div className={capabilities.sevenZip ? "ready" : "blocked"}><span>RAR / ZIP / 7Z</span><strong>{capabilities.sevenZip ? "7-Zip ready" : "7-Zip missing"}</strong><small>{capabilities.sevenZipPath || "Install 7-Zip or set ARCANUM_7Z"}</small></div>
+            <div className="ready"><span>PAGE PROVENANCE</span><strong>{Number(extractionSummary.pageMappedRecords || 0)} PDF records mapped</strong><small>{Number(extractionSummary.totalPages || 0)} source pages indexed</small></div>
+            <div className={Number(extractionSummary.needsVision || 0) ? "attention" : "ready"}><span>SCANNED PDF</span><strong>{Number(extractionSummary.needsVision || 0)} need vision review</strong><small>Image-only PDFs are flagged instead of treated as empty text</small></div>
+            <div className="ready"><span>EXACT DUPLICATES</span><strong>{Number(extractionSummary.exactDuplicatesSkipped || 0)} copies skipped</strong><small>Canonical sources retain the derived content</small></div>
             <div className="ready"><span>TXT / MD / HTML</span><strong>Built-in Node extraction</strong><small>No external dependency required</small></div>
             <div className="ready"><span>IMAGE FILES</span><strong>Asset indexing ready</strong><small>Original bytes copied into derived asset storage</small></div>
-            <div className={Number(extractionSummary.needsVision || 0) ? "attention" : "ready"}><span>SCANNED PDF</span><strong>{Number(extractionSummary.needsVision || 0)} need vision review</strong><small>Image-only PDFs are flagged instead of treated as empty text</small></div>
           </div>
 
           {extractionRecords.length > 0 && (
