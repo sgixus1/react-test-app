@@ -1076,26 +1076,40 @@ function LibraryView() {
 
 function SourceLabView() {
   const [manifest, setManifest] = useState(null);
+  const [extraction, setExtraction] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
     let alive = true;
-    fetch("/arcanum/source-manifest.json", { cache: "no-store" })
-      .then((response) => {
-        if (!response.ok) throw new Error(`Manifest request failed: ${response.status}`);
-        return response.json();
+    Promise.all([
+      fetch("/arcanum/source-manifest.json", { cache: "no-store" }),
+      fetch("/arcanum/extraction-report.json", { cache: "no-store" }),
+    ])
+      .then(async ([manifestResponse, extractionResponse]) => {
+        if (!manifestResponse.ok) throw new Error(`Manifest request failed: ${manifestResponse.status}`);
+        if (!extractionResponse.ok) throw new Error(`Extraction report request failed: ${extractionResponse.status}`);
+        return [await manifestResponse.json(), await extractionResponse.json()];
       })
-      .then((data) => {
-        if (alive) setManifest(data);
+      .then(([manifestData, extractionData]) => {
+        if (alive) {
+          setManifest(manifestData);
+          setExtraction(extractionData);
+        }
       })
       .catch((reason) => {
-        if (alive) setError(reason.message || "Could not read source manifest.");
+        if (alive) setError(reason.message || "Could not read source reports.");
       });
     return () => { alive = false; };
   }, []);
 
+  /* legacy fetch kept out intentionally */
+  /* fetch("/arcanum/source-manifest.json", { cache: "no-store" }) */
   const summary = manifest?.summary || {};
+  const extractionSummary = extraction?.summary || {};
+  const capabilities = extraction?.capabilities || {};
+  const extractionRecords = Array.isArray(extraction?.records) ? extraction.records.slice(0, 18) : [];
   const extracted = Number(summary.totalFiles || summary.extractedFiles || 0);
+  const processed = Number(extractionSummary.requested || 0);
   const inventoryFiles = Number(summary.inventoryFiles || archiveStats.rawFiles || 0);
   const progress = inventoryFiles ? Math.min(100, Math.round((extracted / inventoryFiles) * 100)) : 0;
   const files = Array.isArray(manifest?.files) ? manifest.files.slice(0, 18) : [];
@@ -1118,7 +1132,7 @@ function SourceLabView() {
     },
     {
       title: "Text & image extraction",
-      state: "waiting",
+      state: processed ? "ready" : "waiting",
       copy: "PDF/DOC/DOCX text, page images, diagrams, sigils, tarot art, and illustrations will be attached to their source records after extraction.",
     },
     {
@@ -1166,6 +1180,8 @@ function SourceLabView() {
             <div><span>Documents found</span><strong>{summary.documentFiles || 0}</strong></div>
             <div><span>Exact duplicate sets</span><strong>{summary.exactDuplicateSets || 0}</strong></div>
             <div><span>Likely duplicate sets</span><strong>{summary.likelyDuplicateSets || 0}</strong></div>
+            <div><span>Text records</span><strong>{extractionSummary.textRecords || 0}</strong></div>
+            <div><span>Asset records</span><strong>{extractionSummary.assetRecords || 0}</strong></div>
           </div>
         </div>
 
@@ -1195,9 +1211,38 @@ function SourceLabView() {
           <div className="command-stack">
             <div><small>1 · SCAN EXTRACTED LIBRARY</small><code>npm run arcanum:scan -- -Root "D:\\Magic-Library" -HashAll</code></div>
             <div><small>2 · BUILD SOURCE MANIFEST</small><code>npm run arcanum:import -- "import\\source-files.json"</code></div>
-            <div><small>3 · START WEBSITE</small><code>npm run dev</code></div>
+            <div><small>3 · EXTRACT TEXT & ASSETS</small><code>npm run arcanum:extract -- --root "D:\\Magic-Library" --extract-archives</code></div>
+            <div><small>4 · START WEBSITE</small><code>npm run dev</code></div>
           </div>
         </div>
+
+        <section className="extractor-capabilities">
+          <div className="section-intro split">
+            <div><p className="kicker">EXTRACTION ENGINE</p><h2>Use what is installed. Record what is missing.</h2></div>
+            <p>Plain text and images are handled directly. PDF, Office, and archive extraction use optional system tools when available, so one missing dependency does not block the whole library.</p>
+          </div>
+          <div className="capability-grid">
+            <div className={capabilities.pdfToText ? "ready" : "blocked"}><span>PDF TEXT</span><strong>{capabilities.pdfToText ? "pdftotext ready" : "pdftotext missing"}</strong><small>{capabilities.pdfToTextPath || "Install Poppler or set ARCANUM_PDFTOTEXT"}</small></div>
+            <div className={capabilities.office ? "ready" : "blocked"}><span>DOC / DOCX</span><strong>{capabilities.office ? "LibreOffice ready" : "LibreOffice missing"}</strong><small>{capabilities.officePath || "Install LibreOffice or set ARCANUM_SOFFICE"}</small></div>
+            <div className={capabilities.sevenZip ? "ready" : "blocked"}><span>RAR / ZIP / 7Z</span><strong>{capabilities.sevenZip ? "7-Zip ready" : "7-Zip missing"}</strong><small>{capabilities.sevenZipPath || "Install 7-Zip or set ARCANUM_7Z"}</small></div>
+            <div className="ready"><span>TXT / MD / HTML</span><strong>Built-in Node extraction</strong><small>No external dependency required</small></div>
+            <div className="ready"><span>IMAGE FILES</span><strong>Asset indexing ready</strong><small>Original bytes copied into derived asset storage</small></div>
+            <div className={Number(extractionSummary.needsVision || 0) ? "attention" : "ready"}><span>SCANNED PDF</span><strong>{Number(extractionSummary.needsVision || 0)} need vision review</strong><small>Image-only PDFs are flagged instead of treated as empty text</small></div>
+          </div>
+
+          {extractionRecords.length > 0 && (
+            <div className="extraction-records">
+              <div className="extraction-record-heading"><span>Latest extraction records</span><strong>{processed} processed</strong></div>
+              {extractionRecords.map((record) => (
+                <div className="extraction-row" key={record.id}>
+                  <span className={`extraction-status ${record.status}`}>{record.status}</span>
+                  <div><strong>{record.filename}</strong><small>{record.reason || record.note || record.kind}</small></div>
+                  <em>{record.textChars ? `${record.textChars.toLocaleString()} chars` : record.memberCount ? `${record.memberCount} members` : record.assetPath ? "asset" : "—"}</em>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
 
         <section className="source-file-section">
           <div className="section-intro">
