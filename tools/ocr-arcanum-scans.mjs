@@ -1,0 +1,186 @@
+#!/usr/bin/env node
+/**
+ * OCR queue for image-only/scanned PDFs already classified as needs-vision.
+ *
+ * Conservative defaults:
+ *   - 1 document
+ *   - first 5 pages
+ * Use --all to process every queued scanned PDF and every page.
+ *
+ * Resumable: existing page OCR files are skipped unless --force is supplied.
+ */
+
+import fs from "node:fs";
+import path from "node:path";
+import { PDFParse } from "pdf-parse";
+import { createWorker } from "tesseract.js";
+
+function argValue(name, fallback = null) {
+  const index = process.argv.indexOf(name);
+  return index >= 0 && index + 1 < process.argv.length ? process.argv[index + 1] : fallback;
+}
+
+const rootArg = argValue("--root");
+const extractionReportPath = argValue("--report", "public/arcanum/extracted/extraction-report.json");
+const outputRoot = argValue("--output", "public/arcanum/ocr");
+const languages = String(argValue("--langs", "eng,chi_sim,chi_tra"))
+  .split(",")
+  .map((value) => value.trim())
+  .filter(Boolean);
+const force = process.argv.includes("--force");
+const processAll = process.argv.includes("--all");
+const docLimit = Number(argValue("--limit-docs", processAll ? "0" : "1") || 0);
+const pageLimit = Number(argValue("--max-pages", processAll ? "0" : "5") || 0);
+
+if (!rootArg) {
+  console.error('Usage: node tools/ocr-arcanum-scans.mjs --root "<library-root>" [--all] [--limit-docs N] [--max-pages N]');
+  process.exit(1);
+}
+
+const libraryRoot = path.resolve(rootArg);
+if (!fs.existsSync(libraryRoot)) throw new Error(`Library root not found: ${libraryRoot}`);
+if (!fs.existsSync(extractionReportPath)) throw new Error(`Extraction report not found: ${extractionReportPath}`);
+
+const report = JSON.parse(fs.readFileSync(extractionReportPath, "utf8").replace(/^\uFEFF/, ""));
+const queued = (report.records || []).filter((record) => record.status === "needs-vision");
+const docs = docLimit > 0 ? queued.slice(0, docLimit) : queued;
+
+fs.mkdirSync(outputRoot, { recursive: true });
+fs.mkdirSync(path.join(outputRoot, "pages"), { recursive: true });
+fs.mkdirSync(path.join(outputRoot, "text"), { recursive: true });
+
+console.log(`OCR queue: ${queued.length} scanned PDFs; processing ${docs.length}.`);
+console.log(`Languages: ${languages.join(", ")}`);
+console.log(processAll ? "Mode: ALL pages" : `Safe mode: up to ${pageLimit} pages per document`);
+
+const worker = await createWorker(languages, 1, {
+  logger: (message) => {
+    if (message.status === "recognizing text" && typeof message.progress === "number") {
+      process.stdout.write(`\rOCR ${Math.round(message.progress * 100)}%   `);
+    }
+  },
+});
+
+const records = [];
+
+try {
+  for (let docIndex = 0; docIndex < docs.length; docIndex += 1) {
+    const source = docs[docIndex];
+    const sourcePath = path.join(libraryRoot, ...String(source.sourcePath || "").split("/"));
+
+    if (!fs.existsSync(sourcePath)) {
+      records.push({ id: source.id, filename: source.filename, status: "missing", sourcePath: source.sourcePath });
+      continue;
+    }
+
+    const parser = new PDFParse({ data: new Uint8Array(fs.readFileSync(sourcePath)) });
+
+    try {
+      const info = await parser.getInfo({ parsePageInfo: false });
+      const totalPages = Number(info?.total || source.pageCount || 0);
+      const pagesToProcess = pageLimit > 0 ? Math.min(totalPages, pageLimit) : totalPages;
+      const pageRecords = [];
+
+      console.log(`\n[${docIndex + 1}/${docs.length}] ${source.filename} — ${totalPages} pages, OCR ${pagesToProcess}`);
+
+      for (let pageNumber = 1; pageNumber <= pagesToProcess; pageNumber += 1) {
+        const pageBase = `${source.id}-p${String(pageNumber).padStart(5, "0")}`;
+        const imagePath = path.join(outputRoot, "pages", `${pageBase}.png`);
+        const textPath = path.join(outputRoot, "text", `${pageBase}.txt`);
+
+        if (!force && fs.existsSync(textPath)) {
+          const text = fs.readFileSync(textPath, "utf8");
+          pageRecords.push({ page: pageNumber, status: "cached", imagePath, textPath, textChars: text.length });
+          continue;
+        }
+
+        const screenshot = await parser.getScreenshot({
+          partial: [pageNumber],
+          desiredWidth: 1800,
+          imageDataUrl: false,
+          imageBuffer: true,
+        });
+
+        const image = screenshot?.pages?.[0]?.data;
+        if (!image) {
+          pageRecords.push({ page: pageNumber, status: "render-error", reason: "No screenshot buffer returned" });
+          continue;
+        }
+
+        const imageBuffer = Buffer.from(image);
+        fs.writeFileSync(imagePath, imageBuffer);
+
+        const result = await worker.recognize(imageBuffer);
+        process.stdout.write("\r                    \r");
+        const text = String(result?.data?.text || "").trim();
+        fs.writeFileSync(textPath, text, "utf8");
+
+        pageRecords.push({
+          page: pageNumber,
+          status: text ? "ocr-extracted" : "ocr-empty",
+          imagePath: imagePath.replaceAll("\\", "/"),
+          textPath: textPath.replaceAll("\\", "/"),
+          textChars: text.length,
+          confidence: Number(result?.data?.confidence || 0),
+        });
+
+        console.log(`  page ${pageNumber}/${pagesToProcess}: ${text.length} chars · confidence ${Number(result?.data?.confidence || 0).toFixed(1)}`);
+      }
+
+      const combined = pageRecords
+        .filter((page) => page.textPath && fs.existsSync(page.textPath))
+        .map((page) => `--- PAGE ${page.page} ---\n${fs.readFileSync(page.textPath, "utf8")}`)
+        .join("\n\n");
+
+      const combinedPath = path.join(outputRoot, "text", `${source.id}.txt`);
+      fs.writeFileSync(combinedPath, combined, "utf8");
+
+      records.push({
+        id: source.id,
+        filename: source.filename,
+        sourcePath: source.sourcePath,
+        status: "ocr-complete",
+        totalPages,
+        pagesProcessed: pagesToProcess,
+        completeDocument: pagesToProcess === totalPages,
+        combinedTextPath: combinedPath.replaceAll("\\", "/"),
+        textChars: combined.length,
+        pages: pageRecords,
+      });
+    } catch (error) {
+      records.push({
+        id: source.id,
+        filename: source.filename,
+        sourcePath: source.sourcePath,
+        status: "ocr-error",
+        reason: error?.message || String(error),
+      });
+      console.log(`  OCR error: ${error?.message || String(error)}`);
+    } finally {
+      await parser.destroy();
+    }
+  }
+} finally {
+  await worker.terminate();
+}
+
+const output = {
+  version: 1,
+  generatedAt: new Date().toISOString(),
+  languages,
+  queuedDocuments: queued.length,
+  processedDocuments: records.length,
+  fullRun: processAll,
+  summary: records.reduce((acc, record) => {
+    acc[record.status] = (acc[record.status] || 0) + 1;
+    return acc;
+  }, {}),
+  records,
+};
+
+fs.writeFileSync(path.join(outputRoot, "ocr-report.json"), JSON.stringify(output, null, 2), "utf8");
+fs.writeFileSync("public/arcanum/ocr-report.json", JSON.stringify(output, null, 2), "utf8");
+
+console.log("\nOCR run complete.");
+console.log(JSON.stringify(output.summary, null, 2));
+console.log("Wrote public/arcanum/ocr-report.json");
