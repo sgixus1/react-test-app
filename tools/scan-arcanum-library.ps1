@@ -9,11 +9,29 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$resolvedRoot = (Resolve-Path $Root).Path
+$resolvedRoot = (Resolve-Path -LiteralPath $Root).Path.TrimEnd("\\")
 $items = Get-ChildItem -LiteralPath $resolvedRoot -File -Recurse -Force
 
+function Get-ArcanumRelativePath {
+  param(
+    [Parameter(Mandatory=$true)][string]$BasePath,
+    [Parameter(Mandatory=$true)][string]$FullPath
+  )
+
+  $base = $BasePath.TrimEnd("\\")
+  $full = $FullPath
+
+  if ($full.Length -gt $base.Length -and $full.StartsWith($base, [System.StringComparison]::OrdinalIgnoreCase)) {
+    return $full.Substring($base.Length).TrimStart("\\").Replace("\\", "/")
+  }
+
+  $baseUri = New-Object System.Uri(($base + "\\"))
+  $fullUri = New-Object System.Uri($full)
+  return [System.Uri]::UnescapeDataString($baseUri.MakeRelativeUri($fullUri).ToString()).Replace("\\", "/")
+}
+
 $result = foreach ($item in $items) {
-  $relative = [System.IO.Path]::GetRelativePath($resolvedRoot, $item.FullName).Replace("\\", "/")
+  $relative = Get-ArcanumRelativePath -BasePath $resolvedRoot -FullPath $item.FullName
 
   $ext = $item.Extension.ToLowerInvariant()
   $shouldHash = $HashAll -or $ext -in @(
