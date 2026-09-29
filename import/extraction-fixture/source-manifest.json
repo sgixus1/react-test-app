@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "files": [
+    {
+      "id": "fixture-text-01",
+      "path": "notes.txt",
+      "filename": "notes.txt",
+      "kind": "text-document",
+      "extension": ".txt"
+    },
+    {
+      "id": "fixture-image-01",
+      "path": "symbol.svg",
+      "filename": "symbol.svg",
+      "kind": "image",
+      "extension": ".svg"
+    }
+  ]
+}
