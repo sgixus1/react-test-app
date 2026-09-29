@@ -268,6 +268,343 @@ footer{text-align:center;color:#606776;font:9px/1.5 system-ui;padding:12px}
   .layout{grid-template-columns:1fr}.mode-note{display:none}.topbar{grid-template-columns:1fr}
   .spread-grid{grid-template-columns:repeat(2,1fr)}.cast-area{grid-template-columns:repeat(2,1fr);padding-top:210px}
 }
+
+/* === ARCANUM RUNES PREMIUM VISUAL BUILD v2 === */
+body{
+  background:
+    linear-gradient(180deg,rgba(2,5,14,.45),rgba(2,4,10,.88)),
+    url("../arcanum-tarot/assets/arcanum-tarot-sanctuary.png") center/cover fixed no-repeat,
+    radial-gradient(circle at 50% 0,#17315a 0,#08131f 38%,#02050a 100%)!important;
+}
+body:after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 12%,rgba(92,134,235,.18),transparent 22%),
+    radial-gradient(circle at 50% 70%,rgba(230,176,76,.10),transparent 33%),
+    linear-gradient(90deg,rgba(1,3,9,.76) 0 18%,transparent 30% 70%,rgba(1,3,9,.76) 82% 100%)
+}
+.topbar{
+  min-height:66px!important;padding:10px 26px!important;
+  background:rgba(2,5,13,.90)!important;
+  border-bottom:1px solid rgba(226,177,85,.34)!important;
+  box-shadow:0 10px 44px rgba(0,0,0,.55)!important
+}
+.brand-mark{
+  width:46px!important;height:46px!important;
+  border-color:#e0b35e!important;
+  background:
+    radial-gradient(circle at 50% 44%,rgba(106,149,234,.42),rgba(20,31,52,.96) 67%),
+    linear-gradient(#111a2a,#08101c)!important;
+  box-shadow:inset 0 0 22px rgba(235,190,88,.11),0 0 28px rgba(100,146,232,.16)!important
+}
+.brand{font-size:24px!important;letter-spacing:.17em!important}
+.subtitle{color:#8f9aaf!important;letter-spacing:.16em!important}
+.nav{gap:32px!important}
+.nav a{font-size:11px!important;letter-spacing:.08em!important;color:#c2c8d4!important}
+.nav a.active,.nav a:hover{color:#f3d18c!important}
+.layout{
+  grid-template-columns:380px minmax(680px,1fr) 440px!important;
+  gap:12px!important;margin-top:12px!important
+}
+.panel{
+  border-radius:16px!important;
+  border:1px solid rgba(225,177,82,.32)!important;
+  background:
+    radial-gradient(circle at 15% 4%,rgba(70,101,169,.08),transparent 28%),
+    linear-gradient(180deg,rgba(8,14,25,.95),rgba(4,8,15,.97))!important;
+  box-shadow:0 28px 85px rgba(0,0,0,.58),inset 0 0 0 1px rgba(255,232,177,.035)!important
+}
+.panel:before{
+  content:"";position:absolute;inset:9px;border-radius:12px;
+  border:1px solid rgba(225,177,82,.10);pointer-events:none
+}
+.pad{position:relative;z-index:2;padding:22px!important}
+.controls h2,.reading h2{font-size:25px!important;color:#ecd090!important}
+.lead{font-size:11px!important;color:#939bad!important}
+.step{
+  margin:19px 0 8px!important;
+  color:#e5c482!important;font-size:11px!important;
+  letter-spacing:.14em!important
+}
+
+/* PREMIUM SPREAD TILES */
+.spread-grid{gap:9px!important}
+.spread-option{
+  min-height:118px!important;padding:13px 8px 11px!important;
+  display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;
+  border:1px solid rgba(71,96,141,.72)!important;border-radius:12px!important;
+  background:
+    radial-gradient(circle at 50% 28%,rgba(135,95,201,.14),transparent 34%),
+    linear-gradient(180deg,#0d182b,#070d18)!important;
+  box-shadow:inset 0 0 24px rgba(125,92,189,.06),0 10px 22px rgba(0,0,0,.23)!important
+}
+.spread-option:hover{
+  transform:translateY(-2px) scale(1.01)!important;
+  border-color:#846c9b!important;
+  box-shadow:0 14px 26px rgba(0,0,0,.3),0 0 18px rgba(151,111,215,.11),inset 0 0 24px rgba(133,98,191,.08)!important
+}
+.spread-option.active{
+  border-color:#e2ad52!important;
+  background:
+    radial-gradient(circle at 50% 28%,rgba(226,173,82,.16),transparent 34%),
+    linear-gradient(180deg,#151b2b,#0a0f19)!important;
+  box-shadow:0 0 0 1px rgba(226,173,82,.30),0 0 24px rgba(220,159,59,.23),inset 0 0 28px rgba(226,173,82,.07)!important
+}
+.spread-symbol{
+  width:58px!important;height:54px!important;
+  display:grid!important;place-items:center!important;
+  margin:0 auto 9px!important;
+  border:1px solid rgba(163,133,224,.28)!important;
+  border-radius:16px!important;
+  background:radial-gradient(circle,rgba(145,108,221,.18),transparent 72%)!important;
+  color:#c9aeef!important;font-size:23px!important;
+  text-shadow:0 0 11px rgba(152,116,220,.28)!important
+}
+.spread-option.active .spread-symbol{
+  border-color:rgba(239,201,121,.42)!important;
+  background:radial-gradient(circle,rgba(239,201,121,.17),transparent 72%)!important;
+  color:#f2cc77!important;text-shadow:0 0 12px rgba(229,174,68,.36)!important
+}
+.spread-title{font-size:12px!important;color:#f1e8d5!important}
+.spread-sub{font-size:8.5px!important;color:#8991a3!important}
+
+/* FORM CONTROLS */
+textarea,input,select{
+  border-color:rgba(177,132,57,.58)!important;
+  border-radius:10px!important;
+  background:
+    radial-gradient(circle at 95% 16%,rgba(85,120,181,.08),transparent 28%),
+    linear-gradient(180deg,#091521,#050a13)!important;
+  color:#eee5d6!important;
+  box-shadow:inset 0 0 20px rgba(0,0,0,.48)!important
+}
+textarea{min-height:98px!important;padding:14px!important;font-size:13px!important}
+input{min-height:44px!important}
+textarea:focus,input:focus,select:focus{
+  outline:none!important;border-color:#e0a94c!important;
+  box-shadow:0 0 0 1px rgba(224,169,76,.22),0 0 17px rgba(224,169,76,.11),inset 0 0 20px rgba(0,0,0,.48)!important
+}
+.icon-btn{
+  border-color:#785b32!important;border-radius:9px!important;
+  background:linear-gradient(#101929,#080e18)!important;
+  color:#ebbd63!important
+}
+.icon-btn:hover{border-color:#d6a04a!important;color:#ffe0a0!important}
+.chips{grid-template-columns:repeat(4,1fr)!important;gap:7px!important}
+.chip-btn{
+  min-height:38px!important;border-radius:8px!important;
+  border-color:#34445f!important;background:linear-gradient(#0c1626,#070c15)!important;
+  color:#9da7b9!important
+}
+.chip-btn.active{
+  border-color:#d4a049!important;color:#f2cf86!important;
+  box-shadow:0 0 15px rgba(212,160,73,.17),inset 0 0 13px rgba(212,160,73,.06)!important
+}
+.primary{
+  min-height:50px!important;border-radius:11px!important;
+  font-size:14px!important;letter-spacing:.06em!important;
+  background:linear-gradient(90deg,#b7731f,#f4cf7f 37%,#ffe6a6 50%,#d49939 75%,#b47521)!important;
+  box-shadow:0 10px 26px rgba(190,129,36,.23),inset 0 1px rgba(255,247,213,.88)!important
+}
+.secondary{
+  min-height:43px!important;border-radius:10px!important;
+  border-color:#4b6290!important;
+  background:linear-gradient(#0c1831,#071021)!important
+}
+.note{font-size:9.3px!important;line-height:1.6!important}
+.history{
+  margin-top:17px!important;padding-top:14px!important;
+  border-top:1px solid rgba(225,177,82,.12)!important
+}
+.history button{
+  padding:8px 9px!important;border:1px solid rgba(73,89,115,.43)!important;
+  border-radius:8px!important;background:rgba(8,14,23,.64)!important;margin-top:5px!important
+}
+.history button:hover{border-color:rgba(225,177,82,.42)!important;color:#f0debc!important}
+
+/* CASTING SANCTUARY */
+.cast-table{
+  min-height:900px!important;
+  background:
+    radial-gradient(circle at 50% 16%,rgba(82,126,224,.24),transparent 25%),
+    radial-gradient(circle at 50% 70%,rgba(229,172,71,.10),transparent 36%),
+    linear-gradient(180deg,rgba(5,12,25,.84),rgba(3,8,17,.93))!important;
+  isolation:isolate
+}
+.cast-table:before{
+  content:"";position:absolute;inset:44px;z-index:0;border-radius:50%;
+  border:1px solid rgba(217,166,74,.20)!important;
+  box-shadow:inset 0 0 150px rgba(26,48,91,.34),0 0 85px rgba(216,157,56,.07)!important
+}
+.cast-table:after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 49%,transparent 0 210px,rgba(216,166,73,.17) 211px 212px,transparent 213px 268px,rgba(216,166,73,.08) 269px 270px,transparent 271px),
+    linear-gradient(transparent,rgba(1,4,11,.12))
+}
+.hero{z-index:3!important;padding-top:37px!important}
+.hero h1{
+  font-size:47px!important;letter-spacing:.14em!important;
+  color:#f2d293!important;text-shadow:0 0 27px rgba(218,165,73,.35)!important
+}
+.hero-kicker{letter-spacing:.34em!important;color:#a89068!important}
+.hero p{letter-spacing:.22em!important;color:#9099ac!important}
+.rune-circle{
+  width:238px!important;height:238px!important;top:112px!important;z-index:2!important;
+  border-color:rgba(230,187,99,.44)!important;
+  box-shadow:inset 0 0 100px rgba(71,111,196,.24),0 0 50px rgba(101,140,220,.18)!important
+}
+.rune-circle:before{
+  content:"";position:absolute;inset:18px;border-radius:50%;
+  border:1px dashed rgba(230,187,99,.24)
+}
+.rune-circle:after{
+  font-size:23px!important;color:#ebc46e!important;opacity:.88!important;
+  text-shadow:0 0 14px rgba(228,176,68,.38)!important
+}
+.cast-area{
+  padding:250px 24px 35px!important;gap:30px!important;
+  max-width:930px!important
+}
+
+/* HIGH QUALITY RUNE STONES */
+.rune-stone{
+  width:138px!important;height:178px!important;
+  filter:drop-shadow(0 18px 20px rgba(0,0,0,.45))
+}
+.rune-face{
+  border-radius:42% 47% 45% 44% / 34% 38% 44% 46%!important;
+  border:1px solid rgba(218,171,84,.78)!important;
+  box-shadow:inset 0 0 40px rgba(0,0,0,.46),0 18px 34px rgba(0,0,0,.50)!important
+}
+.rune-back{
+  background:
+    radial-gradient(circle at 31% 23%,rgba(255,255,255,.10) 0 3px,transparent 4px),
+    radial-gradient(circle at 70% 66%,rgba(255,255,255,.05) 0 2px,transparent 3px),
+    linear-gradient(145deg,#22324a,#0e1725 60%,#0a1019)!important
+}
+.rune-back:before{
+  content:"";position:absolute;inset:7px;border-radius:inherit;
+  border:1px solid rgba(211,164,77,.22)
+}
+.rune-back:after{
+  font-size:60px!important;color:#d9a84d!important;
+  text-shadow:0 0 13px rgba(223,172,72,.38),0 0 27px rgba(86,128,217,.16)!important
+}
+.rune-front{
+  background:
+    radial-gradient(circle at 28% 20%,rgba(255,255,255,.12) 0 3px,transparent 4px),
+    radial-gradient(circle at 71% 62%,rgba(255,255,255,.04) 0 2px,transparent 3px),
+    linear-gradient(145deg,#314763,#1a2638 52%,#0d1521)!important
+}
+.rune-front:before{
+  inset:7px!important;border-color:rgba(230,188,101,.38)!important
+}
+.rune-glyph{
+  font-size:86px!important;
+  color:#f2ca70!important;
+  text-shadow:
+    0 0 9px rgba(245,197,91,.55),
+    0 0 24px rgba(102,143,231,.25),
+    0 2px 2px rgba(0,0,0,.55)!important
+}
+.rune-nameplate{
+  min-height:40px!important;
+  border-top-color:rgba(218,166,76,.64)!important;
+  background:linear-gradient(180deg,rgba(7,10,17,.38),rgba(3,6,11,.96))!important
+}
+.rune-name{font-size:11.5px!important;color:#f5d58e!important}
+.rune-meaning{color:#8d96a8!important}
+.position{
+  margin-top:11px!important;color:#efcc86!important;font-size:13px!important;
+  text-shadow:0 2px 8px rgba(0,0,0,.75)
+}
+.position-sub{
+  color:#8992a5!important;font-size:8.5px!important;
+  max-width:150px;margin:4px auto 0!important
+}
+.cast-table.casting .rune-stone{animation:runeCastPremium .84s cubic-bezier(.2,.8,.2,1)}
+@keyframes runeCastPremium{
+  0%{transform:translateY(0) rotate(0) scale(1)}
+  30%{transform:translateY(-38px) rotate(-9deg) scale(1.04)}
+  60%{transform:translateY(12px) rotate(5deg) scale(.98)}
+  100%{transform:none}
+}
+
+/* READING PANEL */
+.reading .tabs{
+  margin-top:12px!important;border-color:#435a82!important;border-radius:9px!important
+}
+.reading .tabs button{
+  min-height:38px!important;background:linear-gradient(#0b1628,#07101c)!important;
+  color:#929bae!important
+}
+.reading .tabs button.active{
+  background:linear-gradient(#1a3d69,#0e223c)!important;
+  color:#e8eff8!important;box-shadow:inset 0 -2px #d8e9ff!important
+}
+.status{
+  margin-top:12px!important;padding:10px 11px!important;border-radius:9px!important;
+  border-color:#3e506e!important;background:#08111dcc!important
+}
+.summary,.explanation{
+  border-color:rgba(163,120,52,.48)!important;border-radius:10px!important;
+  background:linear-gradient(180deg,rgba(12,16,25,.94),rgba(8,11,18,.96))!important;
+  box-shadow:inset 0 0 18px rgba(0,0,0,.33)!important
+}
+.reading-entry{
+  padding:14px 0!important;border-top-color:rgba(255,255,255,.06)!important
+}
+.mini-stone{
+  width:52px!important;height:64px!important;
+  border-color:rgba(199,151,67,.78)!important;
+  background:linear-gradient(145deg,#2d4261,#101a29)!important;
+  color:#efc66f!important;font-size:30px!important;
+  box-shadow:inset 0 0 16px rgba(0,0,0,.42)!important
+}
+.entry-title h4{font-size:14.5px!important;color:#ecd092!important}
+.entry-title small{color:#80899a!important}
+.entry-text{font-size:10.5px!important;line-height:1.62!important;color:#cec5cb!important}
+.rule-box{
+  border-left-color:#8c69c5!important;background:#0a0d15!important;
+  color:#aaa1b5!important;padding:9px!important
+}
+.explanation h3{font-size:16px!important;color:#e6c883!important}
+
+/* LIBRARY */
+.library-grid{gap:10px!important}
+.library-rune{
+  min-height:116px!important;border-radius:10px!important;
+  border-color:#3b4b66!important;
+  background:linear-gradient(#0a1423,#07101a)!important;
+  box-shadow:0 8px 18px rgba(0,0,0,.20)!important
+}
+.library-rune:hover{
+  transform:translateY(-1px);
+  border-color:#ad8240!important;
+  box-shadow:0 12px 22px rgba(0,0,0,.28),0 0 13px rgba(214,160,71,.08)!important
+}
+.library-rune .glyph{
+  font-size:40px!important;color:#edc36d!important;
+  text-shadow:0 0 11px rgba(229,174,69,.28)!important
+}
+.library-rune strong{font-size:10.5px!important;color:#ead7ad!important}
+.library-rune small{color:#7f899a!important}
+
+/* casting layout tuning */
+.cast-area[data-count="5"]{grid-template-columns:repeat(5,minmax(118px,1fr))!important}
+.cast-area[data-count="9"]{grid-template-columns:repeat(3,minmax(130px,1fr))!important;max-width:690px!important}
+.cast-area[data-count="1"]{grid-template-columns:1fr!important;max-width:250px!important}
+@media(max-width:1450px){
+  .layout{grid-template-columns:340px minmax(600px,1fr) 400px!important}
+  .rune-stone{width:124px!important;height:160px!important}
+  .cast-area[data-count="5"]{grid-template-columns:repeat(3,minmax(120px,1fr))!important}
+}
+@media(max-width:1080px){
+  .layout{grid-template-columns:310px 1fr!important}
+  .reading{grid-column:1/-1!important}
+}
+
 </style>
 </head>
 <body>
@@ -290,7 +627,7 @@ footer{text-align:center;color:#606776;font:9px/1.5 system-ui;padding:12px}
     <aside class="panel controls">
       <div class="pad">
         <h2>Create Your Casting</h2>
-        <p class="lead">Choose a spread, focus your question, then cast the runes.</p>
+        <p class="lead">Choose a spread, focus your question, then cast the runes within the sanctuary circle.</p>
 
         <div class="step">1. Choose a Casting</div>
         <div class="spread-grid">
@@ -309,6 +646,7 @@ footer{text-align:center;color:#606776;font:9px/1.5 system-ui;padding:12px}
         <div class="step">4. Modern Reversal Mode</div>
         <div class="chips">
           <button class="chip-btn active" data-reversal="0">Off</button>
+          <button class="chip-btn" data-reversal=".10">10%</button>
           <button class="chip-btn" data-reversal=".15">15%</button>
           <button class="chip-btn" data-reversal=".25">25%</button>
         </div>
@@ -326,7 +664,7 @@ footer{text-align:center;color:#606776;font:9px/1.5 system-ui;padding:12px}
       <div class="hero"><div class="hero-kicker">The Arcanum Archive presents</div><h1>RUNE CASTING</h1><p>Symbols · cycles · choices · reflection</p></div>
       <div class="rune-circle"></div>
       <div id="castArea" class="cast-area"></div>
-      <div class="cast-help">Click a rune stone to reveal or conceal it.</div>
+      <div class="cast-help">Click any rune stone to reveal or conceal it.</div>
     </section>
 
     <aside class="panel reading">
@@ -438,6 +776,7 @@ function explanation(draws){
 function render(draws,seed,question){
  const area=$("#castArea");
  window.currentCasting={draws,spreadKey,seed,question,time:new Date().toISOString()};
+ area.dataset.count=String(draws.length);
  area.innerHTML=draws.map((d,i)=>{
    const pos=SPREADS[spreadKey][i];
    return '<div class="rune-slot"><div class="rune-stone" data-i="'+i+'"><div class="rune-inner">'+
