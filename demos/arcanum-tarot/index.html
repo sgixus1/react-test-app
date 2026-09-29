@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Arcanum Tarot — Rule-Based Demo</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="brand">ARCANUM TAROT</div>
+        <div class="subtitle">FULL 78-CARD RULE-BASED DEMO</div>
+      </div>
+      <div class="top-note">Seeded shuffle · upright/reversed · spread logic · elemental interactions</div>
+      <div id="testBadge" class="badge">Running engine checks…</div>
+    </header>
+
+    <main class="layout">
+      <aside class="panel controls">
+        <div class="pad">
+          <h2>Reading</h2>
+
+          <label for="spread">Spread</label>
+          <select id="spread">
+            <option value="one">One Card</option>
+            <option value="three" selected>Past · Present · Future</option>
+            <option value="love">Love / Relationship</option>
+            <option value="career">Career</option>
+            <option value="decision">Decision</option>
+            <option value="celtic">Celtic Cross</option>
+          </select>
+
+          <label for="question">Question / focus</label>
+          <textarea id="question" placeholder="What should I understand about my current situation?"></textarea>
+
+          <label for="seed">Shuffle seed</label>
+          <input id="seed" placeholder="Blank = new shuffle" />
+
+          <label for="reversalRate">Reversed cards</label>
+          <select id="reversalRate">
+            <option value="0">Off</option>
+            <option value="0.25" selected>25%</option>
+            <option value="0.33">33%</option>
+            <option value="0.50">50%</option>
+          </select>
+
+          <button id="drawButton" class="button primary">Shuffle & Draw</button>
+          <button id="dailyButton" class="button secondary">Today's Card</button>
+
+          <p class="note">
+            The draw is random. The interpretation is not. Meaning comes from the fixed 78-card
+            database, orientation, spread position, question domain, neighboring-card elemental
+            relationships, and Major/Minor Arcana weighting.
+          </p>
+
+          <div class="history">
+            <h3>Recent Readings</h3>
+            <div id="historyList"></div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="panel tarot-table">
+        <div id="spreadArea" class="spread-area"></div>
+        <div class="table-help">Click any card to flip it. Reversed cards are physically inverted.</div>
+      </section>
+
+      <aside class="panel right-panel">
+        <div class="pad reading-panel">
+          <h2>Your Reading</h2>
+          <div id="status" class="status">Choose a spread and draw.</div>
+          <div id="summary"></div>
+          <div id="reading"></div>
+
+          <details class="debug-panel">
+            <summary>Why did the engine say this?</summary>
+            <pre id="trace">No reading yet.</pre>
+          </details>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      For reflection and entertainment. Tarot does not guarantee future events or replace
+      medical, legal, financial, or other professional advice.
+    </footer>
+  </div>
+
+  <script src="./tarot-data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
