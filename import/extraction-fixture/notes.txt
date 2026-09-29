@@ -1,0 +1,3 @@
+Arcanum Archive extraction fixture.
+
+This file verifies built-in UTF-8 text extraction, provenance recording, and extraction report generation.
