@@ -1031,7 +1031,7 @@ body{
 
 /* === Approved generated sanctuary background v8 === */
 :root{
-  --arcanum-bg-local:url(".//arcanum/divination/arcanum-tarot-sanctuary.png");
+  --arcanum-bg-local:url("/arcanum/divination/arcanum-tarot-sanctuary.png");
   --arcanum-bg-fallback:url("https://images.pexels.com/photos/7179423/pexels-photo-7179423.jpeg?auto=compress&cs=tinysrgb&w=2400&dpr=1");
 }
 body{
@@ -1216,6 +1216,12 @@ body:after{
   white-space:nowrap;
 }
 
+
+.product-nav{display:flex;gap:18px;align-items:center}
+.product-nav a{color:#9ea9bc;text-decoration:none;font:600 8px/1 system-ui;letter-spacing:.12em;text-transform:uppercase;padding:8px 0;position:relative}
+.product-nav a:hover,.product-nav a.active{color:#f0d59a}
+.product-nav a.active:after{content:"";position:absolute;left:20%;right:20%;bottom:1px;height:1px;background:#d7ad61}
+@media(max-width:900px){.product-nav{order:3;width:100%;justify-content:center}.topbar{flex-wrap:wrap}}
 </style>
 </head>
 <body>
@@ -1223,9 +1229,9 @@ body:after{
     <header class="topbar">
       <div>
         <div class="brand">ARCANUM TAROT</div>
-        <div class="subtitle">FULL 78-CARD RULE-BASED DEMO</div>
+        <div class="subtitle">78-CARD DIVINATION SYSTEM</div>
       </div>
-      <div class="top-note">Seeded shuffle · upright/reversed · spread logic · elemental interactions</div>
+      <nav class="product-nav"><a href="/#/divination">Archive</a><a class="active" href="/arcanum/divination/tarot.html">Tarot</a><a href="/arcanum/divination/runes.html">Runes</a></nav><div class="top-note">Seeded shuffle · upright/reversed · spread logic · elemental interactions</div>
       <div id="testBadge" class="badge">Running engine checks…</div>
     </header>
 
@@ -2428,7 +2434,7 @@ window.ARCANUM_TAROT = (() => {
       const nav=e.target.closest("[data-nav]");
       if(nav){
         qa(".topnav button").forEach(x=>x.classList.toggle("active",x===nav));
-        if(nav.dataset.nav==="runes"){window.location.href="../arcanum-runes/standalone.html";return;}
+        if(nav.dataset.nav==="runes"){window.location.href="/arcanum/divination/runes.html";return;}
         if(nav.dataset.nav==="library"){q("#libraryOverlay").classList.add("open");return;}
         if(nav.dataset.nav==="journal"){
           q(".history")?.scrollIntoView({behavior:"smooth",block:"center"});return;
@@ -2717,7 +2723,7 @@ window.ARCANUM_TAROT = (() => {
     const probe=new Image();
     probe.onload=()=>document.documentElement.classList.add("arcanum-local-bg");
     probe.onerror=()=>document.documentElement.classList.add("arcanum-bg-fallback");
-    probe.src=".//arcanum/divination/arcanum-tarot-sanctuary.png";
+    probe.src="/arcanum/divination/arcanum-tarot-sanctuary.png";
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",markBackgroundState);
   else markBackgroundState();
