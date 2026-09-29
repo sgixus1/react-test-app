@@ -21,7 +21,8 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "mammoth": "^1.12.3",
-    "pdfjs-dist": "^6.3.289"
+    "pdfjs-dist": "^6.3.289",
+    "pdf-parse": "^2.4.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
