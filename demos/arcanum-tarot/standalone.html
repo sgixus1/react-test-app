@@ -795,6 +795,67 @@ body:after{
   .tarot-table{min-height:780px}
 }
 
+
+/* === Reference implementation v6: no physical reversals + real HQ environment === */
+.card-front.reversed{
+  transform:rotateY(180deg)!important;
+}
+.card-front.reversed .arcanum-card-face:after{
+  content:"REVERSED";
+  position:absolute;z-index:9;right:8px;top:28px;
+  padding:4px 7px;border-radius:999px;
+  border:1px solid #d4a14b;background:rgba(6,8,14,.88);
+  color:#f0ca7c;font:700 7px/1 system-ui;letter-spacing:.14em;
+  box-shadow:0 0 14px #d7953e44;
+}
+.tarot-table{
+  background:
+    linear-gradient(180deg,rgba(2,6,16,.20),rgba(2,4,12,.52)),
+    radial-gradient(circle at 50% 20%,rgba(65,110,220,.18),transparent 28%),
+    url("https://images.pexels.com/photos/7179425/pexels-photo-7179425.jpeg?auto=compress&cs=tinysrgb&w=2400&dpr=1")
+      center center/cover no-repeat!important;
+}
+body{
+  background:
+    linear-gradient(180deg,rgba(1,3,10,.54),rgba(1,2,7,.92)),
+    url("https://images.pexels.com/photos/7179423/pexels-photo-7179423.jpeg?auto=compress&cs=tinysrgb&w=2400&dpr=1")
+      center center/cover fixed no-repeat!important;
+}
+.scene-layer{display:none!important}
+.tarot-table .arcane-props{opacity:.28}
+.tarot-table .table-glow{
+  background:
+    radial-gradient(circle at 50% 23%,rgba(255,211,120,.15),transparent 22%),
+    radial-gradient(circle at 50% 70%,rgba(40,83,180,.12),transparent 34%)!important;
+}
+.tarot-table:before{
+  border-color:#c78d3659!important;
+  box-shadow:inset 0 0 140px rgba(0,0,0,.22),0 0 80px rgba(213,153,61,.10)!important;
+}
+.arcanum-card-face{
+  background:#04070e!important;
+}
+.arcanum-card-art{
+  inset:24px 10px 49px!important;
+}
+.arcanum-card-nameplate{
+  height:41px!important;
+  background:linear-gradient(180deg,rgba(2,4,8,.70),#020306 80%)!important;
+}
+.arcanum-card-name{
+  font-size:12px!important;
+  color:#ffd98b!important;
+}
+.reference-back{
+  background:
+    radial-gradient(circle at center,#efc56f 0 2px,transparent 3px),
+    radial-gradient(circle at center,transparent 0 34px,#d29c4255 35px 36px,transparent 37px),
+    repeating-conic-gradient(from 0deg,#c9933b22 0 7deg,transparent 7deg 15deg),
+    linear-gradient(145deg,#07152d,#030711)!important;
+  border:2px solid #d5a248!important;
+  box-shadow:0 16px 34px #000d,inset 0 0 0 5px #070a12,0 0 0 1px #39200b!important;
+}
+
 </style>
 </head>
 <body>
@@ -831,8 +892,8 @@ body:after{
 
           <label for="reversalRate">Reversed cards</label>
           <select id="reversalRate">
-            <option value="0">Off</option>
-            <option value="0.25" selected>25%</option>
+            <option value="0" selected>Off</option>
+            <option value="0.25">25%</option>
             <option value="0.33">33%</option>
             <option value="0.50">50%</option>
           </select>
@@ -855,7 +916,7 @@ body:after{
 
       <section class="panel tarot-table">
         <div id="spreadArea" class="spread-area"></div>
-        <div class="table-help">Click any card to flip it. Reversed cards are physically inverted.</div>
+        <div class="table-help">Click any card to flip it. Reversed readings stay visually upright and are marked REVERSED.</div>
       </section>
 
       <aside class="panel right-panel">
@@ -1510,7 +1571,7 @@ window.ARCANUM_TAROT = (() => {
   runSelfTests();
 
   const demoSeed = "ARCANUM-DEMO";
-  render(createReading("three",demoSeed,0.25),"three",demoSeed,"Demo reading");
+  render(createReading("three",demoSeed,0),"three",demoSeed,"Demo reading");
   // Keep the seed box blank after the initial preview so Shuffle & Draw
   // produces a new random reading immediately.
   $("#seed").value = "";
