@@ -26,7 +26,7 @@ jobs:
         run: npm run arcanum:import -- "import/source-files.example.json"
 
       - name: Verify native parser modules
-        run: node -e "Promise.all([import('pdfjs-dist/legacy/build/pdf.mjs'), import('pdf-parse'), import('mammoth')]).then(() => console.log('Native PDF/DOCX parsers ready'))"
+        run: node -e "Promise.all([import('pdfjs-dist/legacy/build/pdf.mjs'), import('pdf-parse'), import('mammoth'), import('word-extractor'), import('tesseract.js')]).then(() => console.log('Document parsers and OCR modules ready'))"
 
       - name: Test source extraction engine
         run: npm run arcanum:extract -- --root "import/extraction-fixture" --manifest "import/extraction-fixture/source-manifest.json" --output "public/arcanum/extracted-test"
