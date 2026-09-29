@@ -123,7 +123,7 @@ function Brand() {
   );
 }
 
-function Header({ route, motion, onToggleMotion }) {
+function Header({ route, motion, onToggleMotion, onOpenSearch }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -145,6 +145,9 @@ function Header({ route, motion, onToggleMotion }) {
         ))}
       </nav>
       <div className="header-actions">
+        <button className="global-search-button" type="button" onClick={onOpenSearch} aria-label="Search the archive">
+          ⌕ <span>Search</span><kbd>⌘K</kbd>
+        </button>
         <button className="motion-toggle" type="button" onClick={onToggleMotion} aria-pressed={!motion}>
           <span className="status-dot" /> Motion {motion ? "On" : "Off"}
         </button>
@@ -520,9 +523,23 @@ function SearchPanel({ search, setSearch, category, setCategory, count, savedOnl
   );
 }
 
-function RecordCard({ entry, bookmarked, onToggleBookmark }) {
+function RecordCard({ entry, bookmarked, onToggleBookmark, comparing, onToggleCompare }) {
   return (
     <button className="record-card" type="button" onClick={() => goTo("entry", entry.id)}>
+      <span
+        className={comparing ? "record-compare active" : "record-compare"}
+        role="button"
+        tabIndex={0}
+        aria-label={comparing ? "Remove from comparison" : "Add to comparison"}
+        onClick={(event) => { event.stopPropagation(); onToggleCompare(entry.id); }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            event.stopPropagation();
+            onToggleCompare(entry.id);
+          }
+        }}
+      >{comparing ? "⇄" : "≍"}</span>
       <span
         className={bookmarked ? "record-bookmark active" : "record-bookmark"}
         role="button"
@@ -555,10 +572,115 @@ function RecordCard({ entry, bookmarked, onToggleBookmark }) {
   );
 }
 
+function CompareTray({ ids, onRemove, onClear }) {
+  const entries = ids.map((id) => libraryEntries.find((entry) => entry.id === id)).filter(Boolean);
+  if (entries.length < 2) return null;
+
+  const rows = [
+    ["Tradition", "tradition"],
+    ["Record type", "kind"],
+    ["Language", "language"],
+    ["Import status", "status"],
+    ["Source file", "sourceFile"],
+  ];
+
+  return (
+    <section className="compare-tray">
+      <div className="compare-heading">
+        <div><p className="kicker">COMPARE SOURCES</p><strong>{entries.length} records selected</strong></div>
+        <button type="button" onClick={onClear}>Clear comparison</button>
+      </div>
+      <div className="compare-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Field</th>
+              {entries.map((entry) => (
+                <th key={entry.id}>
+                  <button type="button" onClick={() => goTo("entry", entry.id)}>{entry.title}</button>
+                  <small>{entry.original}</small>
+                  <span onClick={() => onRemove(entry.id)} role="button" tabIndex={0}>Remove ×</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(([label, key]) => (
+              <tr key={key}>
+                <td>{label}</td>
+                {entries.map((entry) => <td key={entry.id}>{entry[key]}</td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  );
+}
+
+function KnowledgeMapView({ onSearch }) {
+  const clusters = useMemo(() => {
+    const map = new Map();
+    libraryEntries.forEach((entry) => {
+      const key = entry.tradition;
+      map.set(key, (map.get(key) || 0) + 1);
+    });
+    return [...map.entries()].sort((a, b) => b[1] - a[1]).slice(0, 14);
+  }, []);
+
+  const positions = [
+    [50,10],[76,17],[91,38],[88,67],[67,86],[42,89],[18,78],
+    [8,53],[14,27],[34,20],[62,29],[72,54],[52,68],[31,55],
+  ];
+
+  return (
+    <main className="view map-view">
+      <section className="subpage-hero map-hero">
+        <div>
+          <p className="kicker">KNOWLEDGE MAP</p>
+          <h1>Trace the relationships.</h1>
+          <p>Browse the archive as a network of traditions and source clusters rather than a flat folder tree. Nodes are generated from the current indexed records.</p>
+        </div>
+        <ArcaneSeal compact />
+      </section>
+      <section className="content-section map-workspace">
+        <div className="map-explainer">
+          <p className="kicker">INDEX-GENERATED NETWORK</p>
+          <h2>Traditions become constellations.</h2>
+          <p>Node size reflects how many indexed records currently belong to a tradition. Selecting a node opens the encyclopedia filtered by that term.</p>
+        </div>
+        <div className="research-constellation">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            {positions.map(([x,y], index) => <line key={index} x1="50" y1="50" x2={x} y2={y} />)}
+            <circle cx="50" cy="50" r="30" />
+            <circle cx="50" cy="50" r="42" />
+          </svg>
+          <button className="research-core" type="button" onClick={() => goTo("encyclopedia")}><span>✦</span><strong>THE ARCHIVE</strong></button>
+          {clusters.map(([tradition, count], index) => {
+            const [x,y] = positions[index];
+            return (
+              <button
+                key={tradition}
+                type="button"
+                className="research-node"
+                style={{ "--x": `${x}%`, "--y": `${y}%`, "--scale": String(0.9 + Math.min(count, 5) * 0.08) }}
+                onClick={() => onSearch(tradition)}
+              >
+                <strong>{tradition}</strong><span>{count} {count === 1 ? "record" : "records"}</span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function EncyclopediaView({ initialSearch, onSearchConsumed, bookmarkSet, onToggleBookmark }) {
   const [search, setSearch] = useState(initialSearch || "");
   const [category, setCategory] = useState("All");
   const [savedOnly, setSavedOnly] = useState(false);
+  const [compareIds, setCompareIds] = useState([]);
 
   useEffect(() => {
     if (initialSearch !== undefined) {
@@ -566,6 +688,14 @@ function EncyclopediaView({ initialSearch, onSearchConsumed, bookmarkSet, onTogg
       onSearchConsumed?.();
     }
   }, [initialSearch, onSearchConsumed]);
+
+  const toggleCompare = (id) => {
+    setCompareIds((current) => {
+      if (current.includes(id)) return current.filter((item) => item !== id);
+      if (current.length >= 3) return [...current.slice(1), id];
+      return [...current, id];
+    });
+  };
 
   const filtered = useMemo(() => {
     const needle = search.trim().toLowerCase();
@@ -614,7 +744,7 @@ function EncyclopediaView({ initialSearch, onSearchConsumed, bookmarkSet, onTogg
             </div>
           </aside>
           <div className="record-grid">
-            {filtered.length ? filtered.map((entry) => <RecordCard entry={entry} bookmarked={bookmarkSet.has(entry.id)} onToggleBookmark={onToggleBookmark} key={entry.id} />) : (
+            {filtered.length ? filtered.map((entry) => <RecordCard entry={entry} bookmarked={bookmarkSet.has(entry.id)} onToggleBookmark={onToggleBookmark} comparing={compareIds.includes(entry.id)} onToggleCompare={toggleCompare} key={entry.id} />) : (
               <div className="empty-state">
                 <ArcaneSeal compact />
                 <h3>No record answered the summons.</h3>
@@ -624,6 +754,7 @@ function EncyclopediaView({ initialSearch, onSearchConsumed, bookmarkSet, onTogg
             )}
           </div>
         </div>
+        <CompareTray ids={compareIds} onRemove={toggleCompare} onClear={() => setCompareIds([])} />
       </section>
     </main>
   );
@@ -786,7 +917,7 @@ function EntryView({ id, bookmarked, onToggleBookmark, onRemember }) {
   );
 }
 
-function LearnView() {
+function LearnView({ completedStudy, onToggleStudyComplete }) {
   const [active, setActive] = useState(0);
   const chapter = learningChapters[active];
 
@@ -803,10 +934,15 @@ function LearnView() {
 
       <section className="content-section learning-workspace">
         <div className="learning-index">
+          <div className="study-progress">
+            <div><span>Study progress</span><strong>{completedStudy.length}/{learningChapters.length}</strong></div>
+            <div className="study-progress-track"><i style={{ width: `${(completedStudy.length / learningChapters.length) * 100}%` }} /></div>
+          </div>
           {learningChapters.map((item, index) => (
             <button className={active === index ? "active" : ""} type="button" key={item.number} onClick={() => setActive(index)}>
               <span>{item.number}</span>
               <div><strong>{item.title}</strong><small>{item.subtitle}</small></div>
+              {completedStudy.includes(item.number) && <em className="chapter-complete">✓</em>}
             </button>
           ))}
         </div>
@@ -823,7 +959,12 @@ function LearnView() {
             <span>✦</span>
             <div><strong>Course content follows the source import.</strong><p>Lesson text will be built from the actual library documents rather than generic internet occult material.</p></div>
           </div>
-          <button className="button gold" type="button" onClick={() => goTo("encyclopedia")}>Explore matching sources</button>
+          <div className="lesson-actions">
+            <button className={completedStudy.includes(chapter.number) ? "button ghost complete-button" : "button gold complete-button"} type="button" onClick={() => onToggleStudyComplete(chapter.number)}>
+              {completedStudy.includes(chapter.number) ? "✓ Chapter marked complete" : "Mark chapter complete"}
+            </button>
+            <button className="button ghost" type="button" onClick={() => goTo("encyclopedia")}>Explore matching sources</button>
+          </div>
         </div>
       </section>
     </main>
@@ -946,8 +1087,22 @@ export default function ArcanumArchive() {
   const route = useRoute();
   const [motion, setMotion] = useState(true);
   const [pendingSearch, setPendingSearch] = useState("");
+  const [paletteOpen, setPaletteOpen] = useState(false);
   const rootRef = useRef(null);
   const archiveMemory = useArchiveMemory();
+
+  useEffect(() => {
+    const keyboard = (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setPaletteOpen((value) => !value);
+      } else if (event.key === "Escape") {
+        setPaletteOpen(false);
+      }
+    };
+    window.addEventListener("keydown", keyboard);
+    return () => window.removeEventListener("keydown", keyboard);
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -977,7 +1132,8 @@ export default function ArcanumArchive() {
       <ParticleField motion={motion} />
       <div className="grain-overlay" aria-hidden="true" />
       <div className="cursor-aura" aria-hidden="true" />
-      <Header route={route} motion={motion} onToggleMotion={() => setMotion((value) => !value)} />
+      <Header route={route} motion={motion} onToggleMotion={() => setMotion((value) => !value)} onOpenSearch={() => setPaletteOpen(true)} />
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} onOpenEntry={(id) => goTo("entry", id)} onSearch={performSearch} />
 
       {route.view === "home" && <HomeView onSearch={performSearch} onOpen={(id) => goTo("entry", id)} bookmarks={archiveMemory.bookmarks} recent={archiveMemory.recent} onToggleBookmark={archiveMemory.toggleBookmark} />}
       {route.view === "encyclopedia" && (
@@ -989,7 +1145,8 @@ export default function ArcanumArchive() {
         />
       )}
       {route.view === "entry" && <EntryView id={route.id} bookmarked={archiveMemory.bookmarkSet.has(route.id)} onToggleBookmark={archiveMemory.toggleBookmark} onRemember={archiveMemory.remember} />}
-      {route.view === "learn" && <LearnView />}
+      {route.view === "map" && <KnowledgeMapView onSearch={performSearch} />}
+      {route.view === "learn" && <LearnView completedStudy={archiveMemory.completedStudy} onToggleStudyComplete={archiveMemory.toggleStudyComplete} />}
       {route.view === "library" && <LibraryView />}
 
       <Footer />
