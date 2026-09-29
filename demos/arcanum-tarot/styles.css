@@ -156,3 +156,23 @@ footer{
   .layout{grid-template-columns:1fr}.spread-area{grid-template-columns:repeat(2,1fr)}
   .tarot-table{min-height:560px}.top-note{display:none}
 }
+
+.reading-explanation{
+  margin:12px 0 15px;padding:13px 14px;border-radius:11px;
+  border:1px solid #5c4930;background:linear-gradient(180deg,#1d1720,#121018);
+  color:#d9d0d9;font:13px/1.6 system-ui
+}
+.reading-explanation h3{
+  margin:0 0 7px;color:#e2c58b;font-family:Georgia,"Times New Roman",serif
+}
+.reading-explanation p{margin:0}
+.card-explanation{
+  margin-top:9px;padding:10px;border-radius:9px;background:#10131a;
+  border:1px solid #2b3240;color:#c0b9c4;font:12px/1.55 system-ui
+}
+.card-explanation strong{color:#e1c997}
+.base-meaning{
+  margin-top:8px;padding:8px 9px;border-radius:8px;
+  background:#101713;border:1px solid #294035;color:#a9cab6;
+  font:11px/1.45 system-ui
+}
