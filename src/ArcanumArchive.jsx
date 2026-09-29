@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { archiveStats, categories, learningChapters, libraryEntries } from "./arcanumData";
+import { useArchiveMemory } from "./useArchiveMemory";
 import "./arcanum.css";
 
 const visualMap = {
@@ -282,7 +283,9 @@ function KnowledgeMap() {
   );
 }
 
-function HomeView({ onSearch, onOpen }) {
+function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
+  const savedEntries = bookmarks.map((id) => libraryEntries.find((entry) => entry.id === id)).filter(Boolean).slice(0, 4);
+  const recentEntries = recent.map((id) => libraryEntries.find((entry) => entry.id === id)).filter(Boolean).slice(0, 4);
   return (
     <main className="view home-view">
       <section className="home-hero">
@@ -343,6 +346,46 @@ function HomeView({ onSearch, onOpen }) {
         <FeaturedRail onOpen={onOpen} />
       </section>
 
+      <section className="content-section personal-vault-section">
+        <div className="section-intro split">
+          <div>
+            <p className="kicker">YOUR PRIVATE VAULT</p>
+            <h2>Keep a trail through the archive.</h2>
+          </div>
+          <p>Bookmark sources worth returning to and let the archive remember the records you recently opened. This stays in your browser and does not alter the source library.</p>
+        </div>
+        <div className="personal-vault-grid">
+          <div className="vault-panel">
+            <div className="vault-heading"><span>✦</span><div><small>SAVED RECORDS</small><strong>{savedEntries.length ? "Your bookmarked sources" : "No seals placed yet"}</strong></div></div>
+            {savedEntries.length ? (
+              <div className="vault-list">
+                {savedEntries.map((entry) => (
+                  <button type="button" key={entry.id} onClick={() => onOpen(entry.id)}>
+                    <img src={visualMap[entry.visual]} alt="" />
+                    <span><strong>{entry.title}</strong><small>{entry.original}</small></span>
+                    <em onClick={(event) => { event.stopPropagation(); onToggleBookmark(entry.id); }}>Remove</em>
+                  </button>
+                ))}
+              </div>
+            ) : <p className="vault-empty">Open an encyclopedia record and place a bookmark to build your personal reading shelf.</p>}
+          </div>
+          <div className="vault-panel">
+            <div className="vault-heading"><span>⌛</span><div><small>RECENTLY VIEWED</small><strong>{recentEntries.length ? "Continue your research" : "Your path is still unwritten"}</strong></div></div>
+            {recentEntries.length ? (
+              <div className="vault-list">
+                {recentEntries.map((entry) => (
+                  <button type="button" key={entry.id} onClick={() => onOpen(entry.id)}>
+                    <img src={visualMap[entry.visual]} alt="" />
+                    <span><strong>{entry.title}</strong><small>{entry.original}</small></span>
+                    <b>Continue ↗</b>
+                  </button>
+                ))}
+              </div>
+            ) : <p className="vault-empty">Records you open will appear here so you can return to a research thread quickly.</p>}
+          </div>
+        </div>
+      </section>
+
       <section className="content-section learning-preview">
         <div className="learning-copy">
           <p className="kicker">THE PATH OF STUDY</p>
@@ -400,7 +443,7 @@ function HomeView({ onSearch, onOpen }) {
   );
 }
 
-function SearchPanel({ search, setSearch, category, setCategory, count }) {
+function SearchPanel({ search, setSearch, category, setCategory, count, savedOnly, setSavedOnly }) {
   return (
     <div className="archive-controls">
       <label className="archive-search">
@@ -408,20 +451,39 @@ function SearchPanel({ search, setSearch, category, setCategory, count }) {
         <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search titles, Chinese terms, traditions, source files…" />
         <small>{count} records</small>
       </label>
-      <div className="category-scroll">
+      <div className="category-row">
+        <div className="category-scroll">
         {categories.map((item) => (
           <button className={category === item ? "active" : ""} type="button" key={item} onClick={() => setCategory(item)}>
             {item}
           </button>
         ))}
+        </div>
+        <button className={savedOnly ? "saved-filter active" : "saved-filter"} type="button" onClick={() => setSavedOnly((value) => !value)}>
+          ★ Saved only
+        </button>
       </div>
     </div>
   );
 }
 
-function RecordCard({ entry }) {
+function RecordCard({ entry, bookmarked, onToggleBookmark }) {
   return (
     <button className="record-card" type="button" onClick={() => goTo("entry", entry.id)}>
+      <span
+        className={bookmarked ? "record-bookmark active" : "record-bookmark"}
+        role="button"
+        tabIndex={0}
+        aria-label={bookmarked ? "Remove bookmark" : "Bookmark record"}
+        onClick={(event) => { event.stopPropagation(); onToggleBookmark(entry.id); }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            event.stopPropagation();
+            onToggleBookmark(entry.id);
+          }
+        }}
+      >{bookmarked ? "★" : "☆"}</span>
       <span className="record-art">
         <img src={visualMap[entry.visual]} alt="" />
         <span className="record-index">SOURCE LOCKED</span>
@@ -440,9 +502,10 @@ function RecordCard({ entry }) {
   );
 }
 
-function EncyclopediaView({ initialSearch, onSearchConsumed }) {
+function EncyclopediaView({ initialSearch, onSearchConsumed, bookmarkSet, onToggleBookmark }) {
   const [search, setSearch] = useState(initialSearch || "");
   const [category, setCategory] = useState("All");
+  const [savedOnly, setSavedOnly] = useState(false);
 
   useEffect(() => {
     if (initialSearch !== undefined) {
@@ -466,9 +529,10 @@ function EncyclopediaView({ initialSearch, onSearchConsumed }) {
         entry.sourceFile,
         entry.summary,
       ].join(" ").toLowerCase();
-      return categoryMatch && (!needle || haystack.includes(needle));
+      const savedMatch = !savedOnly || bookmarkSet.has(entry.id);
+      return categoryMatch && savedMatch && (!needle || haystack.includes(needle));
     });
-  }, [search, category]);
+  }, [search, category, savedOnly, bookmarkSet]);
 
   return (
     <main className="view encyclopedia-view">
@@ -482,7 +546,7 @@ function EncyclopediaView({ initialSearch, onSearchConsumed }) {
       </section>
 
       <section className="content-section archive-browser">
-        <SearchPanel search={search} setSearch={setSearch} category={category} setCategory={setCategory} count={filtered.length} />
+        <SearchPanel search={search} setSearch={setSearch} category={category} setCategory={setCategory} count={filtered.length} savedOnly={savedOnly} setSavedOnly={setSavedOnly} />
         <div className="archive-layout">
           <aside className="archive-aside">
             <div className="aside-card">
@@ -497,12 +561,12 @@ function EncyclopediaView({ initialSearch, onSearchConsumed }) {
             </div>
           </aside>
           <div className="record-grid">
-            {filtered.length ? filtered.map((entry) => <RecordCard entry={entry} key={entry.id} />) : (
+            {filtered.length ? filtered.map((entry) => <RecordCard entry={entry} bookmarked={bookmarkSet.has(entry.id)} onToggleBookmark={onToggleBookmark} key={entry.id} />) : (
               <div className="empty-state">
                 <ArcaneSeal compact />
                 <h3>No record answered the summons.</h3>
                 <p>Try another term or reset the category filter.</p>
-                <button className="button ghost" type="button" onClick={() => { setSearch(""); setCategory("All"); }}>Reset archive</button>
+                <button className="button ghost" type="button" onClick={() => { setSearch(""); setCategory("All"); setSavedOnly(false); }}>Reset archive</button>
               </div>
             )}
           </div>
@@ -544,10 +608,14 @@ function RelatedRecords({ entry }) {
   );
 }
 
-function EntryView({ id }) {
+function EntryView({ id, bookmarked, onToggleBookmark, onRemember }) {
   const entry = libraryEntries.find((item) => item.id === id);
   const [tab, setTab] = useState("overview");
   const [annotations, setAnnotations] = useState(false);
+
+  useEffect(() => {
+    if (entry) onRemember(entry.id);
+  }, [entry, onRemember]);
 
   if (!entry) {
     return (
@@ -571,6 +639,9 @@ function EntryView({ id }) {
           <div className="entry-badges">
             <span>{entry.tradition}</span><span>{entry.kind}</span><span>{entry.language}</span>
           </div>
+          <button className={bookmarked ? "entry-bookmark active" : "entry-bookmark"} type="button" onClick={() => onToggleBookmark(entry.id)}>
+            {bookmarked ? "★ Saved to your vault" : "☆ Save this record"}
+          </button>
         </div>
         <div className="entry-hero-seal"><ArcaneSeal compact /></div>
       </section>
@@ -823,6 +894,7 @@ export default function ArcanumArchive() {
   const [motion, setMotion] = useState(true);
   const [pendingSearch, setPendingSearch] = useState("");
   const rootRef = useRef(null);
+  const archiveMemory = useArchiveMemory();
 
   useEffect(() => {
     const root = rootRef.current;
@@ -854,14 +926,16 @@ export default function ArcanumArchive() {
       <div className="cursor-aura" aria-hidden="true" />
       <Header route={route} motion={motion} onToggleMotion={() => setMotion((value) => !value)} />
 
-      {route.view === "home" && <HomeView onSearch={performSearch} onOpen={(id) => goTo("entry", id)} />}
+      {route.view === "home" && <HomeView onSearch={performSearch} onOpen={(id) => goTo("entry", id)} bookmarks={archiveMemory.bookmarks} recent={archiveMemory.recent} onToggleBookmark={archiveMemory.toggleBookmark} />}
       {route.view === "encyclopedia" && (
         <EncyclopediaView
           initialSearch={pendingSearch}
           onSearchConsumed={() => setPendingSearch("")}
+          bookmarkSet={archiveMemory.bookmarkSet}
+          onToggleBookmark={archiveMemory.toggleBookmark}
         />
       )}
-      {route.view === "entry" && <EntryView id={route.id} />}
+      {route.view === "entry" && <EntryView id={route.id} bookmarked={archiveMemory.bookmarkSet.has(route.id)} onToggleBookmark={archiveMemory.toggleBookmark} onRemember={archiveMemory.remember} />}
       {route.view === "learn" && <LearnView />}
       {route.view === "library" && <LibraryView />}
 
