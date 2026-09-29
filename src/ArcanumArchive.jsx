@@ -20,6 +20,7 @@ const navItems = [
   ["home", "Home"],
   ["encyclopedia", "Encyclopedia"],
   ["map", "Knowledge Map"],
+  ["divination", "Divination"],
   ["sources", "Source Lab"],
   ["learn", "Learn Magic"],
   ["library", "Digital Library"],
@@ -30,7 +31,7 @@ function parseRoute() {
   if (!raw) return { view: "home" };
   const [view, id] = raw.split("/");
   if (view === "entry" && id) return { view: "entry", id };
-  if (["home", "encyclopedia", "map", "sources", "learn", "library"].includes(view)) return { view };
+  if (["home", "encyclopedia", "map", "divination", "sources", "learn", "library"].includes(view)) return { view };
   return { view: "home" };
 }
 
@@ -389,7 +390,7 @@ function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
           <SubjectGate eyebrow="CEREMONY" title="Rituals" visual="rituals" copy="Ritual structures, sacred space, symbolic sequences, and ceremonial systems." onClick={() => onSearch("ritual")} />
           <SubjectGate eyebrow="OBJECTS OF POWER" title="Artifacts" visual="artifacts" copy="Talismans, circles, runes, sigils, manuscripts, and ritual objects." onClick={() => onSearch("artifact")} />
           <SubjectGate eyebrow="LINEAGES & SYSTEMS" title="Traditions" visual="traditions" copy="Distinct cultural and historical systems presented with their own provenance." onClick={() => onSearch("tradition")} />
-          <SubjectGate eyebrow="DIVINATION" title="Oracles" visual="divination" copy="Tarot, astrology, runic sources, and visual systems of interpretation." onClick={() => onSearch("divination")} />
+          <SubjectGate eyebrow="DIVINATION" title="Oracles" visual="divination" copy="Tarot, runes, symbolic systems, and interactive reflective readings." onClick={() => goTo("divination")} />
           <SubjectGate eyebrow="TRANSFORMATION" title="Alchemy" visual="alchemy" copy="Historical, spiritual, and Western alchemical source material." onClick={() => onSearch("alchemy")} />
         </div>
       </section>
@@ -972,6 +973,125 @@ function LearnView({ completedStudy, onToggleStudyComplete }) {
   );
 }
 
+
+function DivinationView() {
+  const tools = [
+    {
+      id: "tarot",
+      eyebrow: "78-CARD SYSTEM",
+      title: "Tarot",
+      symbol: "✦",
+      copy: "Draw from a complete 78-card deck with multiple spreads, upright and optional reversed meanings, position-aware interpretation, and reading history.",
+      href: "/arcanum/divination/tarot.html",
+      status: "Available now",
+      meta: "One Card · Three Card · Love · Career · Decision · Celtic Cross",
+    },
+    {
+      id: "runes",
+      eyebrow: "ELDER FUTHARK",
+      title: "Rune Casting",
+      symbol: "ᛟ",
+      copy: "Cast from all 24 Elder Futhark runes with One Rune, Three Norns, Five Rune Cross, and Nine Rune Cast layouts.",
+      href: "/arcanum/divination/runes.html",
+      status: "Available now",
+      meta: "24 runes · seeded replay · optional reversals · Rune of the Day",
+    },
+  ];
+
+  const upcoming = [
+    ["Pendulum", "Question-led reflective yes / no / unclear casting"],
+    ["Numerology", "Calculated personal numbers and cycle readings"],
+    ["I Ching", "Six-line hexagram casting with changing lines"],
+    ["Oracle", "Original Arcanum symbolic card system"],
+    ["Lenormand", "36-card neighbor and pairing interpretation"],
+    ["Geomancy", "Traditional sixteen-figure shield-chart system"],
+  ];
+
+  return (
+    <main className="view divination-view">
+      <section className="divination-hero">
+        <div className="divination-hero-copy">
+          <p className="kicker">THE DIVINATION CHAMBER</p>
+          <h1>Enter the oracle.</h1>
+          <p>
+            Interactive systems for reflective readings, symbolic study, and structured interpretation. Random selection and calculated inputs are separated from the rules that explain each result.
+          </p>
+          <div className="divination-hero-actions">
+            <a className="button gold" href="/arcanum/divination/tarot.html">Open Tarot</a>
+            <a className="button ghost" href="/arcanum/divination/runes.html">Cast Runes</a>
+          </div>
+        </div>
+        <div className="divination-orbit" aria-hidden="true">
+          <span className="orbit-ring ring-a" />
+          <span className="orbit-ring ring-b" />
+          <span className="orbit-ring ring-c" />
+          <strong>☾</strong>
+          <i>✦</i>
+        </div>
+      </section>
+
+      <section className="content-section divination-tools-section">
+        <div className="section-intro split">
+          <div>
+            <p className="kicker">ACTIVE SYSTEMS</p>
+            <h2>Two complete reading engines are live.</h2>
+          </div>
+          <p>Each system keeps its own symbolism and mechanics instead of forcing every divination method into the same generic reading template.</p>
+        </div>
+
+        <div className="divination-tool-grid">
+          {tools.map((tool) => (
+            <a className={"divination-tool-card " + tool.id} href={tool.href} key={tool.id}>
+              <span className="divination-tool-glow" />
+              <div className="divination-tool-symbol">{tool.symbol}</div>
+              <div className="divination-tool-copy">
+                <small>{tool.eyebrow}</small>
+                <h3>{tool.title}</h3>
+                <p>{tool.copy}</p>
+                <em>{tool.meta}</em>
+              </div>
+              <div className="divination-tool-footer">
+                <span>{tool.status}</span>
+                <strong>Enter reading →</strong>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <section className="content-section divination-roadmap-section">
+        <div className="section-intro">
+          <p className="kicker">THE ORACLE WING</p>
+          <h2>More systems will join the chamber.</h2>
+          <p>The next modules are being built as distinct tools with their own calculations, casting logic, history, and educational context.</p>
+        </div>
+        <div className="divination-roadmap-grid">
+          {upcoming.map(([title, copy], index) => (
+            <article key={title}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div><strong>{title}</strong><p>{copy}</p></div>
+              <em>Planned</em>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="content-section divination-principles">
+        <div>
+          <p className="kicker">READING PRINCIPLES</p>
+          <h2>Transparent mechanics, not mystery-box output.</h2>
+        </div>
+        <div className="principle-grid">
+          <article><span>01</span><strong>Selection</strong><p>Random draws and casts are handled independently from the interpretation rules.</p></article>
+          <article><span>02</span><strong>Context</strong><p>Spread position, orientation, neighboring symbols, and repeated themes can modify a base meaning.</p></article>
+          <article><span>03</span><strong>Replay</strong><p>Optional seeds let a reading be reproduced exactly when testing or reviewing an interpretation.</p></article>
+          <article><span>04</span><strong>Reflection</strong><p>Results are presented as reflective frameworks rather than guaranteed predictions.</p></article>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 function BookSpine({ entry, selected, onSelect }) {
   return (
     <button className={selected ? "book-spine-card selected" : "book-spine-card"} type="button" onClick={onSelect}>
@@ -1361,6 +1481,7 @@ export default function ArcanumArchive() {
       )}
       {route.view === "entry" && <EntryView id={route.id} bookmarked={archiveMemory.bookmarkSet.has(route.id)} onToggleBookmark={archiveMemory.toggleBookmark} onRemember={archiveMemory.remember} />}
       {route.view === "map" && <KnowledgeMapView onSearch={performSearch} />}
+      {route.view === "divination" && <DivinationView />}
       {route.view === "sources" && <SourceLabView />}
       {route.view === "learn" && <LearnView completedStudy={archiveMemory.completedStudy} onToggleStudyComplete={archiveMemory.toggleStudyComplete} />}
       {route.view === "library" && <LibraryView />}
