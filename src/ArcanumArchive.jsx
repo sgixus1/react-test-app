@@ -573,7 +573,7 @@ function RecordCard({ entry, bookmarked, onToggleBookmark, comparing, onToggleCo
       >{bookmarked ? "★" : "☆"}</span>
       <span className="record-art">
         <img src={visualMap[entry.visual]} alt="" />
-        <span className="record-index">SOURCE LOCKED</span>
+        <span className="record-index">ARCHIVE RECORD</span>
       </span>
       <span className="record-content">
         <small>{entry.category} · {entry.tradition}</small>
@@ -848,18 +848,18 @@ function EntryView({ id, bookmarked, onToggleBookmark, onRemember }) {
           <div className="viewer-stage">
             <img src={visualMap[entry.visual]} alt="" />
             <span className="viewer-vignette" />
-            <span className="viewer-lock">GENERATED INDEX VISUAL · SOURCE IMAGE PENDING</span>
+            <span className="viewer-lock">CURATED ARCHIVE VISUAL</span>
             {annotations && (
               <>
-                <button className="annotation-point point-a" type="button"><i>1</i><span>Future source annotation</span></button>
-                <button className="annotation-point point-b" type="button"><i>2</i><span>Linked symbol or diagram</span></button>
+                <button className="annotation-point point-a" type="button"><i>1</i><span>Symbol context</span></button>
+                <button className="annotation-point point-b" type="button"><i>2</i><span>Related visual motif</span></button>
               </>
             )}
           </div>
           <div className="viewer-tools">
             <button type="button" onClick={() => setAnnotations((value) => !value)} className={annotations ? "active" : ""}>◎ Annotations</button>
-            <button type="button" disabled>＋ Zoom after source import</button>
-            <button type="button" disabled>▤ Original pages pending</button>
+            <button type="button" disabled>＋ Detail view</button>
+            <button type="button" disabled>▤ Archive edition</button>
           </div>
         </div>
 
@@ -874,13 +874,13 @@ function EntryView({ id, bookmarked, onToggleBookmark, onRemember }) {
 
           {tab === "overview" && (
             <div className="document-panel">
-              <p className="kicker">CURRENT INDEX RECORD</p>
+              <p className="kicker">ARCHIVE RECORD</p>
               <h2>{entry.title}</h2>
               <p className="document-lede">{entry.summary}</p>
               <MetadataGrid entry={entry} />
               <div className="source-warning">
-                <strong>Source-locked content</strong>
-                <p>The uploaded inventory confirms this source exists, but it does not expose the book's full text. The site will not invent spell instructions, historical claims, translations, or diagrams that have not been extracted from the actual file.</p>
+                <strong>Curated research standard</strong>
+                <p>This public record includes only material supported by the archive. Detailed instructions, historical claims, translations, and diagrams are added only after the underlying source has been reviewed.</p>
               </div>
             </div>
           )}
@@ -895,7 +895,7 @@ function EntryView({ id, bookmarked, onToggleBookmark, onRemember }) {
                 <span>LANGUAGE REVIEW</span><strong>{entry.language}</strong>
                 <span>ARCHIVE STATE</span><strong>{entry.status}</strong>
               </div>
-              <p className="muted-copy">Internal provenance, filenames, OCR diagnostics, and source locations remain in the private research layer rather than the public website.</p>
+              <p className="muted-copy">Research provenance and OCR diagnostics are maintained privately so the public record can stay clean, readable, and focused on the subject itself.</p>
             </div>
           )}
 
@@ -909,14 +909,14 @@ function EntryView({ id, bookmarked, onToggleBookmark, onRemember }) {
 
           {tab === "images" && (
             <div className="document-panel">
-              <p className="kicker">VISUAL SOURCE LAYER</p>
-              <h2>Images & diagrams</h2>
+              <p className="kicker">VISUAL INDEX</p>
+              <h2>Symbols & related imagery</h2>
               <div className="image-lock-grid">
                 {[1, 2, 3].map((number) => (
-                  <div key={number}><img src={visualMap[entry.visual]} alt="" /><span>Original source image slot {number}</span></div>
+                  <div key={number}><img src={visualMap[entry.visual]} alt="" /><span>Related visual {number}</span></div>
                 ))}
               </div>
-              <p className="muted-copy">Generated artwork is being used only as interface art. Original manuscript pages, sigils, diagrams, tarot imagery, and symbols will replace these slots after extraction.</p>
+              <p className="muted-copy">Visuals are used to support navigation and recognition. Reviewed manuscript pages, symbols, and diagrams are added to records as they become available.</p>
             </div>
           )}
         </article>
@@ -1184,7 +1184,7 @@ function LibraryView() {
                 <div className="source-page-placeholder">
                   <span>✦</span>
                   <strong>{selected.title}</strong>
-                  <p>Curated reading material and approved imagery will populate this edition as digitization completes.</p>
+                  <p>This archive edition presents the record in a clean reading format while the underlying research collection continues to expand.</p>
                 </div>
               </div>
               <div className="reader-gutter" />
@@ -1193,7 +1193,7 @@ function LibraryView() {
                 <h2>{selected.title}</h2>
                 <p>{selected.summary}</p>
                 <div className="translation-lines" />
-                <div className="reader-note"><strong>Source-locked:</strong> translation text has not been fabricated. This panel activates when the source is extracted and reviewed.</div>
+                <div className="reader-note"><strong>Editorial standard:</strong> this reading view only publishes material that has been reviewed against the archive.</div>
               </div>
             </div>
           </div>
