@@ -1414,13 +1414,23 @@ window.ARCANUM_TAROT = (() => {
     });
   }
 
+  function freshRandomSeed(){
+    if(globalThis.crypto && typeof globalThis.crypto.randomUUID==="function"){
+      return "AR-"+globalThis.crypto.randomUUID();
+    }
+    return "AR-"+Date.now()+"-"+Math.random().toString(36).slice(2)+"-"+Math.random().toString(36).slice(2);
+  }
+
   function drawNew(){
     const spreadKey = $("#spread").value;
     const question = $("#question").value.trim();
-    const seed = $("#seed").value.trim() || (Date.now()+"-"+Math.random().toString(36).slice(2));
+    const typedSeed = $("#seed").value.trim();
+    const seed = typedSeed || freshRandomSeed();
     const reversalRate = Number($("#reversalRate").value);
 
-    $("#seed").value = seed;
+    // Important: auto-generated seeds are NOT written back into the input.
+    // Therefore a blank seed produces a genuinely fresh draw on every click.
+    // A manually entered seed remains available for intentional reproducibility.
     const draws = createReading(spreadKey,seed,reversalRate);
     render(draws,spreadKey,seed,question);
     saveHistory(window.__currentTarotReading);
@@ -1469,6 +1479,7 @@ window.ARCANUM_TAROT = (() => {
       const b=fisherYates(deck,makeRng("seed-b")).slice(0,8).map(c=>c.id).join(",");
       return a!==b;
     });
+    test("Fresh auto seeds differ",()=>freshRandomSeed()!==freshRandomSeed());
     test("No duplicate cards in Celtic Cross",()=>{
       const r=createReading("celtic","duplicate-test",0.33);
       return new Set(r.map(x=>x.card.id)).size===10;
@@ -1499,8 +1510,10 @@ window.ARCANUM_TAROT = (() => {
   runSelfTests();
 
   const demoSeed = "ARCANUM-DEMO";
-  $("#seed").value = demoSeed;
   render(createReading("three",demoSeed,0.25),"three",demoSeed,"Demo reading");
+  // Keep the seed box blank after the initial preview so Shuffle & Draw
+  // produces a new random reading immediately.
+  $("#seed").value = "";
 })();
 </script>
   <script>
