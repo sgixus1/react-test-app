@@ -20,6 +20,7 @@ const navItems = [
   ["home", "Home"],
   ["encyclopedia", "Encyclopedia"],
   ["map", "Knowledge Map"],
+  ["sources", "Source Lab"],
   ["learn", "Learn Magic"],
   ["library", "Digital Library"],
 ];
@@ -29,7 +30,7 @@ function parseRoute() {
   if (!raw) return { view: "home" };
   const [view, id] = raw.split("/");
   if (view === "entry" && id) return { view: "entry", id };
-  if (["home", "encyclopedia", "map", "learn", "library"].includes(view)) return { view };
+  if (["home", "encyclopedia", "map", "sources", "learn", "library"].includes(view)) return { view };
   return { view: "home" };
 }
 
@@ -1073,6 +1074,172 @@ function LibraryView() {
   );
 }
 
+function SourceLabView() {
+  const [manifest, setManifest] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let alive = true;
+    fetch("/arcanum/source-manifest.json", { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) throw new Error(`Manifest request failed: ${response.status}`);
+        return response.json();
+      })
+      .then((data) => {
+        if (alive) setManifest(data);
+      })
+      .catch((reason) => {
+        if (alive) setError(reason.message || "Could not read source manifest.");
+      });
+    return () => { alive = false; };
+  }, []);
+
+  const summary = manifest?.summary || {};
+  const extracted = Number(summary.totalFiles || summary.extractedFiles || 0);
+  const inventoryFiles = Number(summary.inventoryFiles || archiveStats.rawFiles || 0);
+  const progress = inventoryFiles ? Math.min(100, Math.round((extracted / inventoryFiles) * 100)) : 0;
+  const files = Array.isArray(manifest?.files) ? manifest.files.slice(0, 18) : [];
+
+  const stages = [
+    {
+      title: "Inventory",
+      state: "ready",
+      copy: "The uploaded inventory establishes filenames, source categories, archive volume count, and the current bilingual record map.",
+    },
+    {
+      title: "Filesystem scan",
+      state: extracted ? "ready" : "waiting",
+      copy: "The Windows scanner walks the extracted library, records relative paths and file sizes, and hashes source files for exact duplicate detection.",
+    },
+    {
+      title: "Deduplication",
+      state: extracted ? "ready" : "waiting",
+      copy: "SHA-256 identifies exact copies while normalized filenames plus byte size flag likely duplicate editions for review.",
+    },
+    {
+      title: "Text & image extraction",
+      state: "waiting",
+      copy: "PDF/DOC/DOCX text, page images, diagrams, sigils, tarot art, and illustrations will be attached to their source records after extraction.",
+    },
+    {
+      title: "Translation review",
+      state: "waiting",
+      copy: "Chinese originals and reviewed English translations will remain linked at page and record level rather than replacing the source text.",
+    },
+    {
+      title: "Encyclopedia publishing",
+      state: "waiting",
+      copy: "Only reviewed source-derived material moves into public article sections, learning lessons, diagrams, and the knowledge graph.",
+    },
+  ];
+
+  return (
+    <main className="view source-lab-view">
+      <section className="subpage-hero source-lab-hero">
+        <div>
+          <p className="kicker">SOURCE INGESTION LAB</p>
+          <h1>Turn the library into structured knowledge.</h1>
+          <p>This workspace tracks the path from extracted files to deduplicated sources, visual assets, page-level provenance, translations, and encyclopedia records.</p>
+        </div>
+        <ArcaneSeal compact />
+      </section>
+
+      <section className="content-section source-lab-workspace">
+        <div className="source-lab-overview">
+          <div className="source-progress-card">
+            <div className="source-progress-ring" style={{ "--progress": `${progress * 3.6}deg` }}>
+              <span><strong>{progress}%</strong><small>extracted</small></span>
+            </div>
+            <div>
+              <p className="kicker">CURRENT SOURCE STATE</p>
+              <h2>{manifest?.state === "inventory-only" ? "Inventory mapped. Extraction pending." : "Extracted source tree indexed."}</h2>
+              <p>{manifest?.state === "inventory-only"
+                ? "The website currently knows the library inventory and source filenames, but the underlying document bytes have not yet been imported into the content pipeline."
+                : "The source manifest is active. Duplicate detection and file-type classification are now available for the extracted tree."}</p>
+            </div>
+          </div>
+
+          <div className="source-metrics">
+            <div><span>Inventory files</span><strong>{inventoryFiles}</strong></div>
+            <div><span>Extracted files</span><strong>{extracted}</strong></div>
+            <div><span>Images found</span><strong>{summary.imageFiles || 0}</strong></div>
+            <div><span>Documents found</span><strong>{summary.documentFiles || 0}</strong></div>
+            <div><span>Exact duplicate sets</span><strong>{summary.exactDuplicateSets || 0}</strong></div>
+            <div><span>Likely duplicate sets</span><strong>{summary.likelyDuplicateSets || 0}</strong></div>
+          </div>
+        </div>
+
+        <div className="section-intro split source-pipeline-intro">
+          <div><p className="kicker">INGESTION PIPELINE</p><h2>Every source keeps its provenance.</h2></div>
+          <p>The pipeline is deliberately conservative: it can organize and detect duplicates without pretending it has read a book that has not yet been extracted.</p>
+        </div>
+
+        <div className="pipeline-grid">
+          {stages.map((stage, index) => (
+            <article className={`pipeline-stage ${stage.state}`} key={stage.title}>
+              <span className="pipeline-number">0{index + 1}</span>
+              <i />
+              <small>{stage.state === "ready" ? "READY" : "PENDING"}</small>
+              <h3>{stage.title}</h3>
+              <p>{stage.copy}</p>
+            </article>
+          ))}
+        </div>
+
+        <div className="source-toolkit">
+          <div className="toolkit-copy">
+            <p className="kicker">WINDOWS IMPORT TOOLKIT</p>
+            <h2>One scan. One import. No manual file sorting.</h2>
+            <p>The repository now contains a Windows scanner and a Node importer. After the library is extracted, the scanner creates a hash-aware file manifest and the importer writes the source manifest used by this page.</p>
+          </div>
+          <div className="command-stack">
+            <div><small>1 · SCAN EXTRACTED LIBRARY</small><code>npm run arcanum:scan -- -Root "D:\\Magic-Library" -HashAll</code></div>
+            <div><small>2 · BUILD SOURCE MANIFEST</small><code>npm run arcanum:import -- "import\\source-files.json"</code></div>
+            <div><small>3 · START WEBSITE</small><code>npm run dev</code></div>
+          </div>
+        </div>
+
+        <section className="source-file-section">
+          <div className="section-intro">
+            <p className="kicker">SOURCE FILE MANIFEST</p>
+            <h2>{files.length ? "Extracted files detected." : "Waiting for the extracted library."}</h2>
+            <p>{files.length
+              ? "The first manifest records are shown below. Full-text and image extraction are separate review stages."
+              : "When the scanner/importer runs, this area will populate automatically with the real relative paths, hashes, file kinds, duplicate flags, and import state."}</p>
+          </div>
+
+          {error && <div className="source-error">{error}</div>}
+
+          {files.length ? (
+            <div className="source-file-table-wrap">
+              <table className="source-file-table">
+                <thead><tr><th>File</th><th>Kind</th><th>Size</th><th>Duplicate</th><th>Status</th></tr></thead>
+                <tbody>
+                  {files.map((file) => (
+                    <tr key={file.id}>
+                      <td><strong>{file.filename}</strong><small>{file.path}</small></td>
+                      <td>{file.kind}</td>
+                      <td>{file.size ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "—"}</td>
+                      <td>{file.duplicate?.exact ? "Exact" : file.duplicate?.likely ? "Likely" : "No"}</td>
+                      <td>{file.status || "indexed"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="source-awaiting">
+              <ArcaneSeal compact />
+              <strong>No extracted source manifest yet.</strong>
+              <p>The inventory remains the authoritative basis for the current public records.</p>
+            </div>
+          )}
+        </section>
+      </section>
+    </main>
+  );
+}
+
 function Footer() {
   return (
     <footer className="site-footer">
@@ -1146,6 +1313,7 @@ export default function ArcanumArchive() {
       )}
       {route.view === "entry" && <EntryView id={route.id} bookmarked={archiveMemory.bookmarkSet.has(route.id)} onToggleBookmark={archiveMemory.toggleBookmark} onRemember={archiveMemory.remember} />}
       {route.view === "map" && <KnowledgeMapView onSearch={performSearch} />}
+      {route.view === "sources" && <SourceLabView />}
       {route.view === "learn" && <LearnView completedStudy={archiveMemory.completedStudy} onToggleStudyComplete={archiveMemory.toggleStudyComplete} />}
       {route.view === "library" && <LibraryView />}
 
