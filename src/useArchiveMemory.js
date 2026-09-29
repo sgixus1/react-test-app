@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 const BOOKMARK_KEY = "arcanum.bookmarks.v1";
 const RECENT_KEY = "arcanum.recent.v1";
+const STUDY_KEY = "arcanum.study-progress.v1";
 const MAX_RECENT = 8;
 
 function safeRead(key, fallback) {
@@ -24,9 +25,11 @@ function safeWrite(key, value) {
 export function useArchiveMemory() {
   const [bookmarks, setBookmarks] = useState(() => safeRead(BOOKMARK_KEY, []));
   const [recent, setRecent] = useState(() => safeRead(RECENT_KEY, []));
+  const [completedStudy, setCompletedStudy] = useState(() => safeRead(STUDY_KEY, []));
 
   useEffect(() => safeWrite(BOOKMARK_KEY, bookmarks), [bookmarks]);
   useEffect(() => safeWrite(RECENT_KEY, recent), [recent]);
+  useEffect(() => safeWrite(STUDY_KEY, completedStudy), [completedStudy]);
 
   const bookmarkSet = useMemo(() => new Set(bookmarks), [bookmarks]);
 
@@ -44,6 +47,14 @@ export function useArchiveMemory() {
 
   const clearRecent = useCallback(() => setRecent([]), []);
 
+  const toggleStudyComplete = useCallback((chapterNumber) => {
+    setCompletedStudy((current) => (
+      current.includes(chapterNumber)
+        ? current.filter((item) => item !== chapterNumber)
+        : [...current, chapterNumber]
+    ));
+  }, []);
+
   return {
     bookmarks,
     bookmarkSet,
@@ -51,5 +62,7 @@ export function useArchiveMemory() {
     toggleBookmark,
     remember,
     clearRecent,
+    completedStudy,
+    toggleStudyComplete,
   };
 }
