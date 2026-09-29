@@ -566,7 +566,8 @@ for (let index = 0; index < files.length; index += 1) {
 
   const count = index + 1;
   if (count === 1 || count % 10 === 0 || count === files.length) {
-    console.log(`[${count}/${files.length}] ${result.status}: ${file.filename}`);\n    if (result.status === "error" && result.reason) console.log(`  ↳ ${result.reason}`);
+    console.log(`[${count}/${files.length}] ${result.status}: ${file.filename}`);
+    if (result.status === "error" && result.reason) console.log(`  ↳ ${result.reason}`);
   }
 }
 
@@ -591,7 +592,8 @@ const extraction = {
     pageMappedRecords: results.filter((item) => item.pagePath).length,
     totalPages: results.reduce((sum, item) => sum + Number(item.pageCount || 0), 0),
     needsVision: results.filter((item) => item.status === "needs-vision").length,
-    exactDuplicatesSkipped: results.filter((item) => item.status === "duplicate-skipped").length,\n    errorSamples: results.filter((item) => item.status === "error").slice(0, 10).map((item) => ({ filename: item.filename, reason: item.reason })),
+    exactDuplicatesSkipped: results.filter((item) => item.status === "duplicate-skipped").length,
+    errorSamples: results.filter((item) => item.status === "error").slice(0, 10).map((item) => ({ filename: item.filename, reason: item.reason })),
   },
   records: results,
 };
