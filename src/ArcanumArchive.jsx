@@ -21,7 +21,6 @@ const navItems = [
   ["encyclopedia", "Encyclopedia"],
   ["map", "Knowledge Map"],
   ["divination", "Divination"],
-  ["sources", "Source Lab"],
   ["learn", "Learn Magic"],
   ["library", "Digital Library"],
 ];
@@ -190,11 +189,10 @@ function CommandPalette({ open, onClose, onOpenEntry, onSearch }) {
     return libraryEntries
       .filter((entry) => [
         entry.title,
-        entry.original,
         entry.category,
         entry.tradition,
         entry.kind,
-        entry.sourceFile,
+        entry.summary,
       ].join(" ").toLowerCase().includes(needle))
       .slice(0, 8);
   }, [query]);
@@ -213,7 +211,7 @@ function CommandPalette({ open, onClose, onOpenEntry, onSearch }) {
           {results.map((entry) => (
             <button type="button" key={entry.id} onClick={() => { onOpenEntry(entry.id); onClose(); }}>
               <img src={visualMap[entry.visual]} alt="" />
-              <span><strong>{entry.title}</strong><small>{entry.original}</small><em>{entry.category} · {entry.tradition}</em></span>
+              <span><strong>{entry.title}</strong><small>{entry.kind}</small><em>{entry.category} · {entry.tradition}</em></span>
               <b>↗</b>
             </button>
           ))}
@@ -260,7 +258,7 @@ function StatRibbon() {
       <i />
       <div><strong>{archiveStats.splitVolumes}</strong><span>archive volumes</span></div>
       <i />
-      <div><strong>中文 + EN</strong><span>bilingual source layer</span></div>
+      <div><strong>Curated</strong><span>reviewed knowledge layer</span></div>
       <i />
       <div><strong>Source-Locked</strong><span>no invented articles</span></div>
     </div>
@@ -296,7 +294,7 @@ function FeaturedRail({ onOpen }) {
           <span className="featured-info">
             <small>{entry.category}</small>
             <strong>{entry.title}</strong>
-            <span>{entry.original}</span>
+            <span>{entry.tradition}</span>
           </span>
           <span className="featured-arrow">↗</span>
         </button>
@@ -356,14 +354,14 @@ function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
             <span>ARCHIVE</span>
           </h1>
           <p className="hero-lede">
-            Explore, study, and understand <b>rituals, spells, magical artifacts, symbols, grimoires, traditions, entities, and hidden knowledge</b> through a source-linked digital archive.
+            Explore, study, and understand <b>rituals, spells, magical artifacts, symbols, grimoires, traditions, entities, divination, and esoteric history</b> through a cinematic digital archive.
           </p>
           <HeroSearch onSearch={onSearch} />
           <div className="hero-ctas">
             <button className="button gold" type="button" onClick={() => goTo("encyclopedia")}>Explore the Encyclopedia</button>
             <button className="button ghost" type="button" onClick={() => goTo("learn")}>Begin Learning</button>
           </div>
-          <p className="hero-note">Original Chinese titles are preserved alongside English navigation. Unread source text remains locked until extraction.</p>
+          <p className="hero-note">A curated research archive with interactive learning, cross-linked records, and reflective divination tools.</p>
         </div>
         <div className="hero-seal-wrap"><ArcaneSeal /></div>
         <div className="hero-index">
@@ -402,6 +400,23 @@ function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
           <p>These are real source records from the uploaded inventory. They are ready to receive translations, page images, and cross-references as extraction progresses.</p>
         </div>
         <FeaturedRail onOpen={onOpen} />
+      </section>
+
+      <section className="content-section home-oracle-feature">
+        <div className="oracle-feature-copy">
+          <p className="kicker">THE DIVINATION CHAMBER</p>
+          <h2>Read symbols. Trace patterns. Keep the mechanics visible.</h2>
+          <p>Enter complete Tarot and Elder Futhark reading systems built around transparent selection, position-aware interpretation, history, and reproducible seeded casts.</p>
+          <button className="button gold" type="button" onClick={() => goTo("divination")}>Enter Divination</button>
+        </div>
+        <div className="oracle-feature-visual" aria-hidden="true">
+          <span className="oracle-moon">☾</span>
+          <span className="oracle-ring ring-one" />
+          <span className="oracle-ring ring-two" />
+          <span className="oracle-rune rune-a">ᛟ</span>
+          <span className="oracle-rune rune-b">ᛉ</span>
+          <span className="oracle-star">✦</span>
+        </div>
       </section>
 
       <section className="content-section personal-vault-section">
@@ -563,7 +578,6 @@ function RecordCard({ entry, bookmarked, onToggleBookmark, comparing, onToggleCo
       <span className="record-content">
         <small>{entry.category} · {entry.tradition}</small>
         <strong>{entry.title}</strong>
-        <span className="record-original">{entry.original}</span>
         <span className="record-summary">{entry.summary}</span>
         <span className="record-footer">
           <em>{entry.status}</em>
@@ -583,7 +597,6 @@ function CompareTray({ ids, onRemove, onClear }) {
     ["Record type", "kind"],
     ["Language", "language"],
     ["Import status", "status"],
-    ["Source file", "sourceFile"],
   ];
 
   return (
@@ -600,7 +613,6 @@ function CompareTray({ ids, onRemove, onClear }) {
               {entries.map((entry) => (
                 <th key={entry.id}>
                   <button type="button" onClick={() => goTo("entry", entry.id)}>{entry.title}</button>
-                  <small>{entry.original}</small>
                   <span onClick={() => onRemove(entry.id)} role="button" tabIndex={0}>Remove ×</span>
                 </th>
               ))}
@@ -821,7 +833,6 @@ function EntryView({ id, bookmarked, onToggleBookmark, onRemember }) {
         <div className="entry-title-block">
           <p className="kicker">{entry.category}</p>
           <h1>{entry.title}</h1>
-          <p className="entry-original-title">{entry.original}</p>
           <div className="entry-badges">
             <span>{entry.tradition}</span><span>{entry.kind}</span><span>{entry.language}</span>
           </div>
@@ -854,7 +865,7 @@ function EntryView({ id, bookmarked, onToggleBookmark, onRemember }) {
 
         <article className="entry-document">
           <div className="document-tabs">
-            {["overview", "source", "related", "images"].map((item) => (
+            {["overview", "context", "related", "images"].map((item) => (
               <button className={tab === item ? "active" : ""} type="button" key={item} onClick={() => setTab(item)}>
                 {item}
               </button>
@@ -874,17 +885,17 @@ function EntryView({ id, bookmarked, onToggleBookmark, onRemember }) {
             </div>
           )}
 
-          {tab === "source" && (
+          {tab === "context" && (
             <div className="document-panel">
-              <p className="kicker">PROVENANCE</p>
-              <h2>Original source record</h2>
+              <p className="kicker">RESEARCH CONTEXT</p>
+              <h2>How this record is classified</h2>
               <div className="source-card">
-                <span>FILE</span><strong>{entry.sourceFile}</strong>
-                <span>ORIGINAL TITLE</span><strong>{entry.original}</strong>
-                <span>LANGUAGE LAYER</span><strong>{entry.language}</strong>
-                <span>IMPORT STATE</span><strong>{entry.status}</strong>
+                <span>TRADITION</span><strong>{entry.tradition}</strong>
+                <span>RECORD TYPE</span><strong>{entry.kind}</strong>
+                <span>LANGUAGE REVIEW</span><strong>{entry.language}</strong>
+                <span>ARCHIVE STATE</span><strong>{entry.status}</strong>
               </div>
-              <p className="muted-copy">When the underlying document is extracted, this section will add page-level citations, edition notes, image provenance, OCR confidence, and translation review status.</p>
+              <p className="muted-copy">Internal provenance, filenames, OCR diagnostics, and source locations remain in the private research layer rather than the public website.</p>
             </div>
           )}
 
@@ -1097,7 +1108,6 @@ function BookSpine({ entry, selected, onSelect }) {
     <button className={selected ? "book-spine-card selected" : "book-spine-card"} type="button" onClick={onSelect}>
       <span className="spine-rune">✦</span>
       <strong>{entry.title}</strong>
-      <small>{entry.original}</small>
       <em>{entry.category}</em>
     </button>
   );
@@ -1113,8 +1123,8 @@ function LibraryView() {
       <section className="subpage-hero library-hero">
         <div>
           <p className="kicker">DIGITAL GRIMOIRE LIBRARY</p>
-          <h1>Browse the sources themselves.</h1>
-          <p>The Digital Library is the preservation layer: original titles, scans, diagrams, source metadata, English translations, and links back into the encyclopedia.</p>
+          <h1>Enter the digital reading room.</h1>
+          <p>Browse curated volumes, open connected encyclopedia records, and move between subjects without exposing the archive's internal filenames or ingestion metadata.</p>
         </div>
         <div className="library-lantern"><span>✦</span></div>
       </section>
@@ -1150,7 +1160,6 @@ function LibraryView() {
               <div>
                 <p className="kicker">SELECTED SOURCE</p>
                 <h2>{selected.title}</h2>
-                <p className="record-original">{selected.original}</p>
                 <p>{selected.summary}</p>
                 <MetadataGrid entry={selected} />
                 <div className="selected-actions">
@@ -1165,22 +1174,22 @@ function LibraryView() {
             <div className="reader-sidebar">
               <p className="kicker">SOURCE READER</p>
               <h3>{selected.title}</h3>
-              <p>{selected.original}</p>
+<p>{selected.category} · {selected.tradition}</p>
               <button type="button" onClick={() => setMode("shelf")}>← Back to shelf</button>
               <button type="button" onClick={() => goTo("entry", selected.id)}>Encyclopedia record ↗</button>
             </div>
             <div className="reader-book">
               <div className="reader-page original-page">
-                <small>ORIGINAL SOURCE</small>
+                <small>ARCHIVE EDITION</small>
                 <div className="source-page-placeholder">
                   <span>✦</span>
-                  <strong>{selected.original}</strong>
-                  <p>Original scan / document page will appear here after extraction.</p>
+                  <strong>{selected.title}</strong>
+                  <p>Curated reading material and approved imagery will populate this edition as digitization completes.</p>
                 </div>
               </div>
               <div className="reader-gutter" />
               <div className="reader-page translation-page">
-                <small>ENGLISH TRANSLATION</small>
+                <small>READING NOTES</small>
                 <h2>{selected.title}</h2>
                 <p>{selected.summary}</p>
                 <div className="translation-lines" />
@@ -1412,7 +1421,7 @@ function Footer() {
   return (
     <footer className="site-footer">
       <Brand />
-      <div><strong>Explore · Study · Understand Magic</strong><small>Inventory-grounded prototype · Original source imagery pending extraction</small></div>
+      <div><strong>Explore · Study · Understand Magic</strong><small>A living digital archive of esoteric history, symbolism, and divination.</small></div>
       <button type="button" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Return to top ↑</button>
     </footer>
   );
@@ -1456,6 +1465,52 @@ export default function ArcanumArchive() {
     window.addEventListener("pointermove", pointer);
     return () => window.removeEventListener("pointermove", pointer);
   }, [motion]);
+
+
+  useEffect(() => {
+    // premium reveal observer
+    const root = rootRef.current;
+    if (!root) return undefined;
+
+    const updateScrollState = () => {
+      root.classList.toggle("site-scrolled", window.scrollY > 24);
+    };
+    updateScrollState();
+    window.addEventListener("scroll", updateScrollState, { passive: true });
+
+    const revealTargets = root.querySelectorAll(
+      ".content-section, .subject-gate, .featured-record, .record-card, .vault-panel, .pipeline-stage, .capability-grid > div, .divination-tool-card, .divination-roadmap-grid article, .principle-grid article, .selected-book, .reader-book, .learning-workspace"
+    );
+
+    revealTargets.forEach((node, index) => {
+      node.classList.add("premium-reveal");
+      node.style.setProperty("--reveal-delay", String(Math.min(index % 8, 7) * 55) + "ms");
+    });
+
+    if (!motion || !("IntersectionObserver" in window)) {
+      revealTargets.forEach((node) => node.classList.add("is-visible"));
+      return () => window.removeEventListener("scroll", updateScrollState);
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: "0px 0px -7% 0px" },
+    );
+
+    revealTargets.forEach((node) => observer.observe(node));
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", updateScrollState);
+    };
+  }, [route.view, motion]);
 
   const performSearch = (term) => {
     setPendingSearch(term);
