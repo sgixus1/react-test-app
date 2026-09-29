@@ -19,6 +19,7 @@ const visualMap = {
 const navItems = [
   ["home", "Home"],
   ["encyclopedia", "Encyclopedia"],
+  ["map", "Knowledge Map"],
   ["learn", "Learn Magic"],
   ["library", "Digital Library"],
 ];
@@ -28,7 +29,7 @@ function parseRoute() {
   if (!raw) return { view: "home" };
   const [view, id] = raw.split("/");
   if (view === "entry" && id) return { view: "entry", id };
-  if (["home", "encyclopedia", "learn", "library"].includes(view)) return { view };
+  if (["home", "encyclopedia", "map", "learn", "library"].includes(view)) return { view };
   return { view: "home" };
 }
 
@@ -166,6 +167,58 @@ function ArcaneSeal({ compact = false }) {
       <span className="orbit-dot dot-a" />
       <span className="orbit-dot dot-b" />
       <span className="orbit-dot dot-c" />
+    </div>
+  );
+}
+
+
+function CommandPalette({ open, onClose, onOpenEntry, onSearch }) {
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    if (!open) setQuery("");
+  }, [open]);
+
+  const results = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) return libraryEntries.slice(0, 8);
+    return libraryEntries
+      .filter((entry) => [
+        entry.title,
+        entry.original,
+        entry.category,
+        entry.tradition,
+        entry.kind,
+        entry.sourceFile,
+      ].join(" ").toLowerCase().includes(needle))
+      .slice(0, 8);
+  }, [query]);
+
+  if (!open) return null;
+
+  return (
+    <div className="command-backdrop" role="presentation" onMouseDown={onClose}>
+      <section className="command-palette" role="dialog" aria-modal="true" aria-label="Search The Arcanum Archive" onMouseDown={(event) => event.stopPropagation()}>
+        <div className="command-input">
+          <span>⌕</span>
+          <input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search the whole archive…" />
+          <kbd>Esc</kbd>
+        </div>
+        <div className="command-results">
+          {results.map((entry) => (
+            <button type="button" key={entry.id} onClick={() => { onOpenEntry(entry.id); onClose(); }}>
+              <img src={visualMap[entry.visual]} alt="" />
+              <span><strong>{entry.title}</strong><small>{entry.original}</small><em>{entry.category} · {entry.tradition}</em></span>
+              <b>↗</b>
+            </button>
+          ))}
+          {!results.length && <div className="command-empty">No indexed source matches “{query}”.</div>}
+        </div>
+        <div className="command-footer">
+          <button type="button" onClick={() => { onSearch(query); onClose(); }}>Search all records for “{query || "everything"}”</button>
+          <span>Ctrl/⌘ + K</span>
+        </div>
+      </section>
     </div>
   );
 }
