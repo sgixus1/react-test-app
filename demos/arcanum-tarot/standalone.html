@@ -481,6 +481,142 @@ body:before{
   .card-detail{grid-template-columns:1fr}.library-grid{grid-template-columns:repeat(3,1fr)}
 }
 
+
+/* === Reference fidelity rebuild v4 === */
+body{
+  background:
+    linear-gradient(180deg,rgba(4,5,10,.30),rgba(2,2,6,.82)),
+    url("https://images.pexels.com/photos/6944923/pexels-photo-6944923.jpeg?auto=compress&cs=tinysrgb&w=2400") center/cover fixed no-repeat,
+    #05050a;
+}
+body:after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 4%,rgba(45,84,171,.22),transparent 22%),
+    radial-gradient(circle at 52% 34%,rgba(212,151,59,.16),transparent 28%),
+    linear-gradient(90deg,rgba(2,2,7,.78) 0 20%,transparent 36% 66%,rgba(2,2,7,.76) 82% 100%);
+}
+.app-shell{max-width:none;width:100%;padding:0 18px 18px}
+.topbar{
+  min-height:62px;background:linear-gradient(90deg,rgba(2,3,8,.94),rgba(7,8,15,.88),rgba(2,3,8,.95));
+  border-bottom:1px solid #ad7f386e;box-shadow:0 8px 35px #0009
+}
+.layout{grid-template-columns:420px minmax(700px,1fr) 440px;gap:14px;align-items:stretch}
+.panel{
+  background:linear-gradient(180deg,rgba(4,7,14,.86),rgba(4,6,12,.91));
+  border-color:#c08b3f88;backdrop-filter:blur(9px) saturate(1.08);
+  box-shadow:0 24px 80px #000b,inset 0 0 0 1px #ffda7b0c;
+}
+.controls,.right-panel{position:relative}
+.controls:after,.right-panel:after{
+  content:"";position:absolute;inset:8px;border:1px solid #b4823c55;border-radius:13px;pointer-events:none;
+  box-shadow:inset 0 0 28px #0006
+}
+.controls .pad,.right-panel .pad{position:relative;z-index:2}
+.tarot-table{
+  min-height:900px;padding:0 20px 22px;position:relative;isolation:isolate;
+  background:
+    radial-gradient(ellipse at 50% 53%,rgba(5,10,29,.08),rgba(3,4,10,.54) 58%,rgba(1,2,6,.78) 100%),
+    url("https://images.pexels.com/photos/7179423/pexels-photo-7179423.jpeg?auto=compress&cs=tinysrgb&w=1800") center 44%/cover no-repeat;
+  overflow:hidden;
+}
+.tarot-table:after{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(circle at 50% 29%,transparent 0 155px,rgba(208,148,54,.18) 156px 157px,transparent 158px 210px,rgba(208,148,54,.11) 211px 212px,transparent 213px),
+    repeating-radial-gradient(circle at 50% 62%,transparent 0 104px,#cf964020 105px 106px,transparent 107px 138px),
+    linear-gradient(180deg,rgba(5,7,15,.16),rgba(4,6,13,.38));
+}
+.arcane-props,.table-glow,.tarot-hero,.spread-area,.table-help,.reference-deck-row{z-index:4}
+.scene-layer{position:absolute;inset:0;z-index:2;pointer-events:none}
+.crystal-ball{
+  position:absolute;left:50%;top:36px;transform:translateX(-50%);
+  width:174px;height:174px;border-radius:50%;
+  border:2px solid #d7ab5f;
+  background:
+    radial-gradient(circle at 42% 34%,#ffffffcc 0 2px,transparent 3px),
+    radial-gradient(circle at 50% 50%,#315aa070 0 15%,#131d4fbb 50%,#070d21e8 70%);
+  box-shadow:0 0 0 9px #6b42185c,0 0 45px #7899ff55,inset 0 0 42px #9cb7ff44;
+}
+.crystal-ball:before{
+  content:"☾";position:absolute;inset:0;display:grid;place-items:center;
+  color:#f4c66b;font-size:74px;text-shadow:0 0 20px #e8bb5e;
+}
+.crystal-ball:after{
+  content:"";position:absolute;left:21px;right:21px;bottom:-28px;height:28px;
+  border:3px solid #c88f3c;border-radius:50%;background:#2b1708aa;box-shadow:0 6px 24px #000b
+}
+.scene-candle{position:absolute;width:34px;background:linear-gradient(90deg,#e8bd6f,#fff0ba,#d99e4a);border-radius:7px 7px 4px 4px;box-shadow:0 0 24px #f4ad3b75}
+.scene-candle:before{
+  content:"";position:absolute;left:10px;top:-28px;width:14px;height:30px;border-radius:50% 50% 45% 45%;
+  background:radial-gradient(circle at 50% 65%,#fff8c9 0 12%,#ffbd45 42%,#ff7f22 68%,transparent 72%);
+  filter:drop-shadow(0 0 10px #ffa52f)
+}
+.candle-l1{left:46px;top:144px;height:112px}.candle-l2{left:92px;top:210px;height:82px}
+.candle-r1{right:58px;top:150px;height:120px}.candle-r2{right:112px;top:232px;height:74px}
+.book-stack{position:absolute;right:18px;top:260px;width:170px;transform:rotate(4deg)}
+.book-stack span{
+  display:block;height:31px;margin-top:-2px;border:1px solid #a47332;border-radius:4px;
+  background:linear-gradient(#21170e,#0c0a0a);color:#b98239;padding:7px 12px;font:10px Georgia,serif;letter-spacing:.12em
+}
+.scene-crystal{
+  position:absolute;width:34px;height:80px;clip-path:polygon(50% 0,90% 25%,72% 100%,28% 100%,10% 25%);
+  background:linear-gradient(135deg,#f5d7ff 0,#8d5bdc 32%,#48288b 66%,#d8b7ff 100%);
+  box-shadow:0 0 26px #8c5af07d;opacity:.88
+}
+.crystal-l{left:140px;top:216px;transform:rotate(-8deg)}.crystal-r{right:205px;top:244px;transform:rotate(11deg)}
+.black-cat{
+  position:absolute;right:30px;top:104px;width:70px;height:92px;border-radius:48% 48% 38% 38%;
+  background:#040509;box-shadow:inset 0 0 18px #12182b,0 0 16px #000
+}
+.black-cat:before,.black-cat:after{content:"";position:absolute;top:-18px;width:28px;height:34px;background:#040509;clip-path:polygon(50% 0,100% 100%,0 100%)}
+.black-cat:before{left:4px}.black-cat:after{right:4px}
+.cat-eyes{position:absolute;left:14px;right:14px;top:29px;height:7px;background:radial-gradient(circle at 25% 50%,#e9c248 0 3px,transparent 4px),radial-gradient(circle at 75% 50%,#e9c248 0 3px,transparent 4px)}
+.tarot-hero{padding:234px 10px 0}
+.tarot-hero .hero-kicker{display:none}
+.tarot-hero h1{font-size:47px;letter-spacing:.13em;margin:0;color:#f4d092;text-shadow:0 0 24px #000,0 0 34px #d99e3d55}
+.tarot-hero p{margin-top:2px;color:#e0d0bf;text-shadow:0 2px 8px #000}
+.spread-area{
+  padding:44px 14px 16px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:26px;
+  max-width:860px;margin:0 auto
+}
+.card{width:min(100%,190px)}
+.face{box-shadow:0 14px 35px #000e,0 0 0 2px #271707,0 0 0 3px #d59a45}
+.card-front{padding:4px;background:#120c08}
+.tarot-photo{filter:saturate(1.17) contrast(1.10) brightness(.96)}
+.tarot-gold-frame{
+  inset:4px;border:2px solid #d7a34a;box-shadow:inset 0 0 0 2px #1e1206,inset 0 0 28px #0007,0 0 13px #e9aa4452
+}
+.reference-deck-row{
+  display:flex;justify-content:center;gap:34px;margin:2px auto 0;position:relative
+}
+.reference-back{
+  width:145px;aspect-ratio:2/3;border-radius:10px;position:relative;
+  border:2px solid #c99545;
+  background:
+    radial-gradient(circle at center,#f1c46f 0 2px,transparent 3px),
+    repeating-radial-gradient(circle at center,transparent 0 25px,#c38d3942 26px 27px,transparent 28px 44px),
+    linear-gradient(145deg,#0a1730,#050914);
+  box-shadow:0 14px 30px #000c,inset 0 0 0 5px #0b0c15,0 0 0 1px #23160b
+}
+.reference-back:after{content:"☾";position:absolute;inset:0;display:grid;place-items:center;color:#d6a74f;font-size:42px;text-shadow:0 0 16px #d6a74f}
+.reference-back:nth-child(1){transform:rotate(-3deg)}.reference-back:nth-child(3){transform:rotate(3deg)}
+.table-help{margin-top:11px;text-shadow:0 2px 5px #000}
+.right-panel .reading-panel{max-height:900px}
+.reading-tabs{margin-top:8px}
+.reference-reading-list,.reference-reading-explanation{margin-top:12px}
+.reference-reading-list h3,.reference-reading-explanation h3{
+  color:#e7d6b5;margin:0 0 9px;font-size:16px
+}
+.reference-reading-list .reading-card-row{grid-template-columns:56px 1fr}
+.reference-reading-list .reading-thumb{width:52px}
+.reference-reading-explanation{
+  padding:11px 12px;border:1px solid #76532a;border-radius:9px;background:#0a0d14bd;color:#d6cbd1;font:11.5px/1.5 system-ui
+}
+.reference-reading-explanation p{margin:0}
+@media(max-width:1500px){.layout{grid-template-columns:350px minmax(620px,1fr) 390px}.tarot-hero h1{font-size:39px}.crystal-ball{width:145px;height:145px}}
+@media(max-width:1120px){.scene-layer{opacity:.72}.tarot-hero{padding-top:190px}.layout{grid-template-columns:300px 1fr}.right-panel{grid-column:1/-1}}
+
 </style>
 </head>
 <body>
@@ -1674,6 +1810,69 @@ window.ARCANUM_TAROT = (() => {
     decorateHeader();decorateTable();buildRightTabs();installOverlays();makeLibrary();
     wireNav();wireShuffle();observeReading();cardDoubleClick();
   }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>
+
+
+<script>
+(() => {
+  "use strict";
+  const q=s=>document.querySelector(s);
+
+  function installReferenceScene(){
+    const table=q(".tarot-table"); if(!table||table.dataset.sceneV4)return;
+    table.dataset.sceneV4="1";
+    table.insertAdjacentHTML("afterbegin",
+      '<div class="scene-layer">'+
+        '<div class="crystal-ball"></div>'+
+        '<div class="scene-candle candle-l1"></div><div class="scene-candle candle-l2"></div>'+
+        '<div class="scene-candle candle-r1"></div><div class="scene-candle candle-r2"></div>'+
+        '<div class="scene-crystal crystal-l"></div><div class="scene-crystal crystal-r"></div>'+
+        '<div class="black-cat"><div class="cat-eyes"></div></div>'+
+        '<div class="book-stack"><span>TAROT</span><span>ASTROLOGY</span><span>ALCHEMY</span><span>THE OCCULT</span></div>'+
+      '</div>');
+    const help=q(".table-help");
+    const deck=document.createElement("div");
+    deck.className="reference-deck-row";
+    deck.innerHTML='<div class="reference-back"></div><div class="reference-back"></div><div class="reference-back"></div>';
+    help?.insertAdjacentElement("beforebegin",deck);
+  }
+
+  function mirrorReadingIntoMainTab(){
+    const panel=q(".reading-panel");
+    const readingView=panel?.querySelector('.reading-view[data-view="reading"]');
+    const meanings=q("#reading"), expl=q("#explanation");
+    if(!readingView||!meanings)return;
+
+    let list=readingView.querySelector(".reference-reading-list");
+    if(!list){
+      list=document.createElement("div");list.className="reference-reading-list";
+      readingView.appendChild(list);
+    }
+    list.innerHTML='<h3>The Cards in This Reading</h3>';
+    meanings.querySelectorAll(".entry").forEach(entry=>{
+      const row=entry.querySelector(".reading-card-row");
+      if(row) list.appendChild(row.cloneNode(true));
+    });
+
+    let ex=readingView.querySelector(".reference-reading-explanation");
+    if(!ex){
+      ex=document.createElement("div");ex.className="reference-reading-explanation";
+      readingView.appendChild(ex);
+    }
+    const body=expl?.querySelector(".reading-explanation");
+    ex.innerHTML='<h3>☾ Explanation of This Reading</h3>'+(body?body.innerHTML:'<p>Draw the cards to reveal the complete interpretation.</p>');
+  }
+
+  function observe(){
+    const reading=q("#reading"),expl=q("#explanation");
+    if(reading)new MutationObserver(()=>setTimeout(mirrorReadingIntoMainTab,10)).observe(reading,{childList:true,subtree:true});
+    if(expl)new MutationObserver(()=>setTimeout(mirrorReadingIntoMainTab,10)).observe(expl,{childList:true,subtree:true});
+    setTimeout(mirrorReadingIntoMainTab,120);
+  }
+
+  function init(){installReferenceScene();observe();}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
 </script>
