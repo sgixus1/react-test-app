@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Arcanum Tarot — Rule-Based Demo</title>
+  <title>Arcanum Tarot — Rule-Based Divination</title>
   <style>
 :root{
   --bg:#07070c;--panel:#111019;--panel2:#16131e;--line:#352c3d;
@@ -1972,8 +1972,8 @@ window.ARCANUM_TAROT = (() => {
   renderHistory();
   runSelfTests();
 
-  const demoSeed = "ARCANUM-DEMO";
-  render(createReading("three",demoSeed,0),"three",demoSeed,"Demo reading");
+  const previewSeed = "ARCANUM-PREVIEW";
+  render(createReading("three",previewSeed,0),"three",previewSeed,"Preview reading");
   // Keep the seed box blank after the initial preview so Shuffle & Draw
   // produces a new random reading immediately.
   $("#seed").value = "";
