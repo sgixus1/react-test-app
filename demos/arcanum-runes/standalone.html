@@ -5,927 +5,358 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Arcanum Runes — Elder Futhark Casting</title>
 <style>
-
 :root{
-  --bg:#02050b;
-  --ink:#f4eee4;
-  --muted:#8b95a7;
-  --muted2:#657083;
-  --gold:#d9b269;
-  --gold-soft:#f0d6a0;
-  --gold-dim:#8e6a32;
-  --violet:#8f79c7;
-  --blue:#789ce5;
-  --glass:rgba(6,11,19,.68);
-  --glass-strong:rgba(5,9,16,.86);
-  --line:rgba(223,184,107,.20);
-  --line-cool:rgba(123,151,204,.16);
-  --shadow:0 35px 90px rgba(0,0,0,.52);
+  --bg:#02050b;--ink:#f4eee4;--muted:#8b95a7;--muted2:#657083;
+  --gold:#d9b269;--gold2:#8e6a32;--gold3:#f1d69b;--violet:#8f79c7;--blue:#789ce5;
 }
 *{box-sizing:border-box}
-html{background:var(--bg)}
 html,body{min-height:100%}
 body{
-  margin:0;
-  color:var(--ink);
-  font-family:Georgia,"Times New Roman",serif;
+  margin:0;color:var(--ink);font-family:Georgia,"Times New Roman",serif;
   background:
-    linear-gradient(180deg,rgba(2,5,12,.16),rgba(2,5,11,.58) 56%,rgba(1,3,8,.90)),
-    url("../arcanum-tarot/assets/arcanum-tarot-sanctuary.png") center 18%/cover fixed no-repeat,
-    #02050b;
-  overflow-x:hidden;
+    linear-gradient(180deg,rgba(2,5,12,.16),rgba(2,5,11,.62) 54%,rgba(1,3,8,.90)),
+    url("../arcanum-tarot/assets/arcanum-tarot-sanctuary.png") center 16%/cover fixed no-repeat,
+    radial-gradient(circle at 50% 0,#17325c,#07111e 40%,#02050a 100%);
 }
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-1;
+body:before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
   background:
-    radial-gradient(circle at 50% 10%,rgba(93,133,222,.16),transparent 20%),
-    radial-gradient(circle at 50% 60%,rgba(225,176,81,.08),transparent 28%),
-    linear-gradient(90deg,rgba(0,2,7,.82),transparent 22% 78%,rgba(0,2,7,.82));
+    radial-gradient(circle at 50% 11%,rgba(89,130,218,.18),transparent 21%),
+    radial-gradient(circle at 50% 61%,rgba(224,174,80,.08),transparent 30%),
+    linear-gradient(90deg,rgba(0,2,7,.84),transparent 21% 79%,rgba(0,2,7,.84));
 }
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:-1;
-  background:linear-gradient(180deg,transparent 0 52%,rgba(1,3,8,.42) 78%,rgba(1,3,8,.82) 100%);
+button,input,textarea{font:inherit}button{cursor:pointer}
+.lux-app{width:min(1920px,100%);margin:auto;padding:0 24px 24px}
+.lux-header{
+  position:sticky;top:0;z-index:50;margin:0 -24px;padding:12px 30px;min-height:74px;
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:24px;
+  background:linear-gradient(180deg,rgba(2,5,12,.94),rgba(2,5,12,.70));
+  backdrop-filter:blur(24px);border-bottom:1px solid rgba(222,180,101,.15);
+  box-shadow:0 16px 48px rgba(0,0,0,.24)
 }
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-a{color:inherit}
-.app{width:min(1920px,100%);margin:0 auto;padding:0 24px 24px}
-
-/* masthead */
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:80;
-  min-height:76px;
-  margin:0 -24px;
-  padding:12px 30px;
-  display:grid;
-  grid-template-columns:auto 1fr auto;
-  gap:24px;
-  align-items:center;
-  border-bottom:1px solid rgba(221,182,106,.16);
-  background:linear-gradient(180deg,rgba(3,6,13,.92),rgba(3,6,13,.70));
-  backdrop-filter:blur(24px) saturate(1.08);
-  box-shadow:0 16px 50px rgba(0,0,0,.24);
+.lux-brand{display:flex;align-items:center;gap:13px}
+.lux-sigil{
+  width:48px;height:48px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid rgba(232,197,130,.60);color:#f1cf84;font-size:23px;
+  background:radial-gradient(circle at 50% 43%,rgba(105,146,230,.34),rgba(12,22,38,.96) 67%);
+  box-shadow:inset 0 0 24px rgba(229,181,84,.08),0 0 32px rgba(87,133,225,.08)
 }
-.brand-wrap{display:flex;align-items:center;gap:14px}
-.brand-mark{
-  width:52px;height:52px;border-radius:50%;
-  display:grid;place-items:center;
-  border:1px solid rgba(232,198,131,.60);
-  color:#f1cf84;
-  font-size:24px;
-  background:
-    radial-gradient(circle at 50% 43%,rgba(108,148,232,.34),rgba(13,23,39,.96) 66%),
-    linear-gradient(180deg,#111b2a,#07101c);
-  box-shadow:
-    inset 0 0 0 1px rgba(255,255,255,.025),
-    inset 0 0 28px rgba(232,188,92,.08),
-    0 0 36px rgba(87,133,225,.10);
+.lux-brand-name{color:#ecd09a;font-size:21px;font-weight:600;letter-spacing:.24em}
+.lux-brand-sub{margin-top:4px;color:#717d90;font:8px system-ui;letter-spacing:.24em}
+.lux-nav{display:flex;justify-content:center;gap:32px}
+.lux-nav a{
+  position:relative;padding:10px 2px;color:#a8b2c4;text-decoration:none;
+  font:500 9.5px system-ui;letter-spacing:.14em;text-transform:uppercase
 }
-.brand{
-  color:#ecd19b;
-  font-size:22px;
-  font-weight:600;
-  letter-spacing:.22em;
-}
-.subtitle{
-  margin-top:4px;
-  color:#778296;
-  font:8px/1 system-ui,sans-serif;
-  letter-spacing:.24em;
-  text-transform:uppercase;
-}
-.nav{
-  display:flex;
-  justify-content:center;
-  gap:34px;
-}
-.nav a{
-  position:relative;
-  padding:11px 2px;
-  text-decoration:none;
-  color:#abb5c7;
-  font:500 10px/1 system-ui,sans-serif;
-  letter-spacing:.13em;
-  text-transform:uppercase;
-}
-.nav a:hover,.nav a.active{color:#eed099}
-.nav a.active::after{
-  content:"";
-  position:absolute;
-  left:24%;
-  right:24%;
-  bottom:2px;
-  height:1px;
-  background:linear-gradient(90deg,transparent,#ddb467,transparent);
-}
-.mode-note{
-  max-width:260px;
-  color:#6f7a8d;
-  font:8px/1.45 system-ui,sans-serif;
-  letter-spacing:.07em;
-  text-align:right;
+.lux-nav a.active,.lux-nav a:hover{color:#efd39c}
+.lux-nav a.active:after{content:"";position:absolute;left:25%;right:25%;bottom:1px;height:1px;background:#dcb366}
+.lux-build{
+  padding:7px 10px;border:1px solid rgba(222,180,101,.20);border-radius:999px;
+  color:#8c96a8;background:rgba(7,13,22,.46);font:600 7px system-ui;letter-spacing:.12em
 }
 
-/* product layout */
-.layout{
-  display:grid;
-  grid-template-columns:340px minmax(720px,1fr) 400px;
-  gap:20px;
-  align-items:start;
-  margin-top:22px;
-}
-.controls,.reading{
-  position:sticky;
-  top:98px;
-  align-self:start;
-}
-.controls .pad,.reading .pad{
-  position:relative;
-  overflow:hidden;
-  border-radius:22px;
+.lux-stage{display:grid;grid-template-columns:320px minmax(720px,1fr) 390px;gap:20px;margin-top:20px;align-items:start}
+.ritual-rail,.manuscript{
+  position:sticky;top:96px;overflow:hidden;border-radius:22px;
   border:1px solid rgba(223,184,107,.20);
-  background:
-    radial-gradient(circle at 14% 0%,rgba(83,119,180,.07),transparent 30%),
-    linear-gradient(180deg,rgba(8,14,25,.76),rgba(4,8,15,.84));
-  backdrop-filter:blur(22px) saturate(1.06);
-  box-shadow:var(--shadow),inset 0 0 0 1px rgba(255,240,205,.018);
+  background:linear-gradient(180deg,rgba(8,14,25,.78),rgba(4,8,15,.86));
+  backdrop-filter:blur(22px);box-shadow:0 34px 90px rgba(0,0,0,.48),inset 0 0 0 1px rgba(255,240,205,.018)
 }
-.controls .pad::before,.reading .pad::before{
-  content:"";
-  position:absolute;
-  left:26px;right:26px;top:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(236,198,124,.52),transparent);
-}
-.controls .pad{padding:24px 24px 22px}
-.reading .pad{padding:24px 24px 26px;min-height:720px}
-.rail-eyebrow{
-  color:#86775f;
-  font:600 8px/1 system-ui,sans-serif;
-  letter-spacing:.22em;
-  text-transform:uppercase;
-}
-.controls h2,.reading h2{
-  margin:8px 0 0;
-  color:#efd69f;
-  font-size:28px;
-  font-weight:400;
-  letter-spacing:.01em;
-}
-.lead{
-  margin:7px 0 0;
-  color:#8c96a8;
-  font:10.5px/1.7 system-ui,sans-serif;
-}
-.step{
-  margin:22px 0 9px;
-  color:#bca370;
-  font:600 9.5px/1 system-ui,sans-serif;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-}
-.step::before{
-  content:"";
-  display:inline-block;
-  width:15px;height:1px;
-  margin:0 8px 3px 0;
-  background:rgba(210,167,88,.50);
-}
+.ritual-rail{padding:24px}
+.manuscript{padding:24px;min-height:720px}
+.rail-topline{position:absolute;top:0;left:24px;right:24px;height:1px;background:linear-gradient(90deg,transparent,rgba(238,198,122,.55),transparent)}
+.rail-eyebrow{color:#86775f;font:600 8px system-ui;letter-spacing:.22em;text-transform:uppercase}
+.ritual-rail h2,.manuscript h2{margin:8px 0 0;color:#efd69f;font-size:27px;font-weight:400}
+.lead{margin:7px 0 0;color:#8d97aa;font:10.5px/1.7 system-ui}
+.step{margin:22px 0 9px;color:#bba16e;font:600 9px system-ui;letter-spacing:.17em;text-transform:uppercase}
 
-/* elegant selectors */
-.spread-grid{display:grid;grid-template-columns:1fr;gap:8px}
+.spread-grid{display:grid;gap:8px}
 .spread-option{
-  position:relative;
-  min-height:70px;
-  padding:10px 14px 10px 76px;
-  border-radius:13px;
-  border:1px solid rgba(93,111,140,.28);
-  background:linear-gradient(180deg,rgba(10,18,31,.72),rgba(6,11,20,.82));
-  color:#d9deea;
-  text-align:left;
-  transition:transform .16s ease,border-color .16s ease,background .16s ease;
+  position:relative;min-height:68px;padding:10px 14px 10px 72px;border-radius:13px;
+  border:1px solid rgba(92,111,140,.28);background:linear-gradient(180deg,rgba(10,18,31,.72),rgba(6,11,20,.84));
+  color:#d9deea;text-align:left;transition:.16s ease
 }
-.spread-option:hover{
-  transform:translateX(2px);
-  border-color:rgba(159,135,195,.42);
-  background:linear-gradient(180deg,rgba(14,23,39,.84),rgba(7,13,23,.90));
-}
-.spread-option.active{
-  border-color:rgba(225,183,101,.56);
-  background:
-    radial-gradient(circle at 10% 50%,rgba(225,183,101,.10),transparent 26%),
-    linear-gradient(180deg,rgba(15,23,37,.90),rgba(8,14,23,.96));
-  box-shadow:inset 3px 0 0 rgba(225,183,101,.76);
-}
+.spread-option:hover{transform:translateX(2px);border-color:rgba(160,136,196,.42)}
+.spread-option.active{border-color:rgba(225,183,101,.56);box-shadow:inset 3px 0 0 rgba(225,183,101,.78)}
 .spread-symbol{
-  position:absolute;
-  left:14px;top:9px;
-  width:50px;height:50px;
-  display:grid;place-items:center;
-  border-radius:50%;
-  border:1px solid rgba(150,126,202,.24);
+  position:absolute;left:13px;top:9px;width:48px;height:48px;border-radius:50%;
+  display:grid;place-items:center;border:1px solid rgba(150,126,202,.24);
   background:radial-gradient(circle,rgba(133,103,196,.12),transparent 72%);
-  color:#c6b1ed;
-  font-size:20px;
+  color:#c5b0ed;font-size:19px
 }
-.spread-option.active .spread-symbol{
-  border-color:rgba(232,193,118,.34);
-  color:#efc973;
-  background:radial-gradient(circle,rgba(226,180,92,.14),transparent 72%);
-}
-.spread-title{
-  display:block;
-  color:#eee6d8;
-  font-size:12.5px;
-  font-weight:600;
-}
-.spread-sub{
-  display:block;
-  margin-top:5px;
-  color:#788294;
-  font:8.5px/1.3 system-ui,sans-serif;
-}
+.spread-option.active .spread-symbol{color:#efc973;border-color:rgba(232,193,118,.34)}
+.spread-title{display:block;color:#eee6d8;font-size:12px;font-weight:600}
+.spread-sub{display:block;margin-top:5px;color:#788294;font:8.4px/1.3 system-ui}
 
-/* quiet-luxury inputs */
 textarea,input{
-  width:100%;
-  border:1px solid rgba(181,141,73,.34);
-  border-radius:11px;
-  outline:none;
-  color:#eee6d8;
-  background:rgba(5,10,18,.64);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.012);
+  width:100%;border:1px solid rgba(181,141,73,.34);border-radius:11px;outline:none;
+  color:#eee6d8;background:rgba(5,10,18,.64);box-shadow:inset 0 0 0 1px rgba(255,255,255,.012)
 }
-textarea{
-  min-height:94px;
-  padding:13px 14px;
-  resize:vertical;
-  font:12.5px/1.55 system-ui,sans-serif;
-}
-input{
-  min-height:43px;
-  padding:0 12px;
-  font:12px system-ui,sans-serif;
-}
+textarea{min-height:92px;padding:13px 14px;resize:vertical;font:12px/1.55 system-ui}
+input{min-height:42px;padding:0 11px;font:12px system-ui}
 textarea::placeholder,input::placeholder{color:#646f81}
-textarea:focus,input:focus{
-  border-color:rgba(224,177,91,.72);
-  box-shadow:0 0 0 1px rgba(224,177,91,.14),0 0 18px rgba(224,177,91,.06);
-}
 .seed-row{display:grid;grid-template-columns:1fr 40px;gap:7px}
-.icon-btn{
-  border:1px solid rgba(181,141,73,.32);
-  border-radius:10px;
-  color:#e7bb67;
-  background:rgba(8,14,24,.74);
-}
-.icon-btn:hover{border-color:rgba(220,170,79,.62)}
+.icon-btn{border:1px solid rgba(181,141,73,.32);border-radius:10px;color:#e7bb67;background:rgba(8,14,24,.74)}
 .chips{display:flex;gap:6px}
 .chip-btn{
-  flex:1;
-  min-height:34px;
-  border-radius:999px;
-  border:1px solid rgba(93,110,138,.28);
-  color:#8e99ac;
-  background:rgba(8,14,24,.60);
-  font:700 8px/1 system-ui,sans-serif;
+  flex:1;min-height:33px;border-radius:999px;border:1px solid rgba(93,110,138,.28);
+  color:#8e99ac;background:rgba(8,14,24,.60);font:700 8px system-ui
 }
-.chip-btn.active{
-  border-color:rgba(225,183,101,.50);
-  color:#e9cb8a;
-  background:rgba(225,183,101,.08);
-}
+.chip-btn.active{border-color:rgba(225,183,101,.50);color:#e9cb8a;background:rgba(225,183,101,.08)}
 .primary{
-  width:100%;
-  min-height:54px;
-  margin-top:19px;
-  border:1px solid rgba(255,232,178,.65);
-  border-radius:12px;
-  color:#271707;
-  font-weight:700;
-  font-size:13px;
-  letter-spacing:.09em;
-  text-transform:uppercase;
-  background:linear-gradient(90deg,#a86b20,#dcb05f 31%,#f2da9d 50%,#d19d49 73%,#a86b20);
-  box-shadow:0 14px 38px rgba(177,118,35,.16);
+  width:100%;min-height:54px;margin-top:19px;border:1px solid rgba(255,232,178,.64);border-radius:12px;
+  color:#271707;font-weight:700;font-size:13px;letter-spacing:.10em;
+  background:linear-gradient(90deg,#a76a20,#dbaf5e 31%,#f2da9d 50%,#d09c48 73%,#a76a20);
+  box-shadow:0 14px 38px rgba(177,118,35,.16)
 }
-.primary:hover{filter:brightness(1.035);transform:translateY(-1px)}
 .secondary{
-  width:100%;
-  min-height:42px;
-  margin-top:8px;
-  border:1px solid rgba(99,124,171,.28);
-  border-radius:11px;
-  color:#c7d0df;
-  background:rgba(8,15,27,.58);
+  width:100%;min-height:41px;margin-top:8px;border:1px solid rgba(99,124,171,.28);border-radius:11px;
+  color:#c7d0df;background:rgba(8,15,27,.58);font-size:11px;letter-spacing:.06em
 }
-.note{
-  margin:12px 2px 0;
-  color:#707b8d;
-  font:8.6px/1.65 system-ui,sans-serif;
-}
-.history{
-  margin-top:17px;
-  padding-top:14px;
-  border-top:1px solid rgba(225,177,82,.08);
-}
-.history h3{
-  margin:0;
-  color:#d1b57f;
-  font-size:14px;
-  font-weight:400;
-}
-.history button{
-  width:100%;
-  margin-top:5px;
-  padding:8px 9px;
-  border:0;
-  border-radius:8px;
-  text-align:left;
-  color:#808a9c;
-  background:rgba(255,255,255,.018);
-  font:8.5px/1.4 system-ui,sans-serif;
-}
-.history button:hover{color:#d8c49d;background:rgba(225,177,82,.045)}
+.ritual-rule{height:1px;margin:16px 0 11px;background:linear-gradient(90deg,transparent,rgba(220,178,93,.18),transparent)}
+.note{margin:0;color:#6f798a;font:8.5px/1.65 system-ui}
+.history{margin-top:17px;padding-top:14px;border-top:1px solid rgba(225,177,82,.08)}
+.history h3{margin:0;color:#d0b57f;font-size:13px;font-weight:400}
+.history button{width:100%;margin-top:5px;padding:8px;border:0;border-radius:7px;color:#7f899b;background:rgba(255,255,255,.018);text-align:left;font:8.4px system-ui}
 
-/* altar stage */
-.cast-table{
-  position:relative;
-  min-height:910px;
-  overflow:hidden;
-  border-radius:30px;
-  isolation:isolate;
+.altar-stage{
+  position:relative;min-height:900px;overflow:hidden;border-radius:32px;isolation:isolate;
   background:
-    linear-gradient(180deg,rgba(3,8,17,.08),rgba(3,8,17,.42)),
-    radial-gradient(circle at 50% 30%,rgba(82,121,207,.15),transparent 25%),
-    radial-gradient(circle at 50% 69%,rgba(219,170,78,.085),transparent 32%);
-  box-shadow:inset 0 0 120px rgba(0,0,0,.16);
+    radial-gradient(circle at 50% 31%,rgba(82,121,207,.16),transparent 24%),
+    radial-gradient(circle at 50% 69%,rgba(218,168,74,.08),transparent 31%),
+    linear-gradient(180deg,rgba(3,8,17,.05),rgba(3,8,17,.38));
+  box-shadow:inset 0 0 130px rgba(0,0,0,.16)
 }
-.cast-table::before{
-  content:"";
-  position:absolute;
-  inset:42px;
-  z-index:0;
-  border-radius:50%;
-  border:1px solid rgba(221,176,88,.12);
-  box-shadow:inset 0 0 150px rgba(27,48,85,.13),0 0 80px rgba(206,153,57,.035);
+.altar-stage:before{
+  content:"";position:absolute;inset:38px;border-radius:50%;z-index:0;
+  border:1px solid rgba(222,177,89,.11);box-shadow:inset 0 0 150px rgba(26,46,82,.12)
 }
-.cast-table::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 50%,transparent 0 214px,rgba(218,168,74,.12) 215px 216px,transparent 217px 278px,rgba(218,168,74,.05) 279px 280px,transparent 281px),
-    radial-gradient(circle at 50% 50%,rgba(42,64,106,.11),transparent 57%);
+.altar-backdrop{position:relative;z-index:4;text-align:center;padding-top:40px}
+.altar-crescent{color:#aab8d8;font-size:24px;opacity:.75}
+.altar-title-small{margin-top:9px;color:#858fa2;font:600 7px system-ui;letter-spacing:.36em}
+.altar-title{margin-top:10px;color:#f1d79f;font-size:48px;letter-spacing:.19em;text-shadow:0 0 28px rgba(214,163,72,.18)}
+.altar-subtitle{margin-top:8px;color:#778296;font:7.5px system-ui;letter-spacing:.24em}
+.altar-frame{position:absolute;left:50%;top:150px;transform:translateX(-50%);border-radius:50%;z-index:1}
+.altar-frame.outer{width:360px;height:360px;border:1px solid rgba(112,148,215,.08)}
+.altar-frame.middle{top:180px;width:300px;height:300px;border:1px dashed rgba(221,177,89,.11)}
+.altar-frame.inner{top:210px;width:240px;height:240px;border:1px solid rgba(221,177,89,.18);box-shadow:inset 0 0 80px rgba(91,129,209,.12),0 0 50px rgba(91,129,209,.07)}
+.altar-compass span{position:absolute;z-index:2;color:#9b8456;font-size:14px}
+.altar-compass .north{top:188px;left:50%;transform:translateX(-50%)}
+.altar-compass .south{top:424px;left:50%;transform:translateX(-50%)}
+.altar-compass .west{top:306px;left:calc(50% - 126px)}
+.altar-compass .east{top:306px;left:calc(50% + 116px)}
+.altar-core{
+  position:absolute;top:237px;left:50%;transform:translateX(-50%);z-index:2;
+  width:186px;height:186px;border-radius:50%;display:grid;place-items:center;
+  background:radial-gradient(circle,rgba(98,137,219,.12),rgba(8,14,25,.12) 65%,transparent 66%);
 }
-.hero{
-  position:relative;
-  z-index:4;
-  text-align:center;
-  padding:42px 16px 0;
-}
-.hero-kicker{
-  color:#8993a5;
-  font:600 7.5px/1 system-ui,sans-serif;
-  letter-spacing:.42em;
-  text-transform:uppercase;
-}
-.hero h1{
-  margin:12px 0 0;
-  color:#f1d79f;
-  font-size:52px;
-  font-weight:400;
-  letter-spacing:.18em;
-  text-shadow:0 0 30px rgba(215,164,73,.20);
-}
-.hero p{
-  margin:8px 0 0;
-  color:#7e899c;
-  font:8px/1.3 system-ui,sans-serif;
-  letter-spacing:.25em;
-  text-transform:uppercase;
-}
-.hero-luxury-meta{display:flex;justify-content:center;gap:7px;margin-top:16px}
-.hero-luxury-meta span{
-  padding:6px 10px;
-  border-radius:999px;
-  border:1px solid rgba(156,177,214,.13);
-  background:rgba(5,10,18,.22);
-  color:#858fa2;
-  font:600 7px/1 system-ui,sans-serif;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-}
-.altar-orbit{
-  position:absolute;
-  left:50%;top:124px;
-  transform:translateX(-50%);
-  z-index:1;
-  width:334px;height:334px;
-  border-radius:50%;
-  border:1px solid rgba(117,149,211,.07);
-}
-.altar-orbit::before,.altar-orbit::after{
-  content:"";
-  position:absolute;
-  border-radius:50%;
-  inset:26px;
-  border:1px dashed rgba(215,171,85,.07);
-}
-.altar-orbit::after{
-  inset:56px;
-  border-style:solid;
-  border-color:rgba(215,171,85,.045);
-}
-.rune-circle{
-  position:absolute;
-  left:50%;top:156px;
-  transform:translateX(-50%);
-  z-index:2;
-  width:270px;height:270px;
-  border-radius:50%;
-  border:1px solid rgba(226,183,101,.26);
-  box-shadow:inset 0 0 92px rgba(83,121,203,.14),0 0 64px rgba(96,136,218,.09);
-}
-.rune-circle::before{
-  content:"";
-  position:absolute;
-  inset:25px;
-  border-radius:50%;
-  border:1px dashed rgba(226,183,101,.13);
-}
-.rune-circle::after{
-  content:"ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ";
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  color:#e9c16b;
-  font-size:21px;
-  letter-spacing:.20em;
-  opacity:.74;
-  text-shadow:0 0 14px rgba(227,176,68,.30);
-}
+.altar-core-glyph{color:#d9ac55;font-size:68px;opacity:.28;text-shadow:0 0 30px rgba(217,172,85,.18)}
+
 .cast-area{
-  position:relative;
-  z-index:4;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
-  gap:30px;
-  align-items:start;
-  max-width:940px;
-  margin:0 auto;
-  padding:308px 30px 42px;
+  position:relative;z-index:5;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:32px;max-width:950px;margin:auto;padding:318px 30px 44px
 }
-.cast-area[data-count="1"]{grid-template-columns:1fr;max-width:230px}
+.cast-area[data-count="1"]{grid-template-columns:1fr;max-width:240px}
 .cast-area[data-count="5"]{grid-template-columns:repeat(5,minmax(120px,1fr))}
-.cast-area[data-count="9"]{grid-template-columns:repeat(3,minmax(135px,1fr));max-width:700px}
-.cast-help{
-  position:relative;
-  z-index:4;
-  padding:0 16px 20px;
-  color:#6d7788;
-  text-align:center;
-  font:7.8px/1.5 system-ui,sans-serif;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-}
-
-/* stones */
+.cast-area[data-count="9"]{grid-template-columns:repeat(3,minmax(140px,1fr));max-width:720px}
 .rune-slot{text-align:center}
-.rune-stone{
-  position:relative;
-  width:144px;height:184px;
-  margin:0 auto;
-  perspective:1000px;
-  cursor:pointer;
-  filter:drop-shadow(0 24px 26px rgba(0,0,0,.42));
-}
-.rune-inner{
-  position:relative;
-  width:100%;height:100%;
-  transform-style:preserve-3d;
-  transition:transform .72s cubic-bezier(.2,.82,.2,1);
-}
+.rune-stone{position:relative;width:152px;height:194px;margin:auto;perspective:1000px;cursor:pointer;filter:drop-shadow(0 24px 28px rgba(0,0,0,.46))}
+.rune-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .72s cubic-bezier(.2,.82,.2,1)}
 .rune-stone.revealed .rune-inner{transform:rotateY(180deg)}
 .rune-face{
-  position:absolute;
-  inset:0;
-  overflow:hidden;
-  backface-visibility:hidden;
-  border-radius:42% 47% 45% 44% / 34% 38% 44% 46%;
-  box-shadow:
-    inset 0 0 0 1px rgba(226,183,101,.40),
-    inset 0 0 36px rgba(0,0,0,.46),
-    0 22px 34px rgba(0,0,0,.48);
+  position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;border-radius:43% 47% 45% 44% / 34% 38% 44% 46%;
+  box-shadow:inset 0 0 0 1px rgba(226,183,101,.40),inset 0 0 38px rgba(0,0,0,.48),0 24px 36px rgba(0,0,0,.50)
 }
 .rune-back{
-  background:
-    radial-gradient(circle at 31% 22%,rgba(255,255,255,.07) 0 2px,transparent 3px),
-    linear-gradient(145deg,#17263a,#0a111c 70%,#0a1019);
+  background:radial-gradient(circle at 31% 22%,rgba(255,255,255,.08) 0 2px,transparent 3px),linear-gradient(145deg,#17263a,#0a111c 70%,#091019)
 }
-.rune-back::before{
-  content:"";
-  position:absolute;
-  inset:7px;
-  border-radius:inherit;
-  border:1px solid rgba(215,170,82,.12);
-}
-.rune-back::after{
-  content:"ᛟ";
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  color:#c99b4d;
-  font-size:58px;
-  text-shadow:0 0 12px rgba(203,156,68,.22);
-}
+.rune-back:after{content:"ᛟ";position:absolute;inset:0;display:grid;place-items:center;color:#c99b4d;font-size:60px;text-shadow:0 0 12px rgba(203,156,68,.22)}
 .rune-front{
   transform:rotateY(180deg);
-  background:
-    radial-gradient(circle at 28% 17%,rgba(255,255,255,.095) 0 2px,transparent 3px),
-    radial-gradient(circle at 77% 62%,rgba(255,255,255,.03) 0 1px,transparent 2px),
-    linear-gradient(145deg,#253a54 0%,#162334 52%,#0a111b 100%);
+  background:radial-gradient(circle at 28% 17%,rgba(255,255,255,.10) 0 2px,transparent 3px),linear-gradient(145deg,#263b56 0%,#162334 53%,#09111b 100%)
 }
-.rune-front::before{
-  content:"";
-  position:absolute;
-  inset:7px;
-  border-radius:inherit;
-  border:1px solid rgba(232,193,117,.27);
-}
-.rune-glyph{
-  position:absolute;
-  inset:0 0 42px;
-  display:grid;
-  place-items:center;
-  color:#e8bc66;
-  font-size:88px;
-  text-shadow:0 1px 0 #5d3d14,0 0 11px rgba(230,183,91,.30),0 0 26px rgba(104,144,226,.11);
-}
-.rune-nameplate{
-  position:absolute;
-  left:10px;right:10px;bottom:10px;
-  min-height:40px;
-  border-top:1px solid rgba(221,174,85,.38);
-  border-radius:0 0 18px 18px;
-  background:linear-gradient(180deg,rgba(6,10,17,.22),rgba(3,6,11,.92));
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-}
-.rune-name{
-  color:#efd094;
-  font-size:10.5px;
-  font-weight:700;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-}
-.rune-meaning{
-  margin-top:2px;
-  color:#788294;
-  font:6px/1 system-ui,sans-serif;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-}
-.reversed-badge{
-  position:absolute;
-  top:10px;right:8px;
-  padding:3px 5px;
-  border-radius:999px;
-  border:1px solid rgba(224,177,91,.52);
-  color:#e5bf72;
-  background:rgba(4,7,13,.82);
-  font:700 5px/1 system-ui,sans-serif;
-  letter-spacing:.08em;
-}
-.position{
-  margin-top:11px;
-  color:#dfbf7e;
-  font-size:12px;
-  letter-spacing:.03em;
-}
-.position-sub{
-  max-width:150px;
-  margin:4px auto 0;
-  color:#727d90;
-  font:7.5px/1.35 system-ui,sans-serif;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-}
-.cast-table.casting .rune-stone{animation:runeCast .84s cubic-bezier(.2,.8,.2,1)}
-@keyframes runeCast{
-  0%{transform:translateY(0) rotate(0)}
-  30%{transform:translateY(-38px) rotate(-8deg)}
-  60%{transform:translateY(12px) rotate(5deg)}
-  100%{transform:none}
-}
+.rune-front:before{content:"";position:absolute;inset:8px;border-radius:inherit;border:1px solid rgba(232,193,117,.26)}
+.rune-glyph{position:absolute;inset:0 0 46px;display:grid;place-items:center;color:#e8bc66;font-size:92px;text-shadow:0 1px 0 #5d3d14,0 0 11px rgba(230,183,91,.30),0 0 26px rgba(104,144,226,.11)}
+.rune-nameplate{position:absolute;left:10px;right:10px;bottom:10px;min-height:42px;border-top:1px solid rgba(221,174,85,.38);background:linear-gradient(180deg,rgba(6,10,17,.20),rgba(3,6,11,.93));display:flex;flex-direction:column;justify-content:center;align-items:center;border-radius:0 0 18px 18px}
+.rune-name{color:#efd094;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.rune-meaning{margin-top:2px;color:#788294;font:6px system-ui;letter-spacing:.16em;text-transform:uppercase}
+.reversed-badge{position:absolute;top:10px;right:8px;padding:3px 5px;border:1px solid rgba(224,177,91,.52);border-radius:999px;color:#e5bf72;background:rgba(4,7,13,.82);font:700 5px system-ui}
+.position{margin-top:11px;color:#dfbf7e;font-size:12px}
+.position-sub{max-width:150px;margin:4px auto 0;color:#727d90;font:7.5px/1.35 system-ui;letter-spacing:.10em;text-transform:uppercase}
+.altar-bottom{position:relative;z-index:4;text-align:center;padding-bottom:22px}
+.altar-hint{color:#687386;font:7.5px system-ui;letter-spacing:.12em}
+.altar-signature{margin-top:8px;color:#8d7c5d;font-size:10px;font-style:italic}
+.cast-table.casting .rune-stone{animation:scatter .84s cubic-bezier(.2,.8,.2,1)}
+@keyframes scatter{0%{transform:translateY(0)}30%{transform:translateY(-42px) rotate(-8deg)}60%{transform:translateY(12px) rotate(5deg)}100%{transform:none}}
 
-/* editorial reading */
-.reading-head{margin-bottom:2px}
-.reading .tabs{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  margin:17px 0 0;
-  border-bottom:1px solid rgba(111,132,167,.18);
-}
-.reading .tabs button{
-  position:relative;
-  min-height:38px;
-  border:0;
-  color:#7f899a;
-  background:transparent;
-  font:600 8.5px/1 system-ui,sans-serif;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-}
-.reading .tabs button.active{color:#e1c68c}
-.reading .tabs button.active::after{
-  content:"";
-  position:absolute;
-  left:22%;right:22%;bottom:-1px;height:1px;
-  background:#ddb264;
-}
+.manuscript-head{padding-bottom:2px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);margin-top:17px;border-bottom:1px solid rgba(111,132,167,.18)}
+.tabs button{position:relative;min-height:38px;border:0;color:#7f899a;background:transparent;font:600 8.5px system-ui;letter-spacing:.10em;text-transform:uppercase}
+.tabs button.active{color:#e1c68c}
+.tabs button.active:after{content:"";position:absolute;left:22%;right:22%;bottom:-1px;height:1px;background:#ddb264}
 .view{display:none}.view.active{display:block}
-.status{
-  margin-top:14px;
-  padding:8px 0 8px 11px;
-  border-left:1px solid rgba(110,141,196,.32);
-  color:#768194;
-  background:transparent;
-  font:8px/1.5 system-ui,sans-serif;
-}
-.summary,.explanation{
-  margin-top:10px;
-  padding:14px 0;
-  border-top:1px solid rgba(220,177,91,.13);
-  border-bottom:1px solid rgba(220,177,91,.09);
-  color:#c3c0c4;
-  background:transparent;
-  font:10.5px/1.7 system-ui,sans-serif;
-}
-.reading-entry{
-  padding:16px 0;
-  border-top:1px solid rgba(255,255,255,.045);
-}
-.reading-entry:first-child{border-top:0}
+.status{margin-top:14px;padding:8px 0 8px 11px;border-left:1px solid rgba(110,141,196,.32);color:#768194;background:transparent;font:8px/1.5 system-ui}
+.summary,.explanation{margin-top:10px;padding:14px 0;border-top:1px solid rgba(220,177,91,.13);border-bottom:1px solid rgba(220,177,91,.09);color:#c3c0c4;background:transparent;font:10.5px/1.7 system-ui}
+.reading-entry{padding:16px 0;border-top:1px solid rgba(255,255,255,.045)}.reading-entry:first-child{border-top:0}
 .entry-head{display:flex;gap:12px;align-items:center}
-.mini-stone{
-  width:44px;height:56px;
-  display:grid;place-items:center;
-  border-radius:42% 47% 45% 44% / 34% 38% 44% 46%;
-  color:#e4b865;
-  font-size:27px;
-  background:linear-gradient(145deg,#24374f,#101927);
-  box-shadow:inset 0 0 0 1px rgba(221,174,85,.40),inset 0 0 14px rgba(0,0,0,.35);
-}
-.entry-title h4{
-  margin:0;
-  color:#e6cb92;
-  font-size:13.5px;
-  font-weight:500;
-}
-.entry-title small{
-  display:block;
-  margin-top:3px;
-  color:#788294;
-  font:7.5px/1.3 system-ui,sans-serif;
-  letter-spacing:.08em;
-}
-.entry-text{
-  margin-top:9px;
-  color:#bcb9c0;
-  font:10px/1.72 system-ui,sans-serif;
-}
-.rule-box{
-  margin-top:9px;
-  padding:8px 10px;
-  border-left:1px solid rgba(138,107,192,.50);
-  color:#898294;
-  background:rgba(126,96,181,.03);
-  font:7.8px/1.5 system-ui,sans-serif;
-}
-.explanation h3{
-  margin:0 0 6px;
-  color:#dbc08a;
-  font-size:14px;
-  font-weight:400;
-}
-.library-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:8px;
-  max-height:690px;
-  margin-top:12px;
-  overflow:auto;
-}
-.library-rune{
-  min-height:124px;
-  padding:12px 8px;
-  border-radius:12px;
-  border:1px solid rgba(92,110,139,.22);
-  color:#cad1df;
-  background:rgba(8,14,24,.46);
-  text-align:center;
-}
-.library-rune:hover{
-  transform:translateY(-2px);
-  border-color:rgba(213,171,91,.36);
-  background:rgba(11,18,29,.66);
-}
-.library-rune .glyph{
-  display:block;
-  color:#deb566;
-  font-size:38px;
-}
-.library-rune strong{
-  display:block;
-  margin-top:4px;
-  color:#e6d5b4;
-  font-size:9.5px;
-  font-weight:600;
-  letter-spacing:.06em;
-}
-.library-rune small{
-  display:block;
-  margin-top:4px;
-  color:#727c8e;
-  font:6.6px/1.35 system-ui,sans-serif;
-}
-footer{
-  padding:18px 0 6px;
-  color:#5f697b;
-  text-align:center;
-  font:8px/1.5 system-ui,sans-serif;
-  letter-spacing:.03em;
-}
+.mini-stone{width:44px;height:56px;display:grid;place-items:center;border-radius:43% 47% 45% 44% / 34% 38% 44% 46%;color:#e4b865;font-size:27px;background:linear-gradient(145deg,#24374f,#101927);box-shadow:inset 0 0 0 1px rgba(221,174,85,.40),inset 0 0 14px rgba(0,0,0,.35)}
+.entry-title h4{margin:0;color:#e6cb92;font-size:13.5px;font-weight:500}.entry-title small{display:block;margin-top:3px;color:#788294;font:7.5px system-ui}
+.entry-text{margin-top:9px;color:#bcb9c0;font:10px/1.72 system-ui}
+.rule-box{margin-top:9px;padding:8px 10px;border-left:1px solid rgba(138,107,192,.50);color:#898294;background:rgba(126,96,181,.03);font:7.8px/1.5 system-ui}
+.explanation h3{margin:0 0 6px;color:#dbc08a;font-size:14px;font-weight:400}
+.library-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:690px;margin-top:12px;overflow:auto}
+.library-rune{min-height:124px;padding:12px 8px;border-radius:12px;border:1px solid rgba(92,110,139,.22);color:#cad1df;background:rgba(8,14,24,.46);text-align:center}
+.library-rune:hover{transform:translateY(-2px);border-color:rgba(213,171,91,.36);background:rgba(11,18,29,.66)}
+.library-rune .glyph{display:block;color:#deb566;font-size:38px}.library-rune strong{display:block;margin-top:4px;color:#e6d5b4;font-size:9.5px;font-weight:600}.library-rune small{display:block;margin-top:4px;color:#727c8e;font:6.6px/1.35 system-ui}
+footer{padding:18px 0 6px;color:#5f697b;text-align:center;font:8px/1.5 system-ui}
 
-@media(max-width:1500px){
-  .layout{grid-template-columns:320px minmax(620px,1fr) 380px;gap:16px}
-  .rune-stone{width:128px;height:166px}
-  .cast-area[data-count="5"]{grid-template-columns:repeat(3,minmax(120px,1fr))}
-}
-@media(max-width:1180px){
-  .layout{grid-template-columns:310px 1fr}
-  .reading{grid-column:1/-1;position:relative;top:auto}
-}
-@media(max-width:760px){
-  .app{padding:0 12px 18px}
-  .topbar{margin:0 -12px;padding:12px 16px;grid-template-columns:1fr;gap:10px}
-  .nav{justify-content:flex-start;gap:14px}
-  .mode-note{text-align:left}
-  .layout{grid-template-columns:1fr}
-  .controls,.reading{position:relative;top:auto}
-  .cast-table{min-height:780px}
-  .cast-area{grid-template-columns:repeat(2,1fr);padding-top:286px}
-  .library-grid{grid-template-columns:repeat(3,1fr)}
-}
-
+@media(max-width:1500px){.lux-stage{grid-template-columns:300px minmax(620px,1fr) 370px;gap:15px}.rune-stone{width:134px;height:174px}.cast-area[data-count="5"]{grid-template-columns:repeat(3,minmax(120px,1fr))}}
+@media(max-width:1180px){.lux-stage{grid-template-columns:300px 1fr}.manuscript{grid-column:1/-1;position:relative;top:auto}}
+@media(max-width:760px){.lux-app{padding:0 12px 18px}.lux-header{margin:0 -12px;padding:12px 16px;grid-template-columns:1fr;gap:10px}.lux-nav{justify-content:flex-start;gap:14px}.lux-stage{grid-template-columns:1fr}.ritual-rail,.manuscript{position:relative;top:auto}.altar-stage{min-height:780px}.cast-area{grid-template-columns:repeat(2,1fr);padding-top:300px}.library-grid{grid-template-columns:repeat(3,1fr)}}
 </style>
 </head>
 
 <body>
-<div class="app">
-  <header class="topbar">
-    <div class="brand-wrap">
-      <div class="brand-mark">ᛟ</div>
+<div class="lux-app">
+  <header class="lux-header">
+    <div class="lux-brand">
+      <div class="lux-sigil">ᛟ</div>
       <div>
-        <div class="brand">ARCANUM RUNES</div>
-        <div class="subtitle">Elder Futhark Divination · 24 Runes</div>
+        <div class="lux-brand-name">ARCANUM</div>
+        <div class="lux-brand-sub">RUNE DIVINATION</div>
       </div>
     </div>
-    <nav class="nav">
+
+    <nav class="lux-nav">
       <a href="../arcanum-tarot/standalone.html">Tarot</a>
       <a class="active" href="./standalone.html">Runes</a>
       <a href="#" data-nav="library">Codex</a>
-      <a href="#" data-nav="history">Casting Journal</a>
+      <a href="#" data-nav="history">Journal</a>
     </nav>
-    <div class="mode-note">Private, rule-based interpretation with fresh random casting and optional deterministic replay.</div>
+
+    <div class="lux-build">PREMIUM ALTAR · V4</div>
   </header>
 
-  <main class="layout">
-    <aside class="controls">
-      <div class="pad">
-        <div class="rail-eyebrow">Ritual Console</div>
-        <h2>Open the Runes</h2>
-        <p class="lead">Choose the shape of the reading, hold your question in mind, then cast.</p>
+  <main class="lux-stage">
+    <aside class="ritual-rail controls">
+      <div class="rail-topline"></div>
+      <div class="rail-eyebrow">RITUAL SETUP</div>
+      <h2>Open the Runes</h2>
+      <p class="lead">Choose the form of the casting. Hold one clear question in mind.</p>
 
-        <div class="step">Choose a casting</div>
-        <div class="spread-grid">
-          <button class="spread-option" data-spread="one">
-            <span class="spread-symbol">ᛟ</span>
-            <span class="spread-title">One Rune</span>
-            <span class="spread-sub">A single guiding theme</span>
-          </button>
-          <button class="spread-option active" data-spread="three">
-            <span class="spread-symbol">ᚠ ᛃ ᛞ</span>
-            <span class="spread-title">Three Norns</span>
-            <span class="spread-sub">Past · Present · Future</span>
-          </button>
-          <button class="spread-option" data-spread="five">
-            <span class="spread-symbol">ᛉ ✦ ᛏ</span>
-            <span class="spread-title">Five Rune Cross</span>
-            <span class="spread-sub">Situation · challenge · action</span>
-          </button>
-          <button class="spread-option" data-spread="nine">
-            <span class="spread-symbol">ᚱ ᛇ ᛋ</span>
-            <span class="spread-title">Nine Rune Cast</span>
-            <span class="spread-sub">A wider field of influence</span>
-          </button>
-        </div>
+      <div class="step">01 · Casting form</div>
+      <div class="spread-grid">
+        <button class="spread-option" data-spread="one">
+          <span class="spread-symbol">ᛟ</span>
+          <span class="spread-title">One Rune</span>
+          <span class="spread-sub">A single guiding theme</span>
+        </button>
+        <button class="spread-option active" data-spread="three">
+          <span class="spread-symbol">ᚠ ᛃ ᛞ</span>
+          <span class="spread-title">Three Norns</span>
+          <span class="spread-sub">Past · Present · Future</span>
+        </button>
+        <button class="spread-option" data-spread="five">
+          <span class="spread-symbol">ᛉ ✦ ᛏ</span>
+          <span class="spread-title">Five Rune Cross</span>
+          <span class="spread-sub">Situation · challenge · action</span>
+        </button>
+        <button class="spread-option" data-spread="nine">
+          <span class="spread-symbol">ᚱ ᛇ ᛋ</span>
+          <span class="spread-title">Nine Rune Cast</span>
+          <span class="spread-sub">A wider field of influence</span>
+        </button>
+      </div>
 
-        <div class="step">Your question</div>
-        <textarea id="question" placeholder="What pattern, lesson, or direction should I understand now?"></textarea>
+      <div class="step">02 · Your question</div>
+      <textarea id="question" placeholder="What should I understand about the path before me?"></textarea>
 
-        <div class="step">Casting seed</div>
-        <div class="seed-row">
-          <input id="seed" placeholder="Leave blank for a fresh casting" autocomplete="off">
-          <button id="clearSeed" class="icon-btn" type="button" title="Clear seed">⟳</button>
-        </div>
+      <div class="step">03 · Seed</div>
+      <div class="seed-row">
+        <input id="seed" placeholder="Blank = fresh casting" autocomplete="off">
+        <button id="clearSeed" class="icon-btn" type="button" title="Clear seed">↻</button>
+      </div>
 
-        <div class="step">Reversal mode</div>
-        <div class="chips">
-          <button class="chip-btn active" data-reversal="0">Off</button>
-          <button class="chip-btn" data-reversal=".10">10%</button>
-          <button class="chip-btn" data-reversal=".15">15%</button>
-          <button class="chip-btn" data-reversal=".25">25%</button>
-        </div>
+      <div class="step">04 · Reversal mode</div>
+      <div class="chips">
+        <button class="chip-btn active" data-reversal="0">Off</button>
+        <button class="chip-btn" data-reversal=".10">10%</button>
+        <button class="chip-btn" data-reversal=".15">15%</button>
+        <button class="chip-btn" data-reversal=".25">25%</button>
+      </div>
 
-        <button id="castButton" class="primary">✦ Cast the Runes</button>
-        <button id="dailyButton" class="secondary">☾ Rune of the Day</button>
+      <button id="castButton" class="primary">CAST THE RUNES</button>
+      <button id="dailyButton" class="secondary">RUNE OF THE DAY</button>
 
-        <p class="note">Reflective divination only. The draw is random; interpretation is applied consistently from the rune, position, orientation, and local pattern.</p>
+      <div class="ritual-rule"></div>
+      <p class="note">The draw is random. Interpretation is rule-based and uses the rune, position, orientation, and nearby pattern.</p>
 
-        <div class="history">
-          <h3>Recent Castings</h3>
-          <div id="history"></div>
-        </div>
+      <div class="history">
+        <h3>Recent Castings</h3>
+        <div id="history"></div>
       </div>
     </aside>
 
-    <section class="cast-table" id="castTable">
-      <div class="hero">
-        <div class="hero-kicker">The Arcanum Archive presents</div>
-        <h1>RUNE CASTING</h1>
-        <p>Symbols · Cycles · Choice · Reflection</p>
-        <div class="hero-luxury-meta">
-          <span>Elder Futhark</span>
-          <span>24 Runes</span>
-          <span>Rule-Based</span>
-        </div>
+    <section class="altar-stage cast-table" id="castTable">
+      <div class="altar-backdrop">
+        <div class="altar-crescent">☾</div>
+        <div class="altar-title-small">THE ARCANUM ARCHIVE</div>
+        <div class="altar-title">RUNE CASTING</div>
+        <div class="altar-subtitle">ELDER FUTHARK · 24 SYMBOLS</div>
       </div>
-      <div class="altar-orbit"></div>
-      <div class="rune-circle"></div>
+
+      <div class="altar-frame outer"></div>
+      <div class="altar-frame middle"></div>
+      <div class="altar-frame inner"></div>
+      <div class="altar-compass">
+        <span class="north">ᛏ</span>
+        <span class="east">ᛋ</span>
+        <span class="south">ᛜ</span>
+        <span class="west">ᚱ</span>
+      </div>
+      <div class="altar-core">
+        <div class="altar-core-glyph">ᛟ</div>
+      </div>
+
       <div id="castArea" class="cast-area"></div>
-      <div class="cast-help">Touch any stone to reveal or conceal it</div>
+
+      <div class="altar-bottom">
+        <div class="altar-hint">SELECT A STONE TO REVEAL OR CONCEAL IT</div>
+        <div class="altar-signature">Symbols · Cycles · Choice · Reflection</div>
+      </div>
     </section>
 
-    <aside class="reading">
-      <div class="pad">
-        <div class="reading-head">
-          <div class="rail-eyebrow">Interpretation</div>
-          <h2>Your Reading</h2>
-          <p class="lead">A structured interpretation of the symbols you cast.</p>
-        </div>
+    <aside class="manuscript reading">
+      <div class="manuscript-head">
+        <div class="rail-eyebrow">INTERPRETATION</div>
+        <h2>Your Reading</h2>
+        <p class="lead">A structured reading of the symbols that appeared in your cast.</p>
+      </div>
 
-        <div class="tabs">
-          <button class="active" data-tab="reading">Reading</button>
-          <button data-tab="runes">Meanings</button>
-          <button data-tab="library">Codex</button>
-        </div>
+      <div class="tabs">
+        <button class="active" data-tab="reading">Reading</button>
+        <button data-tab="runes">Meanings</button>
+        <button data-tab="library">Codex</button>
+      </div>
 
-        <div id="readingView" class="view active">
-          <div id="status" class="status">Choose a casting and cast the runes.</div>
-          <div id="summary"></div>
-          <div id="reading"></div>
-          <div id="explanation"></div>
-        </div>
+      <div id="readingView" class="view active">
+        <div id="status" class="status">Choose a casting and cast the runes.</div>
+        <div id="summary"></div>
+        <div id="reading"></div>
+        <div id="explanation"></div>
+      </div>
 
-        <div id="runesView" class="view">
-          <div id="meanings"></div>
-        </div>
+      <div id="runesView" class="view">
+        <div id="meanings"></div>
+      </div>
 
-        <div id="libraryView" class="view">
-          <div id="library" class="library-grid"></div>
-        </div>
+      <div id="libraryView" class="view">
+        <div id="library" class="library-grid"></div>
       </div>
     </aside>
   </main>
 
-  <footer>For reflection and entertainment. Rune casting does not guarantee future events or replace medical, legal, financial, or other professional advice.</footer>
+  <footer>For reflection and entertainment. Rune casting does not guarantee future events or replace professional advice.</footer>
 </div>
 
 <script>
