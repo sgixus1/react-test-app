@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arcanum Runes — Elder Futhark Casting</title>
+<style>
+:root{
+  --bg:#030713;--panel:#07101ddd;--panel2:#0b1423ee;--line:#9a7138;
+  --gold:#e1b35b;--gold2:#8e632c;--ink:#f3ead7;--muted:#9ea4b4;
+  --violet:#9c79db;--blue:#618fd8;--green:#81c5a0;--danger:#d88c8c
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  margin:0;color:var(--ink);font-family:Georgia,"Times New Roman",serif;
+  background:
+    linear-gradient(180deg,rgba(2,5,14,.58),rgba(2,4,10,.92)),
+    url("../arcanum-tarot/assets/arcanum-tarot-sanctuary.png") center/cover fixed no-repeat,
+    radial-gradient(circle at 50% 0,#183260 0,#07111f 40%,#02050b 100%);
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background:
+    radial-gradient(circle at 50% 18%,rgba(92,138,232,.22),transparent 30%),
+    radial-gradient(circle at 50% 70%,rgba(225,170,75,.11),transparent 34%),
+    linear-gradient(90deg,rgba(1,3,9,.85),transparent 28% 72%,rgba(1,3,9,.85));
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{width:100%;min-height:100vh;padding:0 12px 14px}
+.topbar{
+  min-height:64px;margin:0 -12px;padding:9px 24px;
+  display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;
+  border-bottom:1px solid #b7863f75;background:rgba(2,5,13,.93);backdrop-filter:blur(14px);
+  box-shadow:0 12px 42px #000a
+}
+.brand-wrap{display:flex;align-items:center;gap:11px}
+.brand-mark{
+  width:42px;height:42px;border-radius:50%;border:1px solid #d8aa50;
+  display:grid;place-items:center;color:#efca79;font-size:21px;
+  background:radial-gradient(circle,#2b4569,#0a1220 70%);
+  box-shadow:0 0 20px #6e93dd35,inset 0 0 18px #d9aa4220
+}
+.brand{font-weight:700;letter-spacing:.16em;color:#e8c57e;font-size:22px}
+.subtitle{margin-top:3px;color:#8f9aad;font:9px system-ui;letter-spacing:.13em}
+.nav{display:flex;justify-content:center;gap:27px}
+.nav a{
+  color:#c9c0b5;text-decoration:none;font-size:12px;padding:11px 3px;position:relative
+}
+.nav a.active,.nav a:hover{color:#f1d18c}
+.nav a.active:after{
+  content:"";position:absolute;left:14%;right:14%;bottom:1px;height:1px;
+  background:#e1ad50;box-shadow:0 0 10px #e1ad50
+}
+.mode-note{color:#858c9b;font:9px system-ui;letter-spacing:.04em;text-align:right}
+.layout{
+  display:grid;grid-template-columns:360px minmax(640px,1fr) 430px;
+  gap:11px;margin-top:11px;align-items:start
+}
+.panel{
+  border:1px solid #9c733a7c;border-radius:13px;overflow:hidden;
+  background:linear-gradient(180deg,rgba(4,9,19,.95),rgba(3,7,15,.97));
+  backdrop-filter:blur(10px);box-shadow:0 24px 76px #000b,inset 0 0 0 1px #ffd9780a
+}
+.pad{padding:20px}
+h1,h2,h3,h4{margin:0;color:#e8c781}
+.controls h2{font-size:24px;margin-bottom:4px}
+.lead{margin:0 0 12px;color:#848b9c;font:11px/1.55 system-ui}
+.step{
+  margin:17px 0 7px;color:#e3c383;font:700 11px/1 Georgia,serif;
+  letter-spacing:.12em;text-transform:uppercase
+}
+.spread-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.spread-option{
+  min-height:96px;padding:11px 8px;border:1px solid #354664;border-radius:10px;
+  background:radial-gradient(circle at 50% 24%,#6d4ca51e,transparent 34%),linear-gradient(#0a1526,#060b15);
+  color:#ddd5e5;transition:.16s ease
+}
+.spread-option:hover{transform:translateY(-2px);border-color:#80678d}
+.spread-option.active{
+  border-color:#e0aa4e;color:#f4d595;
+  box-shadow:0 0 0 1px #e0aa4e35,0 0 22px #d89c3b2c,inset 0 0 24px #d49a3512
+}
+.spread-symbol{display:block;color:#ad87dc;font-size:28px;line-height:1.1;margin-bottom:6px}
+.spread-option.active .spread-symbol{color:#efc873;text-shadow:0 0 10px #ddad55}
+.spread-title{display:block;font:700 12px/1.2 Georgia,serif}
+.spread-sub{display:block;margin-top:4px;color:#858da0;font:8.5px/1.3 system-ui}
+textarea,input,select{
+  width:100%;border:1px solid #6c512e;border-radius:9px;background:linear-gradient(#081320,#040a13);
+  color:#eee5d4;padding:11px 12px;outline:none;box-shadow:inset 0 0 19px #0008
+}
+textarea{min-height:90px;resize:vertical;font:13px/1.5 system-ui}
+input:focus,textarea:focus,select:focus{border-color:#daa54d;box-shadow:0 0 15px #d59b3a1b,inset 0 0 19px #0008}
+.seed-row{display:grid;grid-template-columns:1fr 42px;gap:7px}
+.icon-btn{
+  border:1px solid #73572f;border-radius:9px;background:#0a1320;color:#e5b95e;font-size:18px
+}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.chip-btn{
+  min-height:38px;border:1px solid #34445f;border-radius:8px;background:#091321;color:#9da7ba;
+  font:700 9px system-ui
+}
+.chip-btn.active{border-color:#d6a149;color:#f1ce84;box-shadow:0 0 14px #d29a3a22}
+.primary{
+  width:100%;min-height:49px;margin-top:16px;border:1px solid #ffe2a0;border-radius:10px;
+  color:#271605;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  background:linear-gradient(90deg,#ae701e,#f7d58b 44%,#ffe9ae 51%,#cf8b2d);
+  box-shadow:0 10px 28px #bd7d252d,inset 0 1px #fff6d1
+}
+.secondary{
+  width:100%;min-height:43px;margin-top:8px;border:1px solid #46608e;border-radius:10px;
+  color:#d3d8ef;background:linear-gradient(#0b1730,#071020)
+}
+.note{color:#7f8797;font:9.5px/1.5 system-ui;margin:12px 0 0}
+.history{margin-top:16px;padding-top:13px;border-top:1px solid #6f522727}
+.history h3{font-size:14px}
+.history button{
+  width:100%;border:0;background:transparent;color:#979dac;text-align:left;
+  padding:6px 0;font:9px/1.35 system-ui
+}
+.history button:hover{color:#e0c283}
+
+.cast-table{
+  position:relative;min-height:855px;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 17%,rgba(80,125,220,.20),transparent 23%),
+    radial-gradient(circle at 50% 64%,rgba(215,162,70,.10),transparent 35%),
+    linear-gradient(180deg,rgba(5,12,27,.88),rgba(3,7,16,.94));
+}
+.cast-table:before{
+  content:"";position:absolute;inset:42px;border-radius:50%;
+  border:1px solid #c4944649;
+  box-shadow:inset 0 0 130px #1e37665c,0 0 70px #c58c2d0c
+}
+.cast-table:after{
+  content:"";position:absolute;inset:95px;border-radius:50%;
+  border:1px dashed #7c653b45;pointer-events:none
+}
+.hero{position:relative;z-index:2;text-align:center;padding:34px 16px 0}
+.hero-kicker{color:#a68c61;font:8px system-ui;letter-spacing:.32em;text-transform:uppercase}
+.hero h1{margin:6px 0 3px;font-size:43px;letter-spacing:.12em;font-weight:400;color:#f0d293;text-shadow:0 0 26px #d9a1454b}
+.hero p{margin:0;color:#8992a6;font:9px system-ui;letter-spacing:.18em;text-transform:uppercase}
+.rune-circle{
+  position:absolute;left:50%;top:106px;transform:translateX(-50%);
+  width:195px;height:195px;border-radius:50%;border:1px solid #ddb35d65;
+  box-shadow:0 0 42px #688de04a,inset 0 0 66px #36578f50
+}
+.rune-circle:before{
+  content:"ᚠ ᚢ ᚦ ᚨ ᚱ ᚲ ᚷ ᚹ";position:absolute;inset:0;
+  display:grid;place-items:center;color:#e9c370;font-size:20px;letter-spacing:.16em;
+  transform:rotate(-8deg);opacity:.75;text-shadow:0 0 12px #e2b04d
+}
+.cast-area{
+  position:relative;z-index:3;display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));
+  gap:24px;align-items:start;max-width:870px;margin:0 auto;padding:225px 22px 28px
+}
+.rune-slot{text-align:center}
+.rune-stone{
+  position:relative;width:128px;height:164px;margin:auto;perspective:900px;cursor:pointer
+}
+.rune-inner{
+  position:relative;width:100%;height:100%;transform-style:preserve-3d;
+  transition:transform .68s cubic-bezier(.2,.8,.2,1)
+}
+.rune-stone.revealed .rune-inner{transform:rotateY(180deg)}
+.rune-face{
+  position:absolute;inset:0;backface-visibility:hidden;border-radius:42% 48% 45% 44% / 34% 38% 43% 46%;
+  border:1px solid #b68842;overflow:hidden;box-shadow:0 16px 31px #000c
+}
+.rune-back{
+  background:
+    radial-gradient(circle at 35% 28%,#59719522 0 2px,transparent 3px),
+    linear-gradient(145deg,#172338,#0a101a 67%,#101929);
+  box-shadow:inset 0 0 28px #0009,0 16px 31px #000c
+}
+.rune-back:after{
+  content:"ᛟ";position:absolute;inset:0;display:grid;place-items:center;
+  color:#c89c4b;font-size:54px;text-shadow:0 0 15px #c79743
+}
+.rune-front{
+  transform:rotateY(180deg);
+  background:
+    radial-gradient(circle at 35% 25%,#7887a630 0 2px,transparent 3px),
+    linear-gradient(145deg,#24334c,#121b29 55%,#09101b);
+  box-shadow:inset 0 0 34px #0008,0 16px 31px #000c
+}
+.rune-front:before{
+  content:"";position:absolute;inset:7px;border-radius:inherit;border:1px solid #cc9b4a70
+}
+.rune-glyph{
+  position:absolute;inset:0 0 38px;display:grid;place-items:center;
+  color:#f0c96f;font-size:78px;text-shadow:0 0 13px #efbc50,0 0 28px #6e8dd9
+}
+.rune-nameplate{
+  position:absolute;left:8px;right:8px;bottom:8px;min-height:35px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  border-top:1px solid #bd8a3b;background:#060912de;border-radius:0 0 18px 18px
+}
+.rune-name{color:#f1d08a;font:700 11px Georgia,serif;letter-spacing:.08em;text-transform:uppercase}
+.rune-meaning{margin-top:2px;color:#8c94a4;font:6px system-ui;letter-spacing:.12em;text-transform:uppercase}
+.reversed-badge{
+  position:absolute;top:11px;right:8px;padding:3px 5px;border:1px solid #b8863e;border-radius:999px;
+  background:#080b12dd;color:#e7bf70;font:700 5px system-ui;letter-spacing:.09em
+}
+.position{margin-top:9px;color:#ebca85;font-size:12px}
+.position-sub{margin-top:3px;color:#858b99;font:8px/1.35 system-ui;text-transform:uppercase;letter-spacing:.08em}
+.cast-help{text-align:center;color:#747c8e;font:9px system-ui;padding-bottom:16px}
+.cast-table.casting .rune-stone{animation:scatter .75s ease}
+@keyframes scatter{
+  0%{transform:translateY(0) rotate(0)}
+  35%{transform:translateY(-30px) rotate(-7deg)}
+  70%{transform:translateY(11px) rotate(4deg)}
+  100%{transform:none}
+}
+
+.reading h2{font-size:23px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid #34435e;border-radius:8px;overflow:hidden;margin:11px 0}
+.tabs button{
+  min-height:36px;border:0;border-right:1px solid #2f3a4e;background:#08111d;color:#8e97aa;font-size:10px
+}
+.tabs button:last-child{border-right:0}
+.tabs button.active{background:linear-gradient(#17375d,#0c1e35);color:#e2eaf5;box-shadow:inset 0 -2px #d2e6ff}
+.view{display:none}.view.active{display:block}
+.status{padding:8px 10px;border:1px solid #2b3b54;border-radius:8px;background:#07101c;color:#8f99aa;font:9px system-ui}
+.summary{
+  margin-top:10px;padding:11px;border:1px solid #644a28;border-radius:9px;background:#0a0e18;
+  color:#d4cbd0;font:11px/1.55 system-ui
+}
+.reading-entry{padding:13px 0;border-top:1px solid #282d38}
+.reading-entry:first-child{border-top:0}
+.entry-head{display:flex;gap:10px;align-items:center}
+.mini-stone{
+  width:46px;height:58px;border-radius:42% 48% 45% 44%;
+  display:grid;place-items:center;border:1px solid #a77a36;background:linear-gradient(#22314a,#0c1320);
+  color:#edc36d;font-size:27px;box-shadow:inset 0 0 13px #0009
+}
+.entry-title h4{font-size:14px;margin:0}
+.entry-title small{color:#777f8f;font:8px system-ui}
+.entry-text{margin-top:7px;color:#c9c4c8;font:10.5px/1.55 system-ui}
+.rule-box{
+  margin-top:7px;padding:8px;border-left:2px solid #7b5ba0;background:#0a0d16;
+  color:#9991a4;font:8.5px/1.45 system-ui
+}
+.explanation{
+  padding:12px;border:1px solid #654b28;border-radius:9px;background:#0a0e18;color:#d1c7cd;
+  font:11px/1.6 system-ui
+}
+.explanation h3{font-size:16px;margin-bottom:7px}
+.library-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;max-height:690px;overflow:auto}
+.library-rune{
+  min-height:106px;padding:10px 7px;border:1px solid #35435b;border-radius:9px;background:#08111d;text-align:center
+}
+.library-rune:hover{border-color:#a1793d}
+.library-rune .glyph{font-size:36px;color:#e8bd67}
+.library-rune strong{display:block;color:#d6c394;font-size:10px}
+.library-rune small{display:block;margin-top:3px;color:#747d8d;font:7px/1.3 system-ui}
+footer{text-align:center;color:#606776;font:9px/1.5 system-ui;padding:12px}
+
+@media(max-width:1350px){
+  .layout{grid-template-columns:320px minmax(560px,1fr) 380px}
+  .rune-stone{width:112px;height:145px}
+}
+@media(max-width:1080px){
+  .layout{grid-template-columns:300px 1fr}.reading{grid-column:1/-1}.nav{display:none}
+}
+@media(max-width:720px){
+  .layout{grid-template-columns:1fr}.mode-note{display:none}.topbar{grid-template-columns:1fr}
+  .spread-grid{grid-template-columns:repeat(2,1fr)}.cast-area{grid-template-columns:repeat(2,1fr);padding-top:210px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand-wrap">
+      <div class="brand-mark">ᛟ</div>
+      <div><div class="brand">ARCANUM RUNES</div><div class="subtitle">ELDER FUTHARK CASTING · 24 RUNES</div></div>
+    </div>
+    <nav class="nav">
+      <a href="../arcanum-tarot/standalone.html">Tarot</a>
+      <a class="active" href="./standalone.html">Runes</a>
+      <a href="#" data-nav="library">Rune Library</a>
+      <a href="#" data-nav="history">Journal</a>
+    </nav>
+    <div class="mode-note">Rule-based interpretation · fresh random casting · optional seeded replay</div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel controls">
+      <div class="pad">
+        <h2>Create Your Casting</h2>
+        <p class="lead">Choose a spread, focus your question, then cast the runes.</p>
+
+        <div class="step">1. Choose a Casting</div>
+        <div class="spread-grid">
+          <button class="spread-option" data-spread="one"><span class="spread-symbol">ᛟ</span><span class="spread-title">One Rune</span><span class="spread-sub">A single guiding theme</span></button>
+          <button class="spread-option active" data-spread="three"><span class="spread-symbol">ᚠ ᛃ ᛞ</span><span class="spread-title">Three Norns</span><span class="spread-sub">Past · Present · Future</span></button>
+          <button class="spread-option" data-spread="five"><span class="spread-symbol">ᛉ ✦ ᛏ</span><span class="spread-title">Five Rune Cross</span><span class="spread-sub">Situation · challenge · action</span></button>
+          <button class="spread-option" data-spread="nine"><span class="spread-symbol">ᚱ ᛇ ᛋ</span><span class="spread-title">Nine Rune Cast</span><span class="spread-sub">A broader pattern reading</span></button>
+        </div>
+
+        <div class="step">2. Your Question</div>
+        <textarea id="question" placeholder="What should I understand about the situation before me?"></textarea>
+
+        <div class="step">3. Casting Seed (Optional)</div>
+        <div class="seed-row"><input id="seed" placeholder="Leave blank for a fresh casting" autocomplete="off"><button id="clearSeed" class="icon-btn" type="button" title="Clear seed">⟳</button></div>
+
+        <div class="step">4. Modern Reversal Mode</div>
+        <div class="chips">
+          <button class="chip-btn active" data-reversal="0">Off</button>
+          <button class="chip-btn" data-reversal=".15">15%</button>
+          <button class="chip-btn" data-reversal=".25">25%</button>
+        </div>
+
+        <button id="castButton" class="primary">✦ Cast the Runes →</button>
+        <button id="dailyButton" class="secondary">☾ Rune of the Day</button>
+
+        <p class="note">Runes are presented here as a reflective divination system. Meanings are rule-based; the draw itself is random. Reversal mode is optional and uses modern interpretive conventions.</p>
+
+        <div class="history"><h3>Recent Castings</h3><div id="history"></div></div>
+      </div>
+    </aside>
+
+    <section class="panel cast-table" id="castTable">
+      <div class="hero"><div class="hero-kicker">The Arcanum Archive presents</div><h1>RUNE CASTING</h1><p>Symbols · cycles · choices · reflection</p></div>
+      <div class="rune-circle"></div>
+      <div id="castArea" class="cast-area"></div>
+      <div class="cast-help">Click a rune stone to reveal or conceal it.</div>
+    </section>
+
+    <aside class="panel reading">
+      <div class="pad">
+        <h2>Your Rune Reading</h2>
+        <div class="tabs">
+          <button class="active" data-tab="reading">Reading</button>
+          <button data-tab="runes">Rune Meanings</button>
+          <button data-tab="library">Library</button>
+        </div>
+        <div id="readingView" class="view active"><div id="status" class="status">Choose a casting and cast the runes.</div><div id="summary"></div><div id="reading"></div><div id="explanation"></div></div>
+        <div id="runesView" class="view"><div id="meanings"></div></div>
+        <div id="libraryView" class="view"><div id="library" class="library-grid"></div></div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>For reflection and entertainment. Rune casting does not guarantee future events or replace medical, legal, financial, or other professional advice.</footer>
+</div>
+
+<script>
+(() => {
+"use strict";
+
+const RUNES=[
+["fehu","ᚠ","Fehu","Freyr's Ætt","Resources, wealth, movement, value","Loss, waste, instability, blocked flow",true],
+["uruz","ᚢ","Uruz","Freyr's Ætt","Strength, vitality, endurance, raw potential","Weakness, depletion, misdirected force",true],
+["thurisaz","ᚦ","Thurisaz","Freyr's Ætt","Threshold, challenge, protection, decisive force","Impulsive reaction, vulnerability, unresolved conflict",true],
+["ansuz","ᚨ","Ansuz","Freyr's Ætt","Message, insight, communication, wisdom","Miscommunication, confusion, poor counsel",true],
+["raidho","ᚱ","Raidho","Freyr's Ætt","Journey, rhythm, order, right movement","Delay, wrong direction, disrupted timing",true],
+["kenaz","ᚲ","Kenaz","Freyr's Ætt","Torch, clarity, craft, understanding","Obscurity, creative block, fading confidence",true],
+["gebo","ᚷ","Gebo","Freyr's Ætt","Gift, exchange, partnership, reciprocity","Imbalance in exchange, obligation, uneven giving",false],
+["wunjo","ᚹ","Wunjo","Freyr's Ætt","Joy, harmony, belonging, satisfaction","Alienation, disappointment, strained harmony",true],
+["hagalaz","ᚺ","Hagalaz","Hagal's Ætt","Disruption, natural forces, necessary change","Disruption internalized; resistance to unavoidable change",false],
+["nauthiz","ᚾ","Nauthiz","Hagal's Ætt","Need, constraint, discipline, necessity","Frustration, denial of limits, compulsive pressure",true],
+["isa","ᛁ","Isa","Hagal's Ætt","Stillness, concentration, pause, containment","Prolonged stagnation or rigidity",false],
+["jera","ᛃ","Jera","Hagal's Ætt","Harvest, cycle, earned result, right timing","Delayed harvest; impatience with a natural cycle",false],
+["eihwaz","ᛇ","Eihwaz","Hagal's Ætt","Endurance, transition, resilience, axis of change","Resistance to transition; endurance without direction",false],
+["perthro","ᛈ","Perthro","Hagal's Ætt","Mystery, chance, hidden factors, revelation","Secrets, uncertainty, hidden information remaining closed",true],
+["algiz","ᛉ","Algiz","Hagal's Ætt","Protection, awareness, instinct, boundaries","Exposure, weakened boundaries, warning ignored",true],
+["sowilo","ᛋ","Sowilo","Hagal's Ætt","Sun, vitality, success, illumination","Burnout, overconfidence, clarity used poorly",false],
+["tiwaz","ᛏ","Tiwaz","Tyr's Ætt","Courage, justice, duty, principled action","Misplaced sacrifice, unfairness, loss of resolve",true],
+["berkano","ᛒ","Berkano","Tyr's Ætt","Birth, growth, healing, nurturing development","Stalled growth, neglect, difficult renewal",true],
+["ehwaz","ᛖ","Ehwaz","Tyr's Ætt","Movement, trust, partnership, cooperation","Mistrust, blocked movement, poor coordination",true],
+["mannaz","ᛗ","Mannaz","Tyr's Ætt","Self, humanity, community, perspective","Isolation, ego distortion, poor self-understanding",true],
+["laguz","ᛚ","Laguz","Tyr's Ætt","Flow, intuition, emotion, adaptability","Emotional overwhelm, confusion, ignoring intuition",true],
+["ingwaz","ᛜ","Ingwaz","Tyr's Ætt","Gestation, stored energy, completion before release","Energy trapped before release; unfinished incubation",false],
+["dagaz","ᛞ","Dagaz","Tyr's Ætt","Dawn, breakthrough, transformation, awakening","Transition delayed; insight not yet integrated",false],
+["othala","ᛟ","Othala","Tyr's Ætt","Heritage, home, inheritance, belonging","Disconnection from roots, possessiveness, inherited burden",true]
+].map((r,i)=>({id:r[0],glyph:r[1],name:r[2],aett:r[3],upright:r[4],reversed:r[5],reversible:r[6],index:i}));
+
+const SPREADS={
+ one:[["Message","What deserves attention now?"]],
+ three:[["Past","What shaped the present pattern?"],["Present","What is active now?"],["Future","What develops if the pattern continues?"]],
+ five:[["Center","Core situation"],["Challenge","What tests or obstructs"],["Root","Underlying cause"],["Action","Constructive response"],["Direction","Where the pattern is moving"]],
+ nine:[["Foundation","What underlies the matter"],["Past","What is receding"],["Present","What is active"],["Hidden","What is not obvious"],["Strength","What supports you"],["Challenge","What requires care"],["Action","What can be done"],["Near Future","What begins to develop"],["Outcome","Likely direction if the pattern continues"]]
+};
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+let spreadKey="three", reversalRate=0;
+
+function hash(str){
+ let h=2166136261>>>0;
+ for(let i=0;i<str.length;i++){h^=str.charCodeAt(i);h=Math.imul(h,16777619)}
+ return h>>>0
+}
+function rng(seed){
+ let a=hash(seed)||1;
+ return ()=>{a+=0x6D2B79F5;let t=a;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}
+}
+function shuffle(arr,r){
+ const a=arr.slice();
+ for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+ return a
+}
+function freshSeed(){
+ return globalThis.crypto?.randomUUID ? "RUNES-"+crypto.randomUUID() : "RUNES-"+Date.now()+"-"+Math.random().toString(36).slice(2)
+}
+function createCasting(spread,seed,rate){
+ const r=rng(seed), picked=shuffle(RUNES,r).slice(0,SPREADS[spread].length);
+ return picked.map(rune=>({rune,reversed:rune.reversible && r()<rate}))
+}
+function interpret(draw,i){
+ const pos=SPREADS[spreadKey][i], base=draw.reversed?draw.rune.reversed:draw.rune.upright;
+ const prev=i>0?window.currentCasting?.draws[i-1]?.rune:null;
+ const next=window.currentCasting?.draws[i+1]?.rune||null;
+ const links=[];
+ if(prev?.aett===draw.rune.aett) links.push("The shared "+draw.rune.aett+" grouping reinforces a related thematic current with "+prev.name+".");
+ if(next?.aett===draw.rune.aett) links.push("Its shared "+draw.rune.aett+" grouping also links it with "+next.name+".");
+ const text=base+". In the "+pos[0]+" position, read this specifically as "+pos[1].toLowerCase()+". "+(links.join(" ")||"Its meaning stands primarily on its own in this position.");
+ return {text,rules:["Base rune meaning — "+(draw.reversed?"modern reversed":"upright"),"Casting position — "+pos[0]+": "+pos[1],...(links.length?links:["No same-ætt neighbor reinforcement"])]}
+}
+function summary(draws){
+ const aetts={};
+ draws.forEach(d=>aetts[d.rune.aett]=(aetts[d.rune.aett]||0)+1);
+ const top=Object.entries(aetts).sort((a,b)=>b[1]-a[1])[0];
+ const rev=draws.filter(d=>d.reversed).length;
+ let s=top&&top[1]>1?top[0]+" appears most often, so its cluster of themes carries extra weight across the casting. ":"No single ætt dominates, so the reading is comparatively balanced across the rune groups. ";
+ s+=rev?rev+" rune"+(rev===1?" uses":"s use")+" the optional modern reversed interpretation. ":"All runes are being read upright. ";
+ s+=draws.length>=5?"Because this is a larger casting, repeated themes and positional relationships matter more than any single rune.":"Focus first on the relationship between each rune and its assigned position.";
+ return s
+}
+function explanation(draws){
+ const names=draws.map(d=>d.rune.name).join(", ");
+ return "This reading combines fixed rune meanings with the selected casting positions. The runes drawn were "+names+". Randomness determines which runes appear; the explanation then applies the same rules consistently. Treat the result as a reflective framework rather than a guaranteed prediction.";
+}
+
+function render(draws,seed,question){
+ const area=$("#castArea");
+ window.currentCasting={draws,spreadKey,seed,question,time:new Date().toISOString()};
+ area.innerHTML=draws.map((d,i)=>{
+   const pos=SPREADS[spreadKey][i];
+   return '<div class="rune-slot"><div class="rune-stone" data-i="'+i+'"><div class="rune-inner">'+
+     '<div class="rune-face rune-back"></div>'+
+     '<div class="rune-face rune-front"><div class="rune-glyph">'+d.rune.glyph+'</div>'+
+     (d.reversed?'<div class="reversed-badge">REVERSED</div>':'')+
+     '<div class="rune-nameplate"><span class="rune-name">'+esc(d.rune.name)+'</span><span class="rune-meaning">'+esc(d.rune.aett)+'</span></div></div>'+
+     '</div></div><div class="position">'+esc(pos[0])+'</div><div class="position-sub">'+esc(pos[1])+'</div></div>'
+ }).join("");
+ area.querySelectorAll(".rune-stone").forEach(el=>el.addEventListener("click",()=>el.classList.toggle("revealed")));
+ $("#summary").innerHTML='<div class="summary">'+esc(summary(draws))+'</div>';
+ $("#reading").innerHTML=draws.map((d,i)=>{
+   const x=interpret(d,i), p=SPREADS[spreadKey][i];
+   return '<div class="reading-entry"><div class="entry-head"><div class="mini-stone">'+d.rune.glyph+'</div><div class="entry-title"><h4>'+esc(p[0])+' — '+esc(d.rune.name)+(d.reversed?' · Reversed':'')+'</h4><small>'+esc(d.rune.aett)+' · '+(d.reversed?'Modern reversed':'Upright')+'</small></div></div><div class="entry-text">'+esc(x.text)+'</div><div class="rule-box">'+esc(x.rules.join(" · "))+'</div></div>'
+ }).join("");
+ $("#meanings").innerHTML=draws.map(d=>'<div class="reading-entry"><div class="entry-head"><div class="mini-stone">'+d.rune.glyph+'</div><div class="entry-title"><h4>'+esc(d.rune.name)+'</h4><small>'+esc(d.rune.aett)+'</small></div></div><div class="entry-text"><strong>Upright:</strong> '+esc(d.rune.upright)+'<br><strong>Modern reversed:</strong> '+esc(d.rune.reversed)+(d.rune.reversible?'':' <em>(symmetrical rune; reversal normally not applied here)</em>')+'</div></div>').join("");
+ $("#explanation").innerHTML='<div class="explanation"><h3>☾ Explanation of This Casting</h3>'+esc(explanation(draws))+'</div>';
+ $("#status").textContent="Seed: "+seed+" · "+draws.length+" rune"+(draws.length===1?"":"s")+" · "+spreadKey+" casting";
+ setTimeout(()=>area.querySelectorAll(".rune-stone").forEach((el,i)=>setTimeout(()=>el.classList.add("revealed"),i*115)),120);
+ renderLibrary();
+}
+function castNew(){
+ const typed=$("#seed").value.trim(), seed=typed||freshSeed(), q=$("#question").value.trim();
+ const draws=createCasting(spreadKey,seed,reversalRate);
+ const table=$("#castTable");table.classList.remove("casting");void table.offsetWidth;table.classList.add("casting");setTimeout(()=>table.classList.remove("casting"),850);
+ render(draws,seed,q);saveHistory(window.currentCasting)
+}
+function daily(){
+ const day=new Date().toISOString().slice(0,10), seed="RUNE-DAILY-"+day;
+ spreadKey="one";syncSpread();
+ const draw=createCasting("one",seed,0);
+ $("#seed").value="";
+ render(draw,seed,"Rune of the day");saveHistory(window.currentCasting)
+}
+function saveHistory(r){
+ const list=JSON.parse(localStorage.getItem("arcanumRuneHistory")||"[]");
+ list.unshift({spreadKey:r.spreadKey,seed:r.seed,question:r.question,time:r.time,draws:r.draws.map(d=>({id:d.rune.id,reversed:d.reversed}))});
+ localStorage.setItem("arcanumRuneHistory",JSON.stringify(list.slice(0,8)));renderHistory()
+}
+function renderHistory(){
+ const root=$("#history"), list=JSON.parse(localStorage.getItem("arcanumRuneHistory")||"[]");
+ if(!list.length){root.innerHTML='<div class="note">No castings saved yet.</div>';return}
+ root.innerHTML=list.map((r,i)=>'<button data-i="'+i+'">'+new Date(r.time).toLocaleString()+' · '+r.spreadKey+(r.question?' · '+esc(r.question.slice(0,22)):'')+'</button>').join("");
+ root.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+   const r=list[Number(b.dataset.i)];spreadKey=r.spreadKey;syncSpread();$("#question").value=r.question||"";$("#seed").value="";
+   render(r.draws.map(x=>({rune:RUNES.find(z=>z.id===x.id),reversed:x.reversed})),r.seed,r.question||"")
+ })
+}
+function renderLibrary(){
+ const root=$("#library");root.innerHTML=RUNES.map(r=>'<button class="library-rune" data-id="'+r.id+'"><span class="glyph">'+r.glyph+'</span><strong>'+r.name+'</strong><small>'+r.aett+'<br>'+r.upright.split(",").slice(0,2).join(",")+'</small></button>').join("");
+ root.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+   const r=RUNES.find(x=>x.id===b.dataset.id);
+   $("#meanings").innerHTML='<div class="reading-entry"><div class="entry-head"><div class="mini-stone">'+r.glyph+'</div><div class="entry-title"><h4>'+r.name+'</h4><small>'+r.aett+'</small></div></div><div class="entry-text"><strong>Upright:</strong> '+r.upright+'<br><strong>Modern reversed:</strong> '+r.reversed+'<br><br><strong>Reversal support:</strong> '+(r.reversible?'Optional modern reversal available.':'Symmetrical rune; this demo keeps it upright.')+'</div></div>';
+   switchTab("runes")
+ })
+}
+function syncSpread(){document.querySelectorAll(".spread-option").forEach(b=>b.classList.toggle("active",b.dataset.spread===spreadKey))}
+function switchTab(tab){
+ document.querySelectorAll(".tabs button").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+ ["reading","runes","library"].forEach(x=>$("#"+x+"View").classList.toggle("active",x===tab))
+}
+document.querySelectorAll(".spread-option").forEach(b=>b.onclick=()=>{spreadKey=b.dataset.spread;syncSpread()});
+document.querySelectorAll(".chip-btn").forEach(b=>b.onclick=()=>{reversalRate=Number(b.dataset.reversal);document.querySelectorAll(".chip-btn").forEach(x=>x.classList.toggle("active",x===b))});
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+document.querySelectorAll("[data-nav]").forEach(a=>a.onclick=e=>{e.preventDefault();if(a.dataset.nav==="library")switchTab("library");else document.querySelector(".history").scrollIntoView({behavior:"smooth"})});
+$("#clearSeed").onclick=()=>{$("#seed").value="";$("#seed").focus()};
+$("#castButton").onclick=castNew;$("#dailyButton").onclick=daily;
+
+function selfTest(){
+ const checks=[
+   ["24 Elder Futhark runes",RUNES.length===24],
+   ["Unique rune IDs",new Set(RUNES.map(r=>r.id)).size===24],
+   ["All glyphs and meanings",RUNES.every(r=>r.glyph&&r.name&&r.upright&&r.reversed)],
+   ["All spread sizes",Object.entries(SPREADS).every(([k,p])=>createCasting(k,"test-"+k,0).length===p.length)],
+   ["No duplicate runes in nine cast",new Set(createCasting("nine","duplicate",0).map(x=>x.rune.id)).size===9],
+   ["Seeded cast deterministic",createCasting("three","same",0).map(x=>x.rune.id).join(",")===createCasting("three","same",0).map(x=>x.rune.id).join(",")]
+ ];
+ if(checks.some(x=>!x[1])) console.error("Rune self-test failure",checks.filter(x=>!x[1])); else console.info("Arcanum Rune self-tests PASS",checks)
+}
+renderHistory();renderLibrary();selfTest();
+const demo=createCasting("three","ARCANUM-RUNES-DEMO",0);
+render(demo,"ARCANUM-RUNES-DEMO","Demo casting");$("#seed").value="";
+})();
+</script>
+</body>
+</html>
