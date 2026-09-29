@@ -22,5 +22,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Test source importer
+        run: npm run arcanum:import -- "import/source-files.example.json"
+
       - name: Build Arcanum Archive
         run: npm run build
