@@ -617,6 +617,184 @@ body:after{
 @media(max-width:1500px){.layout{grid-template-columns:350px minmax(620px,1fr) 390px}.tarot-hero h1{font-size:39px}.crystal-ball{width:145px;height:145px}}
 @media(max-width:1120px){.scene-layer{opacity:.72}.tarot-hero{padding-top:190px}.layout{grid-template-columns:300px 1fr}.right-panel{grid-column:1/-1}}
 
+
+/* === Approved reference implementation v5: functional UI, no mockup generation === */
+body{
+  background:
+    linear-gradient(180deg,rgba(3,6,16,.78),rgba(1,3,9,.94)),
+    url("https://images.pexels.com/photos/6945070/pexels-photo-6945070.jpeg?auto=compress&cs=tinysrgb&w=2400") center/cover fixed no-repeat,
+    #030611;
+}
+body:after{
+  background:
+    radial-gradient(circle at 50% 0%,rgba(54,97,185,.30),transparent 30%),
+    radial-gradient(circle at 50% 58%,rgba(212,149,51,.14),transparent 34%),
+    linear-gradient(90deg,rgba(1,3,10,.92) 0 19%,rgba(1,3,10,.36) 31% 69%,rgba(1,3,10,.91) 82% 100%);
+}
+.app-shell{padding:0 10px 10px}
+.topbar{
+  min-height:64px;padding:8px 24px;margin:0 -10px;
+  background:rgba(2,4,11,.94);
+  border-bottom:1px solid #b886386f;
+}
+.brand{font-size:26px;letter-spacing:.16em}
+.brand-mark{border-color:#dca84b;box-shadow:0 0 22px #dca84b30}
+.layout{
+  grid-template-columns:400px minmax(720px,1fr) 420px;
+  gap:10px;margin-top:10px;min-height:calc(100vh - 84px)
+}
+.panel{
+  border-radius:13px;border-color:#a978347f;
+  background:linear-gradient(180deg,rgba(3,7,16,.94),rgba(2,5,12,.96));
+  box-shadow:0 24px 75px #000c,inset 0 0 0 1px #f7c7640c;
+}
+.controls:after,.right-panel:after{
+  inset:7px;border-color:#d39d4250;border-radius:9px
+}
+.controls .pad,.right-panel .pad{padding:20px 20px 22px}
+.controls h2{display:none}
+.controls label{
+  position:relative;margin:16px 0 7px;
+  color:#e3c98f;font:700 13px/1.1 Georgia,serif;
+  text-transform:uppercase;letter-spacing:.10em
+}
+.controls select,.controls input,.controls textarea{
+  border:1px solid #72552f;border-radius:8px;
+  background:linear-gradient(180deg,#07101c,#040913);
+  color:#eee3cf;box-shadow:inset 0 0 22px #0008;
+}
+.controls textarea{min-height:86px}
+.spread-quick{gap:8px}
+.spread-quick button{
+  min-height:112px;padding-top:48px;border-color:#364768;
+  background:linear-gradient(180deg,#091426,#050b15);
+}
+.spread-quick button.active{
+  color:#f5d99e;border-color:#e1ab4f;
+  box-shadow:0 0 0 1px #e1ab4f,0 0 20px #f0b84d60,inset 0 0 24px #87511533;
+}
+.button.primary{
+  min-height:48px;font-size:15px;color:#2a1705;
+  border-color:#ffe29a;
+  background:linear-gradient(90deg,#b77620 0,#ffe3a2 48%,#c88326 100%);
+  box-shadow:0 0 22px #e2a43e50,inset 0 1px #fff7d0;
+}
+.button.secondary{
+  min-height:43px;border-color:#49618b;background:#071226;color:#d7d4f1
+}
+.note{font-size:10.5px;line-height:1.55;color:#948c96}
+
+.tarot-table{
+  min-height:900px;padding:0 18px 22px;
+  border-color:#9c7133;
+  background:
+    linear-gradient(180deg,rgba(3,8,22,.28),rgba(2,5,14,.56)),
+    radial-gradient(circle at 50% 28%,rgba(50,92,190,.30),transparent 22%),
+    url("https://images.pexels.com/photos/7179792/pexels-photo-7179792.jpeg?auto=compress&cs=tinysrgb&w=2200") center/cover no-repeat;
+}
+.tarot-table:after{
+  background:
+    radial-gradient(circle at 50% 29%,transparent 0 150px,#d6a34932 151px 152px,transparent 153px 208px,#d6a34922 209px 210px,transparent 211px),
+    repeating-radial-gradient(circle at 50% 66%,transparent 0 104px,#d6a3491f 105px 106px,transparent 107px 141px),
+    linear-gradient(180deg,rgba(3,9,24,.08),rgba(2,4,12,.44));
+}
+.scene-layer{display:none!important}
+.arcane-props:before{
+  width:230px;height:230px;top:32px;
+  border:1px solid #e1ad4c80;
+  box-shadow:0 0 55px #4a79d25e,inset 0 0 90px #173a7c5a
+}
+.arcane-props:after{
+  top:68px;font-size:84px;color:#efc767;opacity:.82;
+  text-shadow:0 0 22px #edc363,0 0 45px #4672d2
+}
+.tarot-hero{padding:216px 10px 0}
+.tarot-hero h1{font-size:50px;letter-spacing:.12em;color:#f0cf8e}
+.tarot-hero p{font-size:10px;letter-spacing:.26em;color:#e1d7d0}
+
+.spread-area{
+  max-width:900px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:34px;padding:40px 10px 18px
+}
+.card{width:min(100%,206px);aspect-ratio:2/3}
+.face{
+  border-radius:10px;border:1px solid #d5a34c;
+  box-shadow:0 18px 42px #000f,0 0 0 2px #251606,0 0 0 3px #b77b2e
+}
+.card-front{padding:0;background:#07080c}
+.arcanum-card-face{
+  position:relative;width:100%;height:100%;overflow:hidden;border-radius:8px;
+  background:#05070d;
+}
+.arcanum-card-art{position:absolute;inset:22px 12px 47px;overflow:hidden;border-radius:3px;background:#0b0c10}
+.arcanum-card-art .tarot-photo{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:saturate(1.30) contrast(1.10) brightness(.98) sepia(.05);
+}
+.arcanum-card-art .tarot-fallback{position:absolute;inset:0}
+.arcanum-card-vignette{
+  position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,#0004 0,#0000 18%,#0000 68%,#0009 100%),
+             radial-gradient(circle,transparent 48%,#0203089e 100%);
+}
+.arcanum-card-innerline{
+  position:absolute;inset:5px;border:2px solid #d8aa52;border-radius:6px;
+  box-shadow:inset 0 0 0 1px #5f3b14,inset 0 0 18px #000a;
+}
+.arcanum-card-topmark{
+  position:absolute;z-index:4;top:6px;left:50%;transform:translateX(-50%);
+  min-width:42px;padding:3px 9px 4px;border-radius:0 0 13px 13px;
+  border:1px solid #d9aa50;border-top:0;background:#050608e8;color:#f3d487;
+  font:700 10px/1 Georgia,serif;letter-spacing:.08em;text-align:center
+}
+.arcanum-card-corner{position:absolute;z-index:5;color:#e0b45f;font-size:12px;text-shadow:0 0 8px #e5ad4c}
+.arcanum-card-corner.tl{left:9px;top:8px}.arcanum-card-corner.tr{right:9px;top:8px}
+.arcanum-card-corner.bl{left:9px;bottom:10px}.arcanum-card-corner.br{right:9px;bottom:10px}
+.arcanum-card-nameplate{
+  position:absolute;z-index:5;left:9px;right:9px;bottom:7px;height:39px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  border-top:1px solid #c68c36;background:linear-gradient(180deg,rgba(4,5,8,.78),#020306f5);
+  box-shadow:0 -6px 18px #0008
+}
+.arcanum-card-name{
+  color:#f4d18a;font:700 11px/1.05 Georgia,serif;letter-spacing:.06em;text-align:center;
+  text-shadow:0 1px 7px #000
+}
+.arcanum-card-kind{
+  margin-top:3px;color:#9c8565;font:6.5px/1 system-ui;letter-spacing:.20em
+}
+.position{
+  margin-top:11px;color:#f0d08e;font-size:14px;text-shadow:0 2px 8px #000
+}
+.focus{
+  color:#c4b8b5;font-size:8.5px;line-height:1.45;letter-spacing:.13em;
+  text-shadow:0 2px 7px #000
+}
+.reference-deck-row{gap:24px;margin-top:0}
+.reference-back{width:148px;border-color:#d1a148}
+.reference-back:after{font-size:46px}
+
+.right-panel{border-color:#b27f35}
+.reading-panel h2{font-size:23px}
+.reading-tabs{border-color:#52627f}
+.reading-tabs button.active{background:linear-gradient(180deg,#17385f,#0d1f38);box-shadow:inset 0 -2px #d7ebff,0 0 18px #4590ff38}
+.summary{font-size:12px;line-height:1.58;border-color:#654b26}
+.reference-reading-list h3,.reference-reading-explanation h3{font-size:17px}
+.reading-card-row{grid-template-columns:64px 1fr auto}
+.reading-thumb{width:60px;border:1px solid #c68f3d}
+.reading-card-copy h4{font-size:14px}
+.reading-card-copy .meaning{font-size:11px;line-height:1.52}
+
+@media(max-width:1500px){
+  .layout{grid-template-columns:350px minmax(600px,1fr) 390px}
+  .card{width:min(100%,185px)}
+  .tarot-hero h1{font-size:42px}
+}
+@media(max-width:1180px){
+  .layout{grid-template-columns:310px 1fr}.right-panel{grid-column:1/-1}
+  .tarot-table{min-height:780px}
+}
+
 </style>
 </head>
 <body>
@@ -986,20 +1164,34 @@ window.ARCANUM_TAROT = (() => {
         '<div class="fallback-name">'+esc(card.name)+'</div>'+
       '</div>';
 
+    const topMark = card.arcana==="Major" ? card.rank : symbolFor(card);
+    const smallMark = card.arcana==="Major" ? "MAJOR ARCANA" : card.suit.toUpperCase();
+
     return `
-      <div class="illustrated-card">
-        <img
-          class="tarot-photo"
-          src="${tarotImageUrl(card)}"
-          alt="${esc(card.name)}"
-          loading="eager"
-          decoding="async"
-          referrerpolicy="no-referrer"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
-        />
-        <div class="tarot-fallback" style="display:none">${fallback}</div>
-        <div class="tarot-vignette"></div>
-        <div class="tarot-gold-frame"></div>
+      <div class="arcanum-card-face">
+        <div class="arcanum-card-topmark">${esc(topMark)}</div>
+        <div class="arcanum-card-art">
+          <img
+            class="tarot-photo"
+            src="${tarotImageUrl(card)}"
+            alt="${esc(card.name)}"
+            loading="eager"
+            decoding="async"
+            referrerpolicy="no-referrer"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='grid'"
+          />
+          <div class="tarot-fallback" style="display:none">${fallback}</div>
+        </div>
+        <div class="arcanum-card-vignette"></div>
+        <div class="arcanum-card-innerline"></div>
+        <div class="arcanum-card-corner tl">✦</div>
+        <div class="arcanum-card-corner tr">✦</div>
+        <div class="arcanum-card-corner bl">☾</div>
+        <div class="arcanum-card-corner br">☽</div>
+        <div class="arcanum-card-nameplate">
+          <span class="arcanum-card-name">${esc(card.name.toUpperCase())}</span>
+          <span class="arcanum-card-kind">${smallMark}</span>
+        </div>
       </div>
     `;
   }
@@ -1873,6 +2065,41 @@ window.ARCANUM_TAROT = (() => {
   }
 
   function init(){installReferenceScene();observe();}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>
+
+
+<script>
+(() => {
+  "use strict";
+  function applyApprovedReferenceLabels(){
+    const controls=document.querySelector(".controls");
+    if(!controls)return;
+    const labels=[...controls.querySelectorAll("label")];
+    const exact=["1. CHOOSE A SPREAD","2. YOUR QUESTION","3. SHUFFLE SEED  (OPTIONAL)","4. REVERSED CARDS"];
+    labels.slice(0,4).forEach((l,i)=>l.textContent=exact[i]);
+    const q=document.getElementById("question");
+    if(q) q.placeholder="What should I understand about my current situation?";
+    const draw=document.getElementById("drawButton");
+    if(draw) draw.textContent="✦  SHUFFLE & DRAW  →";
+    const daily=document.getElementById("dailyButton");
+    if(daily) daily.textContent="☾  TODAY’S CARD";
+  }
+
+  function addSpreadDescription(){
+    const panel=document.querySelector(".right-panel .reading-panel");
+    if(!panel || panel.querySelector(".about-spread"))return;
+    const box=document.createElement("div");
+    box.className="reference-reading-explanation about-spread";
+    box.innerHTML='<h3>☾ About This Spread</h3><p>The selected spread gives each card a defined role. The engine combines that position with the card’s orientation, suit, element, neighboring cards, and your question focus.</p>';
+    panel.appendChild(box);
+  }
+
+  function init(){
+    applyApprovedReferenceLabels();
+    addSpreadDescription();
+  }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
 </script>
