@@ -605,6 +605,468 @@ textarea:focus,input:focus,select:focus{
   .reading{grid-column:1/-1!important}
 }
 
+
+/* === ARCANUM RUNES LUXURY PRODUCT REBUILD v3 === */
+:root{
+  --lux-gold:#d8ad63;
+  --lux-gold-soft:#f0d39a;
+  --lux-ink:#f5efe5;
+  --lux-muted:#9ca5b8;
+  --lux-navy:#07101d;
+  --lux-glass:rgba(7,12,22,.62);
+}
+html{background:#02050a}
+body{
+  min-height:100vh;
+  background:
+    linear-gradient(180deg,rgba(2,5,12,.22),rgba(2,4,9,.72)),
+    url("../arcanum-tarot/assets/arcanum-tarot-sanctuary.png") center 20%/cover fixed no-repeat,
+    #02050a!important;
+}
+body:before{
+  background:
+    radial-gradient(circle at 50% 10%,rgba(115,154,240,.16),transparent 20%),
+    radial-gradient(circle at 50% 57%,rgba(218,168,79,.10),transparent 31%),
+    linear-gradient(90deg,rgba(0,2,7,.82),transparent 22% 78%,rgba(0,2,7,.82))!important
+}
+body:after{
+  background:
+    linear-gradient(180deg,rgba(3,6,12,.08),rgba(3,6,12,.30) 35%,rgba(1,3,8,.72) 100%)!important
+}
+.app{max-width:1920px;margin:0 auto;padding:0 22px 28px!important}
+
+/* refined masthead */
+.topbar{
+  margin:0 -22px!important;
+  min-height:74px!important;
+  padding:12px 32px!important;
+  background:linear-gradient(180deg,rgba(3,6,13,.88),rgba(3,6,13,.68))!important;
+  border-bottom:1px solid rgba(215,173,99,.20)!important;
+  box-shadow:0 14px 45px rgba(0,0,0,.28)!important;
+  backdrop-filter:blur(22px) saturate(1.1)!important
+}
+.brand-wrap{gap:14px!important}
+.brand-mark{
+  width:50px!important;height:50px!important;
+  border:1px solid rgba(231,194,125,.65)!important;
+  background:
+    radial-gradient(circle at 50% 44%,rgba(107,148,228,.38),rgba(12,22,38,.96) 64%),
+    linear-gradient(#0f192a,#07101d)!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.035),
+    inset 0 0 28px rgba(226,178,84,.09),
+    0 0 35px rgba(95,139,228,.10)!important
+}
+.brand{font-size:22px!important;font-weight:600!important;letter-spacing:.22em!important;color:#ecd09a!important}
+.subtitle{font-size:8px!important;letter-spacing:.23em!important;color:#7d8798!important}
+.nav{gap:34px!important}
+.nav a{
+  font:500 10px/1 system-ui!important;
+  letter-spacing:.14em!important;
+  text-transform:uppercase;
+  color:#aeb7c8!important
+}
+.nav a.active,.nav a:hover{color:#f1d39a!important}
+.nav a.active:after{
+  left:24%!important;right:24%!important;height:1px!important;
+  background:linear-gradient(90deg,transparent,#e1b96d,transparent)!important
+}
+.mode-note{font-size:8px!important;letter-spacing:.08em!important;color:#768095!important}
+
+/* layout is now stage + two floating rails, not three matching cards */
+.layout{
+  grid-template-columns:360px minmax(700px,1fr) 420px!important;
+  gap:22px!important;
+  margin-top:22px!important;
+  align-items:start!important
+}
+.panel{
+  border:none!important;
+  border-radius:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  overflow:visible!important
+}
+.panel:before{display:none!important}
+
+.controls,.reading{
+  position:sticky!important;
+  top:96px!important;
+  align-self:start!important
+}
+.controls .pad,.reading .pad{
+  border-radius:20px!important;
+  border:1px solid rgba(224,180,96,.22)!important;
+  background:
+    linear-gradient(180deg,rgba(8,14,25,.74),rgba(5,9,17,.82))!important;
+  backdrop-filter:blur(20px) saturate(1.08)!important;
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.45),
+    inset 0 0 0 1px rgba(255,239,204,.022)!important
+}
+.controls .pad{padding:24px 24px 22px!important}
+.reading .pad{padding:24px 24px 26px!important}
+.controls .pad:before,.reading .pad:before{
+  content:"";position:absolute;left:22px;right:22px;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(236,196,119,.55),transparent)
+}
+.controls h2,.reading h2{
+  font-size:27px!important;font-weight:400!important;letter-spacing:.015em!important;
+  color:#f0d59d!important
+}
+.lead{
+  margin-top:7px!important;margin-bottom:4px!important;
+  color:#929bac!important;font-size:10.5px!important;line-height:1.65!important
+}
+
+/* sectional typography like a premium settings rail */
+.step{
+  margin:21px 0 9px!important;
+  font:600 9.5px/1 system-ui!important;
+  letter-spacing:.17em!important;
+  color:#bca371!important
+}
+.step:before{
+  content:"";display:inline-block;width:16px;height:1px;margin:0 8px 3px 0;
+  background:rgba(211,167,85,.55)
+}
+
+/* selector becomes elegant horizontal editorial tiles */
+.spread-grid{grid-template-columns:1fr!important;gap:8px!important}
+.spread-option{
+  position:relative!important;
+  min-height:72px!important;
+  padding:10px 14px 10px 78px!important;
+  align-items:flex-start!important;justify-content:center!important;
+  text-align:left!important;
+  border-radius:12px!important;
+  border:1px solid rgba(97,117,151,.30)!important;
+  background:linear-gradient(180deg,rgba(11,19,33,.72),rgba(7,12,21,.78))!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.012)!important
+}
+.spread-option:hover{
+  transform:translateX(2px)!important;
+  border-color:rgba(170,139,194,.44)!important;
+  background:linear-gradient(180deg,rgba(15,23,39,.84),rgba(8,13,23,.88))!important
+}
+.spread-option.active{
+  border-color:rgba(223,181,99,.58)!important;
+  background:
+    radial-gradient(circle at 12% 50%,rgba(223,181,99,.10),transparent 28%),
+    linear-gradient(180deg,rgba(16,23,37,.92),rgba(9,14,23,.94))!important;
+  box-shadow:
+    inset 3px 0 0 rgba(223,181,99,.82),
+    0 12px 34px rgba(0,0,0,.18)!important
+}
+.spread-symbol{
+  position:absolute!important;left:15px!important;top:10px!important;
+  width:50px!important;height:50px!important;margin:0!important;
+  border-radius:50%!important;
+  font-size:20px!important;
+  background:radial-gradient(circle,rgba(125,102,185,.12),transparent 72%)!important
+}
+.spread-option.active .spread-symbol{
+  background:radial-gradient(circle,rgba(224,178,87,.14),transparent 72%)!important
+}
+.spread-title{
+  text-align:left!important;font-size:12.5px!important;font-weight:600!important;
+  color:#eee5d6!important
+}
+.spread-sub{
+  text-align:left!important;margin-top:5px!important;
+  font-size:8.5px!important;color:#7d8799!important;letter-spacing:.03em!important
+}
+
+/* controls use quiet luxury instead of obvious demo widgets */
+textarea,input{
+  border:1px solid rgba(183,143,75,.34)!important;
+  background:rgba(5,10,18,.62)!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.012)!important
+}
+textarea{min-height:92px!important}
+textarea::placeholder,input::placeholder{color:#667083}
+.seed-row{grid-template-columns:1fr 40px!important}
+.icon-btn{
+  background:rgba(8,14,24,.74)!important;
+  border:1px solid rgba(183,143,75,.32)!important
+}
+.chips{
+  display:flex!important;gap:6px!important
+}
+.chip-btn{
+  flex:1!important;min-height:34px!important;border-radius:999px!important;
+  border:1px solid rgba(95,112,139,.30)!important;
+  background:rgba(8,14,24,.64)!important;
+  font-size:8px!important
+}
+.chip-btn.active{
+  border-color:rgba(224,180,95,.52)!important;
+  background:rgba(224,180,95,.09)!important;
+  box-shadow:none!important;color:#e8c985!important
+}
+.primary{
+  min-height:54px!important;margin-top:19px!important;border-radius:12px!important;
+  color:#261707!important;
+  background:linear-gradient(90deg,#a96d21,#dfb260 32%,#f4dc9e 50%,#d5a24f 72%,#a96c21)!important;
+  box-shadow:0 14px 38px rgba(175,117,34,.18)!important;
+  letter-spacing:.09em!important
+}
+.primary:hover{transform:translateY(-1px);filter:brightness(1.035)}
+.secondary{
+  min-height:42px!important;
+  color:#cad2e1!important;border:1px solid rgba(103,128,173,.30)!important;
+  background:rgba(8,15,27,.62)!important
+}
+.note{
+  color:#737d8e!important;font-size:8.7px!important;line-height:1.65!important;
+  padding:0 2px!important
+}
+.history{border-top-color:rgba(225,177,82,.08)!important}
+.history h3{
+  font-size:14px!important;font-weight:400!important;color:#d3b77f!important;
+  letter-spacing:.02em!important
+}
+.history button{
+  border:none!important;border-radius:7px!important;
+  background:rgba(255,255,255,.018)!important;color:#858e9f!important
+}
+.history button:hover{background:rgba(225,177,82,.05)!important;color:#d8c49d!important}
+
+/* center becomes an altar, not a panel */
+.cast-table{
+  position:relative!important;
+  min-height:910px!important;
+  border-radius:28px!important;
+  overflow:hidden!important;
+  background:
+    linear-gradient(180deg,rgba(3,8,17,.10),rgba(3,8,17,.46)),
+    radial-gradient(circle at 50% 32%,rgba(87,126,211,.16),transparent 25%),
+    radial-gradient(circle at 50% 69%,rgba(221,172,78,.09),transparent 31%)!important;
+  box-shadow:inset 0 0 120px rgba(0,0,0,.18)!important
+}
+.cast-table:before{
+  inset:38px!important;
+  border:1px solid rgba(222,177,89,.13)!important;
+  box-shadow:
+    inset 0 0 140px rgba(25,43,78,.14),
+    0 0 90px rgba(208,155,58,.04)!important
+}
+.cast-table:after{
+  background:
+    radial-gradient(circle at 50% 50%,transparent 0 210px,rgba(216,166,73,.13) 211px 212px,transparent 213px 272px,rgba(216,166,73,.055) 273px 274px,transparent 275px),
+    radial-gradient(circle at 50% 50%,rgba(39,62,105,.12),transparent 55%)!important
+}
+.hero{padding-top:42px!important}
+.hero-kicker{
+  color:#8f98a9!important;font-size:7.5px!important;letter-spacing:.42em!important
+}
+.hero h1{
+  margin-top:12px!important;
+  font-size:51px!important;font-weight:400!important;letter-spacing:.18em!important;
+  color:#f2d79f!important;
+  text-shadow:0 0 30px rgba(215,164,73,.22)!important
+}
+.hero p{
+  margin-top:7px!important;font-size:8px!important;letter-spacing:.25em!important;
+  color:#818b9e!important
+}
+.hero-luxury-meta{
+  display:flex;justify-content:center;gap:8px;margin-top:16px
+}
+.hero-luxury-meta span{
+  padding:6px 10px;border-radius:999px;
+  border:1px solid rgba(163,182,215,.15);
+  background:rgba(5,10,18,.26);
+  color:#8994a6;font:600 7px/1 system-ui;letter-spacing:.10em;text-transform:uppercase
+}
+.rune-circle{
+  top:152px!important;width:260px!important;height:260px!important;
+  border-color:rgba(226,183,101,.28)!important;
+  box-shadow:
+    inset 0 0 90px rgba(83,121,203,.15),
+    0 0 65px rgba(96,136,218,.10)!important
+}
+.rune-circle:before{
+  inset:24px!important;border-color:rgba(226,183,101,.14)!important
+}
+.rune-circle:after{
+  font-size:21px!important;letter-spacing:.20em!important;opacity:.75!important
+}
+.altar-orbit{
+  position:absolute;left:50%;top:118px;transform:translateX(-50%);
+  width:330px;height:330px;border-radius:50%;
+  border:1px solid rgba(117,149,211,.08);z-index:1
+}
+.altar-orbit:before,.altar-orbit:after{
+  content:"";position:absolute;border-radius:50%;inset:24px;
+  border:1px dashed rgba(214,170,83,.08)
+}
+.altar-orbit:after{inset:54px;border-style:solid;border-color:rgba(214,170,83,.055)}
+.cast-area{
+  padding:300px 30px 42px!important;
+  max-width:940px!important;
+  align-items:start!important
+}
+.cast-help{
+  color:#6f7889!important;font-size:8px!important;letter-spacing:.06em!important;
+  text-transform:uppercase
+}
+
+/* premium rune objects: darker mineral, engraved gold */
+.rune-stone{
+  width:142px!important;height:182px!important;
+  filter:drop-shadow(0 24px 26px rgba(0,0,0,.42))!important
+}
+.rune-face{
+  border:none!important;
+  box-shadow:
+    inset 0 0 0 1px rgba(226,183,101,.42),
+    inset 0 0 35px rgba(0,0,0,.46),
+    0 22px 34px rgba(0,0,0,.48)!important
+}
+.rune-front{
+  background:
+    radial-gradient(circle at 28% 17%,rgba(255,255,255,.095) 0 2px,transparent 3px),
+    radial-gradient(circle at 77% 62%,rgba(255,255,255,.03) 0 1px,transparent 2px),
+    linear-gradient(145deg,#253a54 0%,#162334 52%,#0a111b 100%)!important
+}
+.rune-back{
+  background:
+    radial-gradient(circle at 31% 22%,rgba(255,255,255,.07) 0 2px,transparent 3px),
+    linear-gradient(145deg,#17263a,#0a111c 70%,#0a1019)!important
+}
+.rune-back:before{
+  border-color:rgba(215,170,82,.13)!important
+}
+.rune-back:after{
+  color:#c99c4f!important;font-size:57px!important;
+  text-shadow:0 0 12px rgba(203,156,68,.24)!important
+}
+.rune-front:before{
+  border-color:rgba(232,193,117,.28)!important
+}
+.rune-glyph{
+  color:#e9bd67!important;font-size:88px!important;
+  text-shadow:
+    0 1px 0 #5d3d14,
+    0 0 11px rgba(230,183,91,.32),
+    0 0 26px rgba(104,144,226,.12)!important
+}
+.rune-nameplate{
+  left:10px!important;right:10px!important;bottom:10px!important;
+  border-top:1px solid rgba(221,174,85,.40)!important;
+  background:linear-gradient(180deg,rgba(6,10,17,.24),rgba(3,6,11,.92))!important
+}
+.rune-name{font-size:10.5px!important;letter-spacing:.14em!important;color:#efd094!important}
+.rune-meaning{font-size:5.8px!important;letter-spacing:.16em!important;color:#798395!important}
+.position{
+  font-size:12px!important;font-weight:400!important;letter-spacing:.03em!important;color:#e0bf7d!important
+}
+.position-sub{
+  font-size:7.5px!important;letter-spacing:.10em!important;color:#747f92!important
+}
+
+/* editorial reading rail */
+.reading .pad{min-height:690px}
+.reading .tabs{
+  margin-top:16px!important;border:none!important;border-bottom:1px solid rgba(116,135,166,.20)!important;
+  border-radius:0!important;overflow:visible!important
+}
+.reading .tabs button{
+  position:relative;
+  min-height:38px!important;border:none!important;
+  background:transparent!important;color:#7f899b!important;
+  font-size:8.5px!important;letter-spacing:.10em!important;text-transform:uppercase!important
+}
+.reading .tabs button.active{
+  background:transparent!important;color:#e2c88e!important;box-shadow:none!important
+}
+.reading .tabs button.active:after{
+  content:"";position:absolute;left:22%;right:22%;bottom:-1px;height:1px;background:#dfb265
+}
+.status{
+  margin-top:14px!important;
+  border:none!important;border-radius:0!important;
+  border-left:1px solid rgba(110,141,196,.34)!important;
+  background:transparent!important;
+  padding:8px 0 8px 11px!important;
+  color:#788396!important;font-size:8px!important
+}
+.summary,.explanation{
+  border:none!important;border-radius:0!important;
+  border-top:1px solid rgba(220,177,91,.14)!important;
+  border-bottom:1px solid rgba(220,177,91,.10)!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding:14px 0!important
+}
+.summary{font-size:10.5px!important;line-height:1.7!important;color:#c5c1c5!important}
+.reading-entry{
+  position:relative!important;padding:16px 0!important;
+  border-top:1px solid rgba(255,255,255,.045)!important
+}
+.entry-head{gap:12px!important}
+.mini-stone{
+  width:44px!important;height:56px!important;
+  border:none!important;
+  box-shadow:inset 0 0 0 1px rgba(221,174,85,.42),inset 0 0 14px rgba(0,0,0,.35)!important;
+  background:linear-gradient(145deg,#253850,#101927)!important
+}
+.entry-title h4{
+  font-size:13.5px!important;font-weight:500!important;color:#e6cb91!important
+}
+.entry-title small{font-size:7.5px!important;letter-spacing:.08em!important}
+.entry-text{
+  margin-top:9px!important;
+  font-size:10px!important;line-height:1.72!important;color:#bbb9c0!important
+}
+.rule-box{
+  margin-top:9px!important;padding:8px 10px!important;
+  border-left:1px solid rgba(138,107,192,.52)!important;
+  background:rgba(126,96,181,.035)!important;
+  color:#898294!important;font-size:7.8px!important
+}
+.explanation h3{
+  font-size:14px!important;font-weight:400!important;letter-spacing:.03em!important;color:#ddc18a!important
+}
+
+/* library behaves like a premium specimen index */
+.library-grid{grid-template-columns:repeat(3,1fr)!important;gap:8px!important}
+.library-rune{
+  min-height:124px!important;padding:12px 8px!important;
+  border:1px solid rgba(92,110,139,.22)!important;
+  border-radius:12px!important;
+  background:rgba(8,14,24,.48)!important;
+  box-shadow:none!important
+}
+.library-rune:hover{
+  transform:translateY(-2px)!important;
+  border-color:rgba(213,171,91,.38)!important;
+  background:rgba(11,18,29,.68)!important
+}
+.library-rune .glyph{font-size:38px!important;color:#dfb666!important}
+.library-rune strong{font-size:9.5px!important;font-weight:600!important;letter-spacing:.06em!important}
+.library-rune small{font-size:6.6px!important;color:#737d8f!important}
+
+/* responsive */
+@media(max-width:1500px){
+  .layout{grid-template-columns:330px minmax(620px,1fr) 390px!important;gap:16px!important}
+}
+@media(max-width:1180px){
+  .layout{grid-template-columns:320px 1fr!important}
+  .reading{grid-column:1/-1!important;position:relative!important;top:auto!important}
+  .controls{position:sticky!important}
+}
+@media(max-width:760px){
+  .app{padding:0 12px 18px!important}
+  .topbar{margin:0 -12px!important;padding:12px 16px!important}
+  .layout{grid-template-columns:1fr!important}
+  .controls,.reading{position:relative!important;top:auto!important}
+  .cast-table{min-height:780px!important}
+  .cast-area{padding-top:285px!important}
+}
+
 </style>
 </head>
 <body>
@@ -617,14 +1079,14 @@ textarea:focus,input:focus,select:focus{
     <nav class="nav">
       <a href="../arcanum-tarot/standalone.html">Tarot</a>
       <a class="active" href="./standalone.html">Runes</a>
-      <a href="#" data-nav="library">Rune Library</a>
-      <a href="#" data-nav="history">Journal</a>
+      <a href="#" data-nav="library">Codex</a>
+      <a href="#" data-nav="history">Casting Journal</a>
     </nav>
     <div class="mode-note">Rule-based interpretation · fresh random casting · optional seeded replay</div>
   </header>
 
   <main class="layout">
-    <aside class="panel controls">
+    <aside class="controls">
       <div class="pad">
         <h2>Create Your Casting</h2>
         <p class="lead">Choose a spread, focus your question, then cast the runes within the sanctuary circle.</p>
@@ -660,14 +1122,15 @@ textarea:focus,input:focus,select:focus{
       </div>
     </aside>
 
-    <section class="panel cast-table" id="castTable">
-      <div class="hero"><div class="hero-kicker">The Arcanum Archive presents</div><h1>RUNE CASTING</h1><p>Symbols · cycles · choices · reflection</p></div>
+    <section class="cast-table" id="castTable">
+      <div class="hero"><div class="hero-kicker">The Arcanum Archive presents</div><h1>RUNE CASTING</h1><p>Symbols · cycles · choices · reflection</p><div class="hero-luxury-meta"><span>Elder Futhark</span><span>24 Runes</span><span>Rule-Based</span></div></div>
+      <div class="altar-orbit"></div>
       <div class="rune-circle"></div>
       <div id="castArea" class="cast-area"></div>
       <div class="cast-help">Click any rune stone to reveal or conceal it.</div>
     </section>
 
-    <aside class="panel reading">
+    <aside class="reading">
       <div class="pad">
         <h2>Your Rune Reading</h2>
         <div class="tabs">
