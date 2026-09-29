@@ -2428,6 +2428,7 @@ window.ARCANUM_TAROT = (() => {
       const nav=e.target.closest("[data-nav]");
       if(nav){
         qa(".topnav button").forEach(x=>x.classList.toggle("active",x===nav));
+        if(nav.dataset.nav==="runes"){window.location.href="../arcanum-runes/standalone.html";return;}
         if(nav.dataset.nav==="library"){q("#libraryOverlay").classList.add("open");return;}
         if(nav.dataset.nav==="journal"){
           q(".history")?.scrollIntoView({behavior:"smooth",block:"center"});return;
