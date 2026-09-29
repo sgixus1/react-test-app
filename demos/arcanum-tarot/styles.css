@@ -1,0 +1,158 @@
+:root{
+  --bg:#07070c;--panel:#111019;--panel2:#16131e;--line:#352c3d;
+  --gold:#d6ad63;--gold2:#8b6733;--ink:#f3ead7;--muted:#9b939f;
+  --violet:#7b5fc6;--green:#86c5a3;--danger:#d88989
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{
+  margin:0;color:var(--ink);font-family:Georgia,"Times New Roman",serif;
+  background:
+    radial-gradient(circle at 50% -15%,#2c1937 0,#0b0910 40%,#050509 82%);
+}
+button,input,select,textarea{font:inherit}
+.app-shell{max-width:1500px;margin:auto;padding:14px}
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  position:sticky;top:8px;z-index:30;padding:14px 18px;border-radius:16px;
+  border:1px solid var(--line);background:#0a0910ea;backdrop-filter:blur(14px);
+  box-shadow:0 14px 50px #0007
+}
+.brand{color:var(--gold);font-weight:700;letter-spacing:.18em}
+.subtitle,.top-note{font:11px/1.3 system-ui;color:#948c98}
+.subtitle{margin-top:4px;letter-spacing:.08em}
+.badge{
+  padding:6px 9px;border:1px solid #584629;border-radius:999px;
+  color:#d7c39d;font:11px system-ui;white-space:nowrap
+}
+.badge.pass{border-color:#376049;color:#9ed4b6}
+.badge.fail{border-color:#6a3737;color:#e4a5a5}
+.layout{
+  display:grid;grid-template-columns:300px minmax(0,1fr) 390px;
+  gap:14px;margin-top:14px
+}
+.panel{
+  border:1px solid var(--line);border-radius:17px;overflow:hidden;
+  background:linear-gradient(180deg,#111019ef,#0b0a11ef);
+  box-shadow:0 20px 70px #0008
+}
+.pad{padding:16px}
+h2,h3{margin:0 0 10px;color:#e4c98e;letter-spacing:.04em}
+h3{font-size:15px}
+.controls label{
+  display:block;margin:12px 0 5px;color:#a79eaa;font:12px system-ui
+}
+.controls select,.controls input,.controls textarea{
+  width:100%;padding:10px;border-radius:9px;border:1px solid #3d3247;
+  background:#08080d;color:#eee5d4;outline:none
+}
+.controls textarea{min-height:80px;resize:vertical}
+.controls select:focus,.controls input:focus,.controls textarea:focus{border-color:#8265a6}
+.button{
+  width:100%;padding:12px 14px;margin-top:11px;border-radius:10px;
+  cursor:pointer;text-transform:uppercase;letter-spacing:.07em
+}
+.button.primary{
+  border:1px solid #8a6832;color:#f2dda9;
+  background:linear-gradient(#3a2c1a,#20170e)
+}
+.button.secondary{
+  border:1px solid #4b3d60;color:#d8caf0;background:#181321
+}
+.button:hover{filter:brightness(1.12)}
+.note{font:11px/1.5 system-ui;color:#8d8791}
+.history{margin-top:16px;padding-top:13px;border-top:1px solid #2b2532}
+.history button{
+  display:block;width:100%;padding:6px 0;border:0;background:transparent;
+  color:#aaa1b0;text-align:left;cursor:pointer;font:11px/1.35 system-ui
+}
+.history button:hover{color:#d7c9df}
+.tarot-table{
+  min-height:720px;padding:18px;position:relative;
+  background:
+    radial-gradient(circle at center,#321d3b50,transparent 36%),
+    repeating-radial-gradient(circle at center,transparent 0 88px,#a7793317 89px 90px,transparent 91px 119px),
+    linear-gradient(145deg,#17101f,#09090f 72%)
+}
+.tarot-table:before{
+  content:"";position:absolute;inset:23px;border:1px solid #77592b5c;
+  border-radius:50%;pointer-events:none
+}
+.spread-area{
+  position:relative;z-index:2;display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(138px,1fr));
+  gap:18px;align-items:start;padding:30px 5px
+}
+.slot{text-align:center}
+.card{
+  width:min(100%,170px);aspect-ratio:2/3;margin:auto;
+  perspective:900px;cursor:pointer;user-select:none
+}
+.card-inner{
+  width:100%;height:100%;position:relative;transform-style:preserve-3d;
+  transition:transform .72s cubic-bezier(.2,.8,.2,1)
+}
+.card.revealed .card-inner{transform:rotateY(180deg)}
+.face{
+  position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;
+  border:1px solid #b48b4d;overflow:hidden;box-shadow:0 12px 35px #000b
+}
+.card-back{
+  display:grid;place-items:center;
+  background:
+    radial-gradient(circle,#d0ab6033 0 2px,transparent 3px),
+    conic-gradient(from 45deg,#261735,#0b1019,#33203c,#0b1019,#261735);
+  background-size:18px 18px
+}
+.card-back:after{
+  content:"✦";display:grid;place-items:center;width:78px;height:78px;
+  border:1px solid #b78d4d;border-radius:50%;font-size:48px;color:#d4ad65;
+  box-shadow:0 0 24px #a67bd64c
+}
+.card-front{transform:rotateY(180deg);background:#0e0d13}
+.card-front.reversed{transform:rotateY(180deg) rotateZ(180deg)}
+.card-front svg{display:block;width:100%;height:100%}
+.position{
+  margin-top:8px;color:#d9bd84;font-size:12px;letter-spacing:.12em
+}
+.focus{min-height:30px;color:#807985;font:10px/1.35 system-ui}
+.table-help{position:relative;z-index:2;color:#8a838e;font:11px system-ui}
+.reading-panel{max-height:calc(100vh - 80px);overflow:auto}
+.status{color:#928a96;font:11px system-ui}
+.summary{
+  margin:11px 0 14px;padding:11px;border-radius:10px;
+  border:1px solid #40354d;background:#17131e;color:#ddd3dd;
+  font:13px/1.55 system-ui
+}
+.entry{padding:13px 0;border-top:1px solid #2a2430}
+.entry:first-child{border-top:0}
+.entry h4{margin:0 0 5px;color:#e5c68a}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin:5px 0 8px}
+.chip{
+  padding:3px 6px;border:1px solid #4c4058;border-radius:999px;
+  color:#bdb1c7;font:10px system-ui
+}
+.meaning{color:#d2cad3;font:13px/1.55 system-ui}
+.why{
+  margin-top:8px;padding-left:8px;border-left:2px solid #6c5588;
+  color:#8e8692;font:10.5px/1.5 system-ui
+}
+.debug-panel{margin-top:12px}
+.debug-panel summary{cursor:pointer;color:#af96cf;font:12px system-ui}
+.debug-panel pre{
+  white-space:pre-wrap;padding:10px;border-radius:8px;border:1px solid #28222d;
+  background:#08080d;color:#9b94a0;font:10px/1.45 ui-monospace,Consolas,monospace
+}
+footer{
+  padding:20px;text-align:center;color:#756f79;font:11px system-ui
+}
+@media(max-width:1120px){
+  .layout{grid-template-columns:280px 1fr}
+  .right-panel{grid-column:1/-1}
+  .reading-panel{max-height:none}
+}
+@media(max-width:760px){
+  .app-shell{padding:8px}.topbar{position:static;align-items:flex-start;flex-direction:column}
+  .layout{grid-template-columns:1fr}.spread-area{grid-template-columns:repeat(2,1fr)}
+  .tarot-table{min-height:560px}.top-note{display:none}
+}
