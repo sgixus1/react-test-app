@@ -37,5 +37,8 @@ jobs:
           test -f public/arcanum/extracted-test/assets/fixture-image-01.svg
           test -f public/arcanum/extraction-report.json
 
+      - name: Verify OCR CLI syntax
+        run: node --check tools/ocr-arcanum-scans.mjs
+
       - name: Build Arcanum Archive
         run: npm run build
