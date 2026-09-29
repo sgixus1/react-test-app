@@ -31,6 +31,8 @@ const force = process.argv.includes("--force");
 const processAll = process.argv.includes("--all");
 const docLimit = Number(argValue("--limit-docs", processAll ? "0" : "1") || 0);
 const pageLimit = Number(argValue("--max-pages", processAll ? "0" : "5") || 0);
+const startDoc = Math.max(0, Number(argValue("--start-doc", "0") || 0));
+const maxTotalPages = Math.max(0, Number(argValue("--max-total-pages", processAll ? "0" : "0") || 0));
 
 if (!rootArg) {
   console.error('Usage: node tools/ocr-arcanum-scans.mjs --root "<library-root>" [--all] [--limit-docs N] [--max-pages N]');
@@ -43,13 +45,14 @@ if (!fs.existsSync(extractionReportPath)) throw new Error(`Extraction report not
 
 const report = JSON.parse(fs.readFileSync(extractionReportPath, "utf8").replace(/^\uFEFF/, ""));
 const queued = (report.records || []).filter((record) => record.status === "needs-vision");
-const docs = docLimit > 0 ? queued.slice(0, docLimit) : queued;
+const sliced = queued.slice(startDoc);
+const docs = docLimit > 0 ? sliced.slice(0, docLimit) : sliced;
 
 fs.mkdirSync(outputRoot, { recursive: true });
 fs.mkdirSync(path.join(outputRoot, "pages"), { recursive: true });
 fs.mkdirSync(path.join(outputRoot, "text"), { recursive: true });
 
-console.log(`OCR queue: ${queued.length} scanned PDFs; processing ${docs.length}.`);
+console.log(`OCR queue: ${queued.length} scanned PDFs; processing ${docs.length} starting at index ${startDoc}.`);
 console.log(`Languages: ${languages.join(", ")}`);
 console.log(processAll ? "Mode: ALL pages" : `Safe mode: up to ${pageLimit} pages per document`);
 
@@ -62,6 +65,9 @@ const worker = await createWorker(languages, 1, {
 });
 
 const records = [];
+let newlyProcessedPages = 0;
+let cachedPages = 0;
+let totalPageBudgetUsed = 0;
 
 try {
   for (let docIndex = 0; docIndex < docs.length; docIndex += 1) {
@@ -78,7 +84,16 @@ try {
     try {
       const info = await parser.getInfo({ parsePageInfo: false });
       const totalPages = Number(info?.total || source.pageCount || 0);
-      const pagesToProcess = pageLimit > 0 ? Math.min(totalPages, pageLimit) : totalPages;
+      let pagesToProcess = pageLimit > 0 ? Math.min(totalPages, pageLimit) : totalPages;
+      if (maxTotalPages > 0) {
+        const remainingBudget = Math.max(0, maxTotalPages - totalPageBudgetUsed);
+        pagesToProcess = Math.min(pagesToProcess, remainingBudget);
+      }
+
+      if (pagesToProcess <= 0) {
+        console.log("\nPage budget reached; stopping OCR batch.");
+        break;
+      }
       const pageRecords = [];
 
       console.log(`\n[${docIndex + 1}/${docs.length}] ${source.filename} — ${totalPages} pages, OCR ${pagesToProcess}`);
@@ -91,6 +106,8 @@ try {
         if (!force && fs.existsSync(textPath)) {
           const text = fs.readFileSync(textPath, "utf8");
           pageRecords.push({ page: pageNumber, status: "cached", imagePath, textPath, textChars: text.length });
+          cachedPages += 1;
+          totalPageBudgetUsed += 1;
           continue;
         }
 
@@ -124,6 +141,8 @@ try {
           confidence: Number(result?.data?.confidence || 0),
         });
 
+        newlyProcessedPages += 1;
+        totalPageBudgetUsed += 1;
         console.log(`  page ${pageNumber}/${pagesToProcess}: ${text.length} chars · confidence ${Number(result?.data?.confidence || 0).toFixed(1)}`);
       }
 
@@ -171,10 +190,15 @@ const output = {
   queuedDocuments: queued.length,
   processedDocuments: records.length,
   fullRun: processAll,
-  summary: records.reduce((acc, record) => {
-    acc[record.status] = (acc[record.status] || 0) + 1;
-    return acc;
-  }, {}),
+  summary: {
+    ...records.reduce((acc, record) => {
+      acc[record.status] = (acc[record.status] || 0) + 1;
+      return acc;
+    }, {}),
+    newlyProcessedPages,
+    cachedPages,
+    totalPageBudgetUsed,
+  },
   records,
 };
 
