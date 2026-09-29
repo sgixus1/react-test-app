@@ -1,0 +1,26 @@
+name: Arcanum Build Check
+
+on:
+  push:
+    branches:
+      - feature/arcanum-archive-v0.1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Arcanum Archive
+        run: npm run build
