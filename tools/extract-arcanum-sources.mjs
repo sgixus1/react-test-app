@@ -96,6 +96,7 @@ const office = firstAvailable([
 let pdfjs = null;
 let pdfParse = null;
 let mammoth = null;
+let WordExtractor = null;
 let nativePdfError = null;
 let alternatePdfError = null;
 let nativeDocxError = null;
@@ -120,10 +121,16 @@ try {
   nativeDocxError = error?.message || String(error);
 }
 
+try {
+  const module = await import("word-extractor");
+  WordExtractor = module.default ?? module;
+} catch {}
+
 const capabilities = {
   nativePdf: Boolean(pdfjs?.getDocument),
   alternatePdf: Boolean(pdfParse),
   nativeDocx: Boolean(mammoth?.extractRawText),
+  nativeDoc: Boolean(WordExtractor),
   sevenZip: Boolean(sevenZip),
   pdfToText: Boolean(pdfToText),
   office: Boolean(office),
@@ -409,6 +416,29 @@ async function extractDocx(filePath, file) {
   }
 }
 
+async function extractLegacyDocNative(filePath, file) {
+  if (!WordExtractor) return { status: "blocked", reason: "word-extractor unavailable" };
+
+  try {
+    const extractor = new WordExtractor();
+    const doc = await extractor.extract(filePath);
+    const sections = [
+      doc.getBody?.() || "",
+      doc.getFootnotes?.() || "",
+      doc.getEndnotes?.() || "",
+      doc.getTextboxes?.({ includeHeadersAndFooters: false }) || "",
+    ].filter(Boolean);
+
+    const record = writeTextRecord(file, sections.join("\n\n"), "word-extractor");
+    return {
+      status: record.textChars ? "extracted" : "needs-review",
+      ...record,
+    };
+  } catch (error) {
+    return { status: "error", reason: `word-extractor failed: ${error?.message || String(error)}`, engine: "word-extractor" };
+  }
+}
+
 function extractLegacyOffice(filePath, file) {
   if (!office) return { status: "blocked", reason: "Legacy DOC/RTF requires LibreOffice/soffice" };
 
@@ -542,7 +572,10 @@ async function extractOne(file) {
       extracted = await extractPdf(filePath, file);
     } else if (ext === ".docx") {
       extracted = await extractDocx(filePath, file);
-    } else if ([".doc", ".rtf"].includes(ext)) {
+    } else if (ext === ".doc") {
+      extracted = await extractLegacyDocNative(filePath, file);
+      if (extracted.status === "error" && office) extracted = extractLegacyOffice(filePath, file);
+    } else if (ext === ".rtf") {
       extracted = extractLegacyOffice(filePath, file);
     } else if ([".png", ".jpg", ".jpeg", ".webp", ".gif", ".tif", ".tiff", ".bmp", ".svg"].includes(ext)) {
       extracted = indexImage(filePath, file);
