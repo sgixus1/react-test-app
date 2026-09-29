@@ -32,7 +32,8 @@ if (!inputPath) {
   process.exit(1);
 }
 
-const raw = JSON.parse(fs.readFileSync(inputPath, "utf8"));
+const inputText = fs.readFileSync(inputPath, "utf8").replace(/^\uFEFF/, "");
+const raw = JSON.parse(inputText);
 if (!Array.isArray(raw)) {
   throw new Error("Input manifest must be a JSON array.");
 }
