@@ -83,6 +83,24 @@ function shouldAccept(candidate, oldText, newText, newConfidence) {
 try {
   for (const { doc, page } of candidates) {
     if (processed >= maxPages) break;
+
+    const pageBase = page.pageBase || `${doc.id}-p${String(page.page).padStart(5, "0")}`;
+    const currentTextPath = path.join(textRoot, `${pageBase}.txt`);
+    if ((page.reasons || []).includes("missing") && fs.existsSync(currentTextPath)) {
+      const currentText = fs.readFileSync(currentTextPath, "utf8").trim();
+      if (currentText.length > 0) {
+        results.push({
+          id: doc.id,
+          filename: doc.filename,
+          page: page.page,
+          pageBase,
+          status: "resolved-before-repair",
+          textChars: currentText.length,
+        });
+        continue;
+      }
+    }
+
     const sourcePath = path.join(libraryRoot, ...String(doc.sourcePath || "").split("/"));
     if (!fs.existsSync(sourcePath)) {
       results.push({ id: doc.id, filename: doc.filename, page: page.page, status: "missing-source" });
@@ -104,7 +122,6 @@ try {
       }
 
       const imageBuffer = Buffer.from(image);
-      const pageBase = page.pageBase || `${doc.id}-p${String(page.page).padStart(5, "0")}`;
       const imagePath = path.join(pageRoot, `${pageBase}.png`);
       const textPath = path.join(textRoot, `${pageBase}.txt`);
       const oldText = fs.existsSync(textPath) ? fs.readFileSync(textPath, "utf8") : "";
