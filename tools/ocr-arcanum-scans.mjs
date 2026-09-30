@@ -53,6 +53,23 @@ fs.mkdirSync(path.join(outputRoot, "pages"), { recursive: true });
 fs.mkdirSync(path.join(outputRoot, "text"), { recursive: true });
 fs.mkdirSync(path.join(outputRoot, "quality"), { recursive: true });
 
+const previousReportConfidence = new Map();
+const previousOcrReportPath = path.join(outputRoot, "ocr-report.json");
+if (fs.existsSync(previousOcrReportPath)) {
+  try {
+    const previousOcrReport = JSON.parse(fs.readFileSync(previousOcrReportPath, "utf8").replace(/^\uFEFF/, ""));
+    for (const record of previousOcrReport.records || []) {
+      for (const page of record.pages || []) {
+        if (page.confidence !== null && page.confidence !== undefined && Number.isFinite(Number(page.confidence))) {
+          previousReportConfidence.set(`${record.id}:${page.page}`, Number(page.confidence));
+        }
+      }
+    }
+  } catch {
+    // Previous OCR report is optional; continue without inherited confidence.
+  }
+}
+
 console.log(`OCR queue: ${queued.length} scanned PDFs; processing ${docs.length} starting at index ${startDoc}.`);
 console.log(`Languages: ${languages.join(", ")}`);
 console.log(processAll ? "Mode: ALL pages" : `Safe mode: up to ${pageLimit} pages per document`);
@@ -117,13 +134,20 @@ try {
               quality = null;
             }
           }
+          const qualityConfidence =
+            quality?.confidence !== null &&
+            quality?.confidence !== undefined &&
+            Number.isFinite(Number(quality.confidence))
+              ? Number(quality.confidence)
+              : undefined;
+          const inheritedConfidence = previousReportConfidence.get(`${source.id}:${pageNumber}`);
           pageRecords.push({
             page: pageNumber,
             status: "cached",
             imagePath,
             textPath,
             textChars: text.length,
-            confidence: Number.isFinite(Number(quality?.confidence)) ? Number(quality.confidence) : undefined,
+            confidence: qualityConfidence ?? (Number.isFinite(inheritedConfidence) ? inheritedConfidence : undefined),
           });
           cachedPages += 1;
           continue;
