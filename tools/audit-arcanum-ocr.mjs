@@ -34,7 +34,7 @@ if (fs.existsSync(outPath)) {
     const previousAudit = JSON.parse(fs.readFileSync(outPath, "utf8").replace(/^\uFEFF/, ""));
     for (const doc of previousAudit.documents || []) {
       for (const page of doc.flaggedPages || []) {
-        if (Number.isFinite(Number(page.confidence))) {
+        if (page.confidence !== null && page.confidence !== undefined && Number.isFinite(Number(page.confidence))) {
           previousAuditConfidence.set(`${doc.id}:${page.page}`, Number(page.confidence));
         }
       }
@@ -99,7 +99,7 @@ for (const source of sources) {
     const text = exists ? fs.readFileSync(textPath, "utf8").trim() : "";
     const chars = text.length;
     const meta = qualityMeta(source.id, page, pageBase);
-    const confidence = Number.isFinite(Number(meta?.confidence)) ? Number(meta.confidence) : null;
+    const confidence = meta?.confidence !== null && meta?.confidence !== undefined && Number.isFinite(Number(meta.confidence)) ? Number(meta.confidence) : null;
 
     if (exists) totals.cachedPages += 1;
     if (!exists) totals.missingPages += 1;
