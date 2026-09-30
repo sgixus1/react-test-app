@@ -50,7 +50,7 @@ const docs = docLimit > 0 ? sliced.slice(0, docLimit) : sliced;
 
 fs.mkdirSync(outputRoot, { recursive: true });
 fs.mkdirSync(path.join(outputRoot, "pages"), { recursive: true });
-fs.mkdirSync(path.join(outputRoot, "text"), { recursive: true });
+fs.mkdirSync(path.join(outputRoot, "text"), { recursive: true });\nfs.mkdirSync(path.join(outputRoot, "quality"), { recursive: true });
 
 console.log(`OCR queue: ${queued.length} scanned PDFs; processing ${docs.length} starting at index ${startDoc}.`);
 console.log(`Languages: ${languages.join(", ")}`);
@@ -107,7 +107,23 @@ try {
 
         if (!force && fs.existsSync(textPath)) {
           const text = fs.readFileSync(textPath, "utf8");
-          pageRecords.push({ page: pageNumber, status: "cached", imagePath, textPath, textChars: text.length });
+          const qualityPath = path.join(outputRoot, "quality", `${pageBase}.json`);
+          let quality = null;
+          if (fs.existsSync(qualityPath)) {
+            try {
+              quality = JSON.parse(fs.readFileSync(qualityPath, "utf8").replace(/^\\uFEFF/, ""));
+            } catch {
+              quality = null;
+            }
+          }
+          pageRecords.push({
+            page: pageNumber,
+            status: "cached",
+            imagePath,
+            textPath,
+            textChars: text.length,
+            confidence: Number.isFinite(Number(quality?.confidence)) ? Number(quality.confidence) : undefined,
+          });
           cachedPages += 1;
           continue;
         }
@@ -134,7 +150,25 @@ try {
         const result = await worker.recognize(imageBuffer);
         process.stdout.write("\r                    \r");
         const text = String(result?.data?.text || "").trim();
+        const confidence = Number(result?.data?.confidence || 0);
         fs.writeFileSync(textPath, text, "utf8");
+        fs.writeFileSync(
+          path.join(outputRoot, "quality", `${pageBase}.json`),
+          JSON.stringify({
+            id: source.id,
+            filename: source.filename,
+            sourcePath: source.sourcePath,
+            page: pageNumber,
+            pageBase,
+            measuredAt: new Date().toISOString(),
+            renderWidth: 1800,
+            languages,
+            textChars: text.length,
+            confidence,
+            status: text ? "ocr-extracted" : "ocr-empty",
+          }, null, 2),
+          "utf8",
+        );
 
         pageRecords.push({
           page: pageNumber,
@@ -142,13 +176,13 @@ try {
           imagePath: imagePath.replaceAll("\\", "/"),
           textPath: textPath.replaceAll("\\", "/"),
           textChars: text.length,
-          confidence: Number(result?.data?.confidence || 0),
+          confidence,
         });
 
         newlyProcessedPages += 1;
         newPagesForDocument += 1;
         totalPageBudgetUsed = newlyProcessedPages + cachedPages;
-        console.log(`  page ${pageNumber}/${totalPages}: ${text.length} chars · confidence ${Number(result?.data?.confidence || 0).toFixed(1)}`);
+        console.log(`  page ${pageNumber}/${totalPages}: ${text.length} chars · confidence ${confidence.toFixed(1)}`);
       }
 
       const combined = pageRecords
