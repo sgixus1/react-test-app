@@ -178,6 +178,34 @@ function ArcaneSeal({ compact = false }) {
 }
 
 
+function CelestialScene({ variant = "archive", compact = false }) {
+  return (
+    <div className={`celestial-scene ${variant}${compact ? " compact" : ""}`} aria-hidden="true">
+      <svg viewBox="0 0 720 720" role="presentation">
+        <circle className="scene-halo" cx="360" cy="360" r="286" />
+        <circle className="scene-orbit orbit-one" cx="360" cy="360" r="224" />
+        <circle className="scene-orbit orbit-two" cx="360" cy="360" r="162" />
+        <ellipse className="scene-orbit orbit-three" cx="360" cy="360" rx="284" ry="108" />
+        <ellipse className="scene-orbit orbit-four" cx="360" cy="360" rx="108" ry="284" />
+        <path className="scene-diamond" d="M360 108 612 360 360 612 108 360Z" />
+        <path className="scene-cross" d="M360 82V638M82 360H638" />
+        <path className="scene-constellation" d="M152 228 226 164 304 218 386 138 472 208 558 172M156 494 236 534 324 474 408 552 506 486 574 532" />
+        <circle className="scene-star star-a" cx="226" cy="164" r="7" />
+        <circle className="scene-star star-b" cx="472" cy="208" r="5" />
+        <circle className="scene-star star-c" cx="236" cy="534" r="6" />
+        <circle className="scene-star star-d" cx="506" cy="486" r="5" />
+        <circle className="scene-moon" cx="360" cy="360" r="74" />
+        <path className="scene-crescent" d="M389 292c-54 17-83 76-64 128 11 30 34 52 63 64-58 8-116-27-137-84-26-72 12-151 84-177 17-6 36-9 54-7Z" />
+      </svg>
+      <span className="scene-sigil sigil-n">✦</span>
+      <span className="scene-sigil sigil-e">☾</span>
+      <span className="scene-sigil sigil-s">ᛟ</span>
+      <span className="scene-sigil sigil-w">△</span>
+      <i className="scene-glow" />
+    </div>
+  );
+}
+
 function CommandPalette({ open, onClose, onOpenEntry, onSearch }) {
   const [query, setQuery] = useState("");
 
@@ -349,6 +377,7 @@ function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
       <section className="home-hero">
         <div className="hero-library-art" style={{ backgroundImage: `url(${assetUrl("arcanum/hero-library.svg")})` }} aria-hidden="true" />
         <div className="hero-blackout" aria-hidden="true" />
+        <div className="hero-celestial-scene"><CelestialScene variant="archive" /></div>
         <div className="hero-copy">
           <p className="kicker">A LIVING ENCYCLOPEDIA OF MAGIC</p>
           <h1>
@@ -393,6 +422,23 @@ function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
           <SubjectGate eyebrow="DIVINATION" title="Oracles" visual="divination" copy="Tarot, runes, symbolic systems, and interactive reflective readings." onClick={() => goTo("divination")} />
           <SubjectGate eyebrow="TRANSFORMATION" title="Alchemy" visual="alchemy" copy="Historical, spiritual, and Western alchemical source material." onClick={() => onSearch("alchemy")} />
         </div>
+        <div className="visual-atlas" aria-label="Illustrated archive pathways">
+          <article className="atlas-panel atlas-wide">
+            <img src={visualMap.artifacts} alt="" />
+            <span className="atlas-shade" />
+            <div><small>ILLUSTRATED DOSSIER</small><strong>Ritual Architecture</strong><p>Circles, talismans, tools, diagrams, and ceremonial spaces become visual entry points into connected records.</p></div>
+          </article>
+          <article className="atlas-panel">
+            <img src={visualMap.divination} alt="" />
+            <span className="atlas-shade" />
+            <div><small>ORACLE SYSTEMS</small><strong>Symbolic Engines</strong><p>Tarot, runes, and future divination systems are presented as distinct visual languages.</p></div>
+          </article>
+          <article className="atlas-panel">
+            <img src={visualMap.traditions} alt="" />
+            <span className="atlas-shade" />
+            <div><small>HISTORICAL THREADS</small><strong>Traditions in Context</strong><p>Use imagery to orient the reader without flattening different systems into one aesthetic.</p></div>
+          </article>
+        </div>
       </section>
 
       <section className="content-section featured-section">
@@ -412,12 +458,7 @@ function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
           <button className="button gold" type="button" onClick={() => goTo("divination")}>Enter Divination</button>
         </div>
         <div className="oracle-feature-visual" aria-hidden="true">
-          <span className="oracle-moon">☾</span>
-          <span className="oracle-ring ring-one" />
-          <span className="oracle-ring ring-two" />
-          <span className="oracle-rune rune-a">ᛟ</span>
-          <span className="oracle-rune rune-b">ᛉ</span>
-          <span className="oracle-star">✦</span>
+          <CelestialScene variant="oracle" compact />
         </div>
       </section>
 
@@ -494,16 +535,16 @@ function HomeView({ onSearch, onOpen, bookmarks, recent, onToggleBookmark }) {
         <div className="teaser-copy">
           <p className="kicker">DIGITAL GRIMOIRE LIBRARY</p>
           <h2>See the original.<br />Read the translation.</h2>
-          <p>Original scans and Chinese text will sit beside the English layer, with zoomable diagrams, source metadata, annotations, and links back into the encyclopedia.</p>
+          <p>Curated archive editions sit beside the English research layer, with zoomable diagrams, annotations, visual context, and links back into the encyclopedia.</p>
           <button className="button gold" type="button" onClick={() => goTo("library")}>Open the Digital Library</button>
         </div>
         <div className="book-object" aria-label="Stylized manuscript preview">
           <div className="book-glow" />
           <div className="book-page left-page">
-            <small>ORIGINAL SOURCE</small>
+            <small>ARCHIVE FACSIMILE</small>
             <div className="manuscript-glyph">✦</div>
-            <h3>魔法阵</h3>
-            <p>Original source imagery will be attached here after extraction.</p>
+            <h3>Ritual Diagram</h3>
+            <p>Reviewed diagrams and archival imagery are presented here as visual research material.</p>
           </div>
           <div className="book-spine" />
           <div className="book-page right-page">
@@ -523,7 +564,7 @@ function SearchPanel({ search, setSearch, category, setCategory, count, savedOnl
     <div className="archive-controls">
       <label className="archive-search">
         <span>⌕</span>
-        <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search titles, Chinese terms, traditions, source files…" />
+        <input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search titles, traditions, symbols, subjects, and record types…" />
         <small>{count} records</small>
       </label>
       <div className="category-row">
@@ -944,7 +985,7 @@ function LearnView({ completedStudy, onToggleStudyComplete }) {
           <h1>A guided path through the archive.</h1>
           <p>Not a random list of occult terms. The learning experience is structured around source literacy, historical context, symbolic systems, and relationships between traditions.</p>
         </div>
-        <div className="lesson-orbit"><ArcaneSeal /></div>
+        <div className="lesson-orbit"><CelestialScene variant="study" compact /></div>
       </section>
 
       <section className="content-section learning-workspace">
@@ -995,7 +1036,7 @@ function DivinationView() {
       title: "Tarot",
       symbol: "✦",
       copy: "Draw from a complete 78-card deck with multiple spreads, upright and optional reversed meanings, position-aware interpretation, and reading history.",
-      href: "/arcanum/divination/tarot.html",
+      href: assetUrl("arcanum/divination/tarot.html"),
       status: "Available now",
       meta: "One Card · Three Card · Love · Career · Decision · Celtic Cross",
     },
@@ -1005,7 +1046,7 @@ function DivinationView() {
       title: "Rune Casting",
       symbol: "ᛟ",
       copy: "Cast from all 24 Elder Futhark runes with One Rune, Three Norns, Five Rune Cross, and Nine Rune Cast layouts.",
-      href: "/arcanum/divination/runes.html",
+      href: assetUrl("arcanum/divination/runes.html"),
       status: "Available now",
       meta: "24 runes · seeded replay · optional reversals · Rune of the Day",
     },
@@ -1035,11 +1076,7 @@ function DivinationView() {
           </div>
         </div>
         <div className="divination-orbit" aria-hidden="true">
-          <span className="orbit-ring ring-a" />
-          <span className="orbit-ring ring-b" />
-          <span className="orbit-ring ring-c" />
-          <strong>☾</strong>
-          <i>✦</i>
+          <CelestialScene variant="divination" />
         </div>
       </section>
 
@@ -1128,7 +1165,7 @@ function LibraryView() {
           <h1>Enter the digital reading room.</h1>
           <p>Browse curated volumes, open connected encyclopedia records, and move between subjects without exposing the archive's internal filenames or ingestion metadata.</p>
         </div>
-        <div className="library-lantern"><span>✦</span></div>
+        <div className="library-lantern illustrated"><CelestialScene variant="library" compact /></div>
       </section>
 
       <section className="content-section library-workspace">
