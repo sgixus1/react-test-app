@@ -50,7 +50,8 @@ const docs = docLimit > 0 ? sliced.slice(0, docLimit) : sliced;
 
 fs.mkdirSync(outputRoot, { recursive: true });
 fs.mkdirSync(path.join(outputRoot, "pages"), { recursive: true });
-fs.mkdirSync(path.join(outputRoot, "text"), { recursive: true });\nfs.mkdirSync(path.join(outputRoot, "quality"), { recursive: true });
+fs.mkdirSync(path.join(outputRoot, "text"), { recursive: true });
+fs.mkdirSync(path.join(outputRoot, "quality"), { recursive: true });
 
 console.log(`OCR queue: ${queued.length} scanned PDFs; processing ${docs.length} starting at index ${startDoc}.`);
 console.log(`Languages: ${languages.join(", ")}`);
