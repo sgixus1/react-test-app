@@ -28,22 +28,6 @@ const textRoot = path.join(ocrRoot, "text");
 const qualityRoot = path.join(ocrRoot, "quality");
 const latestReportPath = path.join(ocrRoot, "ocr-report.json");
 
-const previousAuditConfidence = new Map();
-if (fs.existsSync(outPath)) {
-  try {
-    const previousAudit = JSON.parse(fs.readFileSync(outPath, "utf8").replace(/^\uFEFF/, ""));
-    for (const doc of previousAudit.documents || []) {
-      for (const page of doc.flaggedPages || []) {
-        if (page.confidence !== null && page.confidence !== undefined && Number.isFinite(Number(page.confidence))) {
-          previousAuditConfidence.set(`${doc.id}:${page.page}`, Number(page.confidence));
-        }
-      }
-    }
-  } catch {
-    // A prior audit is optional; ignore malformed legacy output.
-  }
-}
-
 const latestConfidence = new Map();
 if (fs.existsSync(latestReportPath)) {
   try {
@@ -68,9 +52,7 @@ function qualityMeta(id, page, pageBase) {
     }
   }
   const confidence = latestConfidence.get(`${id}:${page}`);
-  if (Number.isFinite(confidence)) return { confidence, source: "latest-report" };
-  const previousConfidence = previousAuditConfidence.get(`${id}:${page}`);
-  return Number.isFinite(previousConfidence) ? { confidence: previousConfidence, source: "previous-audit" } : null;
+  return Number.isFinite(confidence) ? { confidence, source: "latest-report" } : null;
 }
 
 const documents = [];
