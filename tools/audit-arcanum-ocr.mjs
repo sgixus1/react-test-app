@@ -34,7 +34,7 @@ if (fs.existsSync(latestReportPath)) {
     const latest = JSON.parse(fs.readFileSync(latestReportPath, "utf8").replace(/^\uFEFF/, ""));
     for (const record of latest.records || []) {
       for (const page of record.pages || []) {
-        if (Number.isFinite(Number(page.confidence))) latestConfidence.set(`${record.id}:${page.page}`, Number(page.confidence));
+        if (page.confidence !== null && page.confidence !== undefined && Number.isFinite(Number(page.confidence))) latestConfidence.set(`${record.id}:${page.page}`, Number(page.confidence));
       }
     }
   } catch {
