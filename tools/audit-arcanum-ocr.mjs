@@ -66,6 +66,7 @@ const totals = {
   lowConfidencePages: 0,
   reviewConfidencePages: 0,
   repairCandidates: 0,
+  exhaustedPages: 0,
   confidenceKnownPages: 0,
 };
 
@@ -82,11 +83,13 @@ for (const source of sources) {
     const chars = text.length;
     const meta = qualityMeta(source.id, page, pageBase);
     const confidence = meta?.confidence !== null && meta?.confidence !== undefined && Number.isFinite(Number(meta.confidence)) ? Number(meta.confidence) : null;
+    const exhausted = meta?.exhausted === true;
 
     if (exists) totals.cachedPages += 1;
     if (!exists) totals.missingPages += 1;
     if (exists && chars === 0) totals.emptyPages += 1;
     if (exists && chars > 0 && chars < shortThreshold) totals.shortPages += 1;
+    if (exhausted) totals.exhaustedPages += 1;
     if (confidence !== null) totals.confidenceKnownPages += 1;
     if (confidence !== null && confidence < lowConfidence) totals.lowConfidencePages += 1;
     else if (confidence !== null && confidence < reviewConfidence) totals.reviewConfidencePages += 1;
@@ -98,10 +101,12 @@ for (const source of sources) {
     if (confidence !== null && confidence < lowConfidence) reasons.push("low-confidence");
     else if (confidence !== null && confidence < reviewConfidence) reasons.push("review-confidence");
 
-    const repair = reasons.includes("missing") ||
+    const repair = !exhausted && (
+      reasons.includes("missing") ||
       reasons.includes("empty") ||
       reasons.includes("low-confidence") ||
-      (includeShort && reasons.includes("short"));
+      (includeShort && reasons.includes("short"))
+    );
 
     if (repair) totals.repairCandidates += 1;
 
@@ -113,6 +118,8 @@ for (const source of sources) {
         chars,
         confidence,
         reasons,
+        exhausted,
+        exhaustedReason: meta?.exhaustedReason || null,
         repair,
       });
     }
