@@ -1,1 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620"><defs><radialGradient id="g"><stop stop-color="#274f87" stop-opacity=".62"/><stop offset=".5" stop-color="#121d38"/><stop offset="1" stop-color="#060609"/></radialGradient></defs><rect width="900" height="620" fill="url(#g)"/><g transform="translate(450 310)" fill="none" stroke="#e2c36c"><circle r="215" opacity=".35"/><circle r="164" stroke-dasharray="4 10" opacity=".6"/><circle r="98" opacity=".8"/><path d="M-160 0Q0-190 160 0Q0 190-160 0Z"/><circle r="32"/><circle r="9" fill="#e8c96f"/></g><g fill="#e7c66b" opacity=".8"><circle cx="210" cy="145" r="3"/><circle cx="690" cy="170" r="2"/><circle cx="710" cy="460" r="3"/><circle cx="170" cy="430" r="2"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+<defs>
+  <linearGradient id="divinationbg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#05070c"/><stop offset=".5" stop-color="#0d1730"/><stop offset="1" stop-color="#03050a"/></linearGradient>
+  <radialGradient id="divinationhalo"><stop stop-color="#416ca8" stop-opacity=".72"/><stop offset=".28" stop-color="#553c83" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <linearGradient id="divinationgold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4dfa1"/><stop offset=".45" stop-color="#c79a4d"/><stop offset="1" stop-color="#6d4920"/></linearGradient>
+  <linearGradient id="divinationglass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dce8ff" stop-opacity=".26"/><stop offset=".5" stop-color="#416ca8" stop-opacity=".09"/><stop offset="1" stop-color="#04070b" stop-opacity=".38"/></linearGradient>
+  <filter id="divinationglow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="divinationsoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="28"/></filter>
+  <pattern id="divinationstars" width="95" height="80" patternUnits="userSpaceOnUse"><circle cx="13" cy="18" r="1.3" fill="#f1d994" opacity=".48"/><circle cx="72" cy="41" r=".9" fill="#d7c17d" opacity=".32"/><circle cx="42" cy="69" r=".7" fill="#bca8dc" opacity=".24"/></pattern>
+</defs>
+<rect width="1200" height="800" fill="url(#divinationbg)"/>
+<rect width="1200" height="800" fill="url(#divinationstars)" opacity=".7"/>
+<ellipse cx="850" cy="330" rx="440" ry="380" fill="url(#divinationhalo)" opacity=".46"/>
+<path d="M55 790V230Q55 84 198 84h155q143 0 143 146v560M704 790V230Q704 84 847 84h155q143 0 143 146v560" fill="none" stroke="#6b4d2b" stroke-opacity=".4" stroke-width="5"/>
+<path d="M88 790V248q0-120 115-120h144q115 0 115 120v542M738 790V248q0-120 115-120h144q115 0 115 120v542" fill="none" stroke="#d2a65b" stroke-opacity=".12" stroke-width="2"/>
+<path d="M0 705Q310 645 600 700T1200 700V800H0Z" fill="#020307" opacity=".78"/>
+<ellipse cx="600" cy="710" rx="480" ry="78" fill="#000" opacity=".48" filter="url(#divinationsoft)"/>
+
+<g transform="translate(600 440)">
+ <ellipse cy="150" rx="390" ry="108" fill="#0e0b13" stroke="#795b37" stroke-width="5"/>
+ <ellipse cy="132" rx="310" ry="72" fill="none" stroke="#e0bd6a" stroke-opacity=".34" stroke-width="2"/>
+ <circle cy="-75" r="142" fill="#17283e" stroke="#d9c07b" stroke-opacity=".65" stroke-width="4"/>
+ <circle cy="-75" r="112" fill="url(#divinationhalo)" opacity=".7"/>
+ <circle cy="-75" r="54" fill="#d4e7ff" opacity=".18" stroke="#e9d49c" stroke-width="2" filter="url(#divinationglow)"/>
+ <path d="M-250 82l95-46 44 92-96 45Z" fill="#261d35" stroke="#d4b76d" stroke-width="3"/><path d="M-230 91  -163 58 -131 119 -199 149Z" fill="none" stroke="#a78ac8" stroke-width="2"/>
+ <path d="M155 38l99 35-34 96-99-35Z" fill="#18283a" stroke="#d4b76d" stroke-width="3"/><path d="M175 58l60 21-22 62-60-21Z" fill="none" stroke="#8ca6d5" stroke-width="2"/>
+ <g fill="none" stroke="#dabb67" stroke-width="2"><circle cx="-75" cy="128" r="26"/><path d="M-75 102v52M-101 128h52"/><path d="M44 110 72 146 33 169 9 132Z"/></g>
+</g>
+
+<g fill="#e4c879" opacity=".5"><circle cx="130" cy="120" r="2"/><circle cx="225" cy="196" r="3"/><circle cx="1070" cy="150" r="2"/><circle cx="1015" cy="525" r="2"/><circle cx="535" cy="112" r="1.7"/><circle cx="680" cy="182" r="1.4"/></g>
+<path d="M0 0h1200v800H0Z" fill="none" stroke="#d7b065" stroke-opacity=".08" stroke-width="16"/>
+</svg>
