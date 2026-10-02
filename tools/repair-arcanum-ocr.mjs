@@ -266,7 +266,7 @@ try {
         touchedDocs.add(doc.id);
       }
 
-      const noUsableText = !accept && oldText.trim().length === 0 && attempts.every((attempt) => attempt.text.length < minRecoveredChars);
+      const noUsableText = !accept && oldText.trim().length === 0;
       const noBetterLowConfidence =
         !accept &&
         oldText.trim().length > 0 &&
