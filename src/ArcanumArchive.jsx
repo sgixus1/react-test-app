@@ -14,8 +14,8 @@ const visualMap = {
   divination: assetUrl("arcanum/divination.svg"),
   alchemy: assetUrl("arcanum/alchemy.svg"),
   plants: assetUrl("arcanum/plants.svg"),
-  grimoires: assetUrl("arcanum/spells.svg"),
-  historical: assetUrl("arcanum/traditions.svg"),
+  grimoires: assetUrl("arcanum/grimoires.svg"),
+  historical: assetUrl("arcanum/historical.svg"),
 };
 
 const navItems = [
