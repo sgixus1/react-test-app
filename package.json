@@ -14,7 +14,8 @@
     "arcanum:extract": "node tools/extract-arcanum-sources.mjs",
     "arcanum:ocr": "node tools/ocr-arcanum-scans.mjs",
     "arcanum:ocr:audit": "node tools/audit-arcanum-ocr.mjs",
-    "arcanum:ocr:repair": "node tools/repair-arcanum-ocr.mjs"
+    "arcanum:ocr:repair": "node tools/repair-arcanum-ocr.mjs",
+    "arcanum:ocr:review": "node tools/build-arcanum-ocr-review.mjs"
   },
   "dependencies": {
     "@paypal/react-paypal-js": "^8.9.2",
