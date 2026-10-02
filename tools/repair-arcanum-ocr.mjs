@@ -62,27 +62,23 @@ function readJson(filePath) {
 }
 
 function restoreWeakPriorRepairs() {
-  if (!fs.existsSync(reportPath)) return 0;
-  const previous = readJson(reportPath);
-  if (!previous) return 0;
+  if (!fs.existsSync(repairRoot)) return 0;
 
   let restored = 0;
-  for (const result of previous.results || []) {
-    if (
-      result?.accepted !== true ||
-      Number(result?.previousChars || 0) !== 0 ||
-      Number(result?.textChars || 0) >= minRecoveredChars
-    ) {
-      continue;
-    }
+  const backups = fs.readdirSync(repairRoot).filter((name) => name.endsWith(".before.txt"));
 
-    const pageBase = result.pageBase;
-    if (!pageBase) continue;
-    const beforePath = path.join(repairRoot, `${pageBase}.before.txt`);
+  for (const backupName of backups) {
+    const pageBase = backupName.slice(0, -".before.txt".length);
+    const beforePath = path.join(repairRoot, backupName);
     const textPath = path.join(textRoot, `${pageBase}.txt`);
-    if (!fs.existsSync(beforePath)) continue;
+    if (!fs.existsSync(textPath)) continue;
 
-    fs.writeFileSync(textPath, fs.readFileSync(beforePath, "utf8"), "utf8");
+    const beforeText = fs.readFileSync(beforePath, "utf8");
+    const currentText = fs.readFileSync(textPath, "utf8");
+    if (beforeText.trim().length !== 0) continue;
+    if (currentText.trim().length === 0 || currentText.trim().length >= minRecoveredChars) continue;
+
+    fs.writeFileSync(textPath, beforeText, "utf8");
     const qualityPath = path.join(qualityRoot, `${pageBase}.json`);
     const quality = readJson(qualityPath) || {};
     fs.writeFileSync(
