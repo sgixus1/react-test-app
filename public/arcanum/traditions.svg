@@ -1,1 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620"><defs><radialGradient id="g"><stop stop-color="#75622b" stop-opacity=".44"/><stop offset=".55" stop-color="#241b17"/><stop offset="1" stop-color="#070607"/></radialGradient></defs><rect width="900" height="620" fill="url(#g)"/><g fill="none" stroke="#d5b461" stroke-width="2" opacity=".78" transform="translate(450 310)"><circle r="215"/><circle r="165"/><circle r="115"/><path d="M0-205 177 102-177 102Z"/><path d="M0 205 177-102-177-102Z"/><path d="M-205 0 0-205 205 0 0 205Z"/></g><g fill="#edce78"><circle cx="450" cy="310" r="12"/><circle cx="450" cy="105" r="6"/><circle cx="627" cy="412" r="6"/><circle cx="273" cy="412" r="6"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+<defs>
+  <linearGradient id="traditionsbg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#05070c"/><stop offset=".5" stop-color="#201814"/><stop offset="1" stop-color="#03050a"/></linearGradient>
+  <radialGradient id="traditionshalo"><stop stop-color="#a17b36" stop-opacity=".72"/><stop offset=".28" stop-color="#5c4925" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <linearGradient id="traditionsgold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4dfa1"/><stop offset=".45" stop-color="#c79a4d"/><stop offset="1" stop-color="#6d4920"/></linearGradient>
+  <linearGradient id="traditionsglass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dce8ff" stop-opacity=".26"/><stop offset=".5" stop-color="#a17b36" stop-opacity=".09"/><stop offset="1" stop-color="#04070b" stop-opacity=".38"/></linearGradient>
+  <filter id="traditionsglow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="traditionssoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="28"/></filter>
+  <pattern id="traditionsstars" width="95" height="80" patternUnits="userSpaceOnUse"><circle cx="13" cy="18" r="1.3" fill="#f1d994" opacity=".48"/><circle cx="72" cy="41" r=".9" fill="#d7c17d" opacity=".32"/><circle cx="42" cy="69" r=".7" fill="#bca8dc" opacity=".24"/></pattern>
+</defs>
+<rect width="1200" height="800" fill="url(#traditionsbg)"/>
+<rect width="1200" height="800" fill="url(#traditionsstars)" opacity=".7"/>
+<ellipse cx="850" cy="330" rx="440" ry="380" fill="url(#traditionshalo)" opacity=".46"/>
+<path d="M55 790V230Q55 84 198 84h155q143 0 143 146v560M704 790V230Q704 84 847 84h155q143 0 143 146v560" fill="none" stroke="#6b4d2b" stroke-opacity=".4" stroke-width="5"/>
+<path d="M88 790V248q0-120 115-120h144q115 0 115 120v542M738 790V248q0-120 115-120h144q115 0 115 120v542" fill="none" stroke="#d2a65b" stroke-opacity=".12" stroke-width="2"/>
+<path d="M0 705Q310 645 600 700T1200 700V800H0Z" fill="#020307" opacity=".78"/>
+<ellipse cx="600" cy="710" rx="480" ry="78" fill="#000" opacity=".48" filter="url(#traditionssoft)"/>
+
+<g opacity=".92">
+ <path d="M130 610 275 388 420 610Z" fill="#11131a" stroke="#7b633d" stroke-width="3"/><path d="M185 610 275 464 365 610Z" fill="#19151a"/>
+ <path d="M760 610 930 330 1090 610Z" fill="#10141c" stroke="#80643c" stroke-width="3"/><path d="M820 610 930 435 1030 610Z" fill="#19151a"/>
+ <path d="M480 610V315q0-92 120-92t120 92v295" fill="#0b0d13" stroke="#9a7440" stroke-width="4"/>
+ <path d="M520 610V340q0-65 80-65t80 65v270" fill="#141019" stroke="#c59b57" stroke-opacity=".42" stroke-width="2"/>
+</g>
+<g transform="translate(600 420)" fill="none" stroke="#d8b668" stroke-opacity=".55"><circle r="175"/><circle r="126" stroke-dasharray="5 10"/><path d="M0-160 138 80-138 80Z"/><path d="M0 160 138-80-138-80Z"/></g>
+<path d="M170 675Q370 615 520 675Q670 615 1030 675" fill="none" stroke="#d6b36b" stroke-opacity=".36" stroke-width="3"/>
+
+<g fill="#e4c879" opacity=".5"><circle cx="130" cy="120" r="2"/><circle cx="225" cy="196" r="3"/><circle cx="1070" cy="150" r="2"/><circle cx="1015" cy="525" r="2"/><circle cx="535" cy="112" r="1.7"/><circle cx="680" cy="182" r="1.4"/></g>
+<path d="M0 0h1200v800H0Z" fill="none" stroke="#d7b065" stroke-opacity=".08" stroke-width="16"/>
+</svg>
