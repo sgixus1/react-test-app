@@ -276,11 +276,16 @@ try {
         oldText.trim().length > 0 &&
         (page.reasons || []).includes("low-confidence");
 
-      const isExhausted = noUsableText || noBetterLowConfidence;
-      if (isExhausted) exhausted += 1;
-
       const effectiveConfidence = accept ? best.confidence : oldConfidence;
       const effectiveChars = accept ? best.text.length : oldText.trim().length;
+      const improvedButStillLow =
+        accept &&
+        effectiveConfidence !== null &&
+        effectiveConfidence < 50 &&
+        (page.reasons || []).includes("low-confidence");
+
+      const isExhausted = noUsableText || noBetterLowConfidence || improvedButStillLow;
+      if (isExhausted) exhausted += 1;
 
       const quality = {
         id: doc.id,
@@ -306,7 +311,13 @@ try {
         reasons: page.reasons || [],
         accepted: accept,
         exhausted: isExhausted,
-        exhaustedReason: noUsableText ? "no-usable-text-after-multipass" : noBetterLowConfidence ? "no-better-low-confidence-result" : null,
+        exhaustedReason: noUsableText
+          ? "no-usable-text-after-multipass"
+          : noBetterLowConfidence
+            ? "no-better-low-confidence-result"
+            : improvedButStillLow
+              ? "improved-but-still-low-confidence-after-multipass"
+              : null,
       };
       fs.writeFileSync(qualityPath, JSON.stringify(quality, null, 2), "utf8");
 
