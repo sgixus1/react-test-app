@@ -1,1 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620"><defs><radialGradient id="g"><stop stop-color="#a2482e" stop-opacity=".64"/><stop offset=".5" stop-color="#35151a"/><stop offset="1" stop-color="#080607"/></radialGradient><filter id="glow"><feGaussianBlur stdDeviation="9" result="x"/><feMerge><feMergeNode in="x"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="900" height="620" fill="url(#g)"/><ellipse cx="450" cy="420" rx="310" ry="95" fill="none" stroke="#d7ae57" stroke-opacity=".35" stroke-width="3"/><ellipse cx="450" cy="420" rx="230" ry="68" fill="none" stroke="#e0bf68" stroke-opacity=".5" stroke-width="2"/><g transform="translate(450 415)" fill="none" stroke="#dfb85f"><circle r="155" opacity=".52"/><path d="M0-145 126 72-126 72Z"/><path d="M0 145 126-72-126-72Z" opacity=".7"/></g><g fill="#f0cf77" filter="url(#glow)"><path d="M230 370q-18-28 0-58 18 30 0 58Z"/><path d="M670 370q-18-28 0-58 18 30 0 58Z"/><path d="M450 205q-18-28 0-58 18 30 0 58Z"/></g><g stroke="#c9984e" stroke-width="9"><path d="M230 455v-94"/><path d="M670 455v-94"/><path d="M450 290v-94"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+<defs>
+  <linearGradient id="ritualsbg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#05070c"/><stop offset=".5" stop-color="#261119"/><stop offset="1" stop-color="#03050a"/></linearGradient>
+  <radialGradient id="ritualshalo"><stop stop-color="#a74d37" stop-opacity=".72"/><stop offset=".28" stop-color="#5f2931" stop-opacity=".28"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+  <linearGradient id="ritualsgold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f4dfa1"/><stop offset=".45" stop-color="#c79a4d"/><stop offset="1" stop-color="#6d4920"/></linearGradient>
+  <linearGradient id="ritualsglass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dce8ff" stop-opacity=".26"/><stop offset=".5" stop-color="#a74d37" stop-opacity=".09"/><stop offset="1" stop-color="#04070b" stop-opacity=".38"/></linearGradient>
+  <filter id="ritualsglow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="10" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="ritualssoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="28"/></filter>
+  <pattern id="ritualsstars" width="95" height="80" patternUnits="userSpaceOnUse"><circle cx="13" cy="18" r="1.3" fill="#f1d994" opacity=".48"/><circle cx="72" cy="41" r=".9" fill="#d7c17d" opacity=".32"/><circle cx="42" cy="69" r=".7" fill="#bca8dc" opacity=".24"/></pattern>
+</defs>
+<rect width="1200" height="800" fill="url(#ritualsbg)"/>
+<rect width="1200" height="800" fill="url(#ritualsstars)" opacity=".7"/>
+<ellipse cx="850" cy="330" rx="440" ry="380" fill="url(#ritualshalo)" opacity=".46"/>
+<path d="M55 790V230Q55 84 198 84h155q143 0 143 146v560M704 790V230Q704 84 847 84h155q143 0 143 146v560" fill="none" stroke="#6b4d2b" stroke-opacity=".4" stroke-width="5"/>
+<path d="M88 790V248q0-120 115-120h144q115 0 115 120v542M738 790V248q0-120 115-120h144q115 0 115 120v542" fill="none" stroke="#d2a65b" stroke-opacity=".12" stroke-width="2"/>
+<path d="M0 705Q310 645 600 700T1200 700V800H0Z" fill="#020307" opacity=".78"/>
+<ellipse cx="600" cy="710" rx="480" ry="78" fill="#000" opacity=".48" filter="url(#ritualssoft)"/>
+
+<g transform="translate(600 430)">
+  <ellipse cy="195" rx="420" ry="118" fill="#10090c" stroke="#6c472a" stroke-width="5"/>
+  <ellipse cy="175" rx="355" ry="82" fill="none" stroke="#e0bb65" stroke-opacity=".38" stroke-width="3"/>
+  <ellipse cy="175" rx="265" ry="58" fill="none" stroke="#9a72bc" stroke-opacity=".48" stroke-dasharray="8 12" stroke-width="2"/>
+  <path d="M0 42 220 205-220 205Z" fill="none" stroke="#d8b05a" stroke-opacity=".75" stroke-width="3"/>
+  <path d="M0 270 220 105-220 105Z" fill="none" stroke="#d8b05a" stroke-opacity=".46" stroke-width="2"/>
+  <rect x="-92" y="-10" width="184" height="120" rx="6" fill="#1a1112" stroke="#8e6734" stroke-width="3"/>
+  <path d="M-65 20h130M-52 48h104M-40 76h80" stroke="#d2aa5c" stroke-opacity=".52" stroke-width="2"/>
+  <circle cy="27" r="62" fill="none" stroke="#d8bd78" stroke-width="2"/>
+</g>
+<g fill="#ffd778" filter="url(#ritualsglow)"><path d="M255 500q-19-32 0-61 20 29 0 61Z"/><path d="M945 500q-19-32 0-61 20 29 0 61Z"/><path d="M600 225q-19-32 0-61 20 29 0 61Z"/></g>
+<g stroke="#b17c3d" stroke-width="10"><path d="M255 610v-122"/><path d="M945 610v-122"/><path d="M600 335v-122"/></g>
+
+<g fill="#e4c879" opacity=".5"><circle cx="130" cy="120" r="2"/><circle cx="225" cy="196" r="3"/><circle cx="1070" cy="150" r="2"/><circle cx="1015" cy="525" r="2"/><circle cx="535" cy="112" r="1.7"/><circle cx="680" cy="182" r="1.4"/></g>
+<path d="M0 0h1200v800H0Z" fill="none" stroke="#d7b065" stroke-opacity=".08" stroke-width="16"/>
+</svg>
