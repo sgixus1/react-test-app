@@ -83,7 +83,15 @@ for (const source of sources) {
     const chars = text.length;
     const meta = qualityMeta(source.id, page, pageBase);
     const confidence = meta?.confidence !== null && meta?.confidence !== undefined && Number.isFinite(Number(meta.confidence)) ? Number(meta.confidence) : null;
-    const exhausted = meta?.exhausted === true;
+    const exhausted =
+      meta?.exhausted === true ||
+      (
+        meta?.accepted === true &&
+        Array.isArray(meta?.attempts) &&
+        meta.attempts.length > 0 &&
+        confidence !== null &&
+        confidence < lowConfidence
+      );
 
     if (exists) totals.cachedPages += 1;
     if (!exists) totals.missingPages += 1;
